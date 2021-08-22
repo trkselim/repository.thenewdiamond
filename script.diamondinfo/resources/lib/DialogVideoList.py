@@ -24,6 +24,7 @@ SORTS = {
 		'first_air_date': 'First aired'
 		}}
 LANGUAGES = [
+	{'id': '', 'name': ''},
 	{'id': 'bg', 'name': 'Bulgarian'},
 	{'id': 'cs', 'name': 'Czech'},
 	{'id': 'da', 'name': 'Danish'},
@@ -66,6 +67,10 @@ def get_tmdb_window(window_type):
 				self.listitems = Utils.create_listitems(self.listitem_list)
 				self.total_items = len(self.listitem_list)
 			else:
+				##custom addition to add english, not horror + votes > 1000 by default
+				self.add_filter('with_original_language', 'en', 'Original language', 'English')
+				self.add_filter('without_genres', '27', 'Genres', 'NOT Horror')
+				self.add_filter('vote_count.gte', '1000', '%s (%s)' % ('Vote count', '>'), '1000')
 				self.update_content(force_update=kwargs.get('force', False))
 
 		def onClick(self, control_id):
