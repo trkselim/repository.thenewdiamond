@@ -219,12 +219,41 @@ def get_tmdb_window(window_type):
 		@ch.click(5002)
 		def set_genre_filter(self):
 			response = TheMovieDB.get_tmdb_data('genre/%s/list?language=%s&' % (self.type, xbmcaddon.Addon().getSetting('LanguageID')), 10)
+			"""
 			id_list = [item['id'] for item in response['genres']]
 			label_list = [item['name'] for item in response['genres']]
 			index = xbmcgui.Dialog().select(heading='Choose genre', list=label_list)
 			if index == -1:
 				return None
 			self.add_filter('with_genres', str(id_list[index]), 'Genres', label_list[index])
+			self.mode = 'filter'
+			self.page = 1
+			self.update()
+			
+			params = {"language": addon.setting("LanguageID")}
+			response = tmdb.get_data(url="genre/%s/list" % (self.type),
+									 params=params,
+									 cache_days=100)
+			"""
+			selected = [i["id"] for i in self.filters if i["type"] == "with_genres"]
+			ids = [item["id"] for item in response["genres"]]
+			labels = [item["name"] for item in response["genres"]]
+			preselect = [ids.index(int(i)) for i in str(selected[0]).split(",")] if selected else []
+			indexes = xbmcgui.Dialog().multiselect(heading='Choose genre',options=labels,preselect=preselect)
+			if indexes is None:
+				return None
+			indexes2 = xbmcgui.Dialog().yesno('Genres', 'Set with/without genres for newly selected items', 'without_genres', 'with_genres', 3500) 
+			indexes3 = str(indexes2)
+
+			self.filters = [i for i in self.filters if i["type"] != "with_genres"]
+			for i in indexes:
+				if indexes2 == False:
+					if str(i) in str(preselect):
+						self.add_filter('with_genres', ids[i], 'Genres', labels[i])
+					else:
+						self.add_filter('without_genres', ids[i], 'NOT Genres', labels[i])
+				else:
+					self.add_filter('with_genres', ids[i], 'Genres', labels[i])
 			self.mode = 'filter'
 			self.page = 1
 			self.update()
