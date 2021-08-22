@@ -106,7 +106,7 @@ def get_movie_window(window_type):
 					'id': self.listitem.getProperty('id'),
 					'type': 'with_companies',
 					'typelabel': 'Studios',
-					'label': self.listitem.getLabel().decode('utf-8')
+					'label': self.listitem.getLabel()
 				}]
 			wm.open_video_list(prev_window=self, filters=filters)
 
@@ -123,7 +123,7 @@ def get_movie_window(window_type):
 					'id': self.listitem.getProperty('id'),
 					'type': 'with_genres',
 					'typelabel': 'Genres',
-					'label': self.listitem.getLabel().decode('utf-8')
+					'label': self.listitem.getLabel()
 				}]
 			wm.open_video_list(prev_window=self, filters=filters)
 
