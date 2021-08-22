@@ -197,7 +197,7 @@ class DialogBaseList(object):
 			self.filters[index]['label'] = str(label)
 			return None
 		dialog = xbmcgui.Dialog()
-		ret = dialog.yesno(heading='Filter', line1='Choose filter behaviour', nolabel='OR', yeslabel='AND')
+		ret = dialog.yesno(heading='Filter', message='Choose filter behaviour', nolabel='OR', yeslabel='AND')
 		if ret:
 			self.filters[index]['id'] = self.filters[index]['id'] + ',' + urllib.parse.quote_plus(str(value))
 			self.filters[index]['label'] = self.filters[index]['label'] + ',' + label
