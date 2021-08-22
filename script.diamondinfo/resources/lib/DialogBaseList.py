@@ -92,7 +92,7 @@ class DialogBaseList(object):
 	@ch.click(6000)
 	def open_search(self):
 		result = xbmcgui.Dialog().input(heading='Enter search string', type=xbmcgui.INPUT_ALPHANUM)
-		if int(result) and int(result) > -1:
+		if result and len(result) > -1:
 			self.search(result)
 		if self.total_items > 0:
 			self.setFocusId(500)
