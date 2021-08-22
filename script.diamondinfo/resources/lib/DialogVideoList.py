@@ -233,7 +233,7 @@ def get_tmdb_window(window_type):
 		def set_vote_count_filter(self):
 			ret = True
 			if not self.type == 'tv':
-				ret = xbmcgui.Dialog().yesno(heading='Choose option', line1='Choose filter behaviour', nolabel='Lower limit', yeslabel='Upper limit')
+				ret = xbmcgui.Dialog().yesno(heading='Choose option', message='Choose filter behaviour', nolabel='Lower limit', yeslabel='Upper limit')
 			result = xbmcgui.Dialog().input(heading='Vote count', type=xbmcgui.INPUT_NUMERIC)
 			if result:
 				if ret:
@@ -246,7 +246,7 @@ def get_tmdb_window(window_type):
 
 		@ch.click(5003)
 		def set_year_filter(self):
-			ret = xbmcgui.Dialog().yesno(heading='Choose option', line1='Choose filter behaviour', nolabel='Lower limit', yeslabel='Upper limit')
+			ret = xbmcgui.Dialog().yesno(heading='Choose option', message='Choose filter behaviour', nolabel='Lower limit', yeslabel='Upper limit')
 			result = xbmcgui.Dialog().input(heading='Year', type=xbmcgui.INPUT_NUMERIC)
 			if not result:
 				return None
