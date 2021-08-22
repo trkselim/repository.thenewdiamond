@@ -3,6 +3,8 @@ from resources.lib import Utils
 from resources.lib.WindowManager import wm
 from resources.lib.OnClickHandler import OnClickHandler
 
+import urllib
+
 ch = OnClickHandler()
 
 class DialogBaseList(object):
@@ -199,8 +201,8 @@ class DialogBaseList(object):
 		dialog = xbmcgui.Dialog()
 		ret = dialog.yesno(heading='Filter', message='Choose filter behaviour', nolabel='OR', yeslabel='AND')
 		if ret:
-			self.filters[index]['id'] = self.filters[index]['id'] + ',' + urllib.parse.quote_plus(str(value))
+			self.filters[index]['id'] = str(self.filters[index]['id']) + ',' + urllib.parse.quote_plus(str(value))
 			self.filters[index]['label'] = self.filters[index]['label'] + ',' + label
 		else:
-			self.filters[index]['id'] = self.filters[index]['id'] + '|' + urllib.parse.quote_plus(str(value))
+			self.filters[index]['id'] = str(self.filters[index]['id']) + '|' + urllib.parse.quote_plus(str(value))
 			self.filters[index]['label'] = self.filters[index]['label'] + '|' + label
