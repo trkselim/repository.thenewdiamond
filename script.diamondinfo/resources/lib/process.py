@@ -50,11 +50,11 @@ def start_info_actions(infos, params):
 		elif info == 'search_menu':
 			search_str = xbmcgui.Dialog().input(heading='Enter search string', type=xbmcgui.INPUT_ALPHANUM)
 			return wm.open_video_list(search_str=search_str, mode='search')
-		
+
 		elif info == 'search_string':
 			search_str = params['str']
 			return wm.open_video_list(search_str=search_str, mode='search')
-		
+
 		elif info == 'studio':
 			if 'id' in params and params['id']:
 				return wm.open_video_list(media_type='tv', mode='filter', listitems=TheMovieDB.get_company_data(params['id']))
