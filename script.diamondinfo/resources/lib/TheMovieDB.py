@@ -784,6 +784,12 @@ def get_set_movies(set_id):
 	else:
 		return [], {}
 
+def get_person(person_id):
+	response = get_tmdb_data('person/%s?language=%s&append_to_response=combined_credits&' % (person_id, xbmcaddon.Addon().getSetting('LanguageID')), 14)
+	listitems = handle_tmdb_multi_search(response['combined_credits']['cast'])
+	listitems += handle_tmdb_multi_search(response['combined_credits']['crew'])
+	return listitems
+
 def get_person_movies(person_id):
 	response = get_tmdb_data('person/%s/credits?language=%s&' % (person_id, xbmcaddon.Addon().getSetting('LanguageID')), 14)
 	if 'crew' in response:
