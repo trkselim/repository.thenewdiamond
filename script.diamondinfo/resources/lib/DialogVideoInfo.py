@@ -94,6 +94,47 @@ def get_movie_window(window_type):
 		def open_actor_info(self):
 			wm.open_actor_info(prev_window=self, actor_id=self.listitem.getProperty('id'))
 
+		@ch.action('contextmenu', 150)
+		@ch.action('contextmenu', 250)
+		def context_menu(self):
+			Utils.show_busy()
+			if self.listitem.getProperty('dbid') and self.listitem.getProperty('dbid') != 0:
+				dbid = self.listitem.getProperty('dbid')
+			else:
+				dbid = 0
+			item_id = self.listitem.getProperty('id')
+			if self.type == 'tv':
+				imdb_id = Utils.fetch(TheMovieDB.get_tvshow_ids(item_id), 'imdb_id')
+				tvdb_id = Utils.fetch(TheMovieDB.get_tvshow_ids(item_id), 'tvdb_id')
+			else:
+				imdb_id = TheMovieDB.get_imdb_id_from_movie_id(item_id)
+			item_1 = False
+			if self.listitem.getProperty('TVShowTitle'):
+				listitems = ['Play - TMDB Helper ']
+			else:
+				listitems = ['Play - TMDB Helper']
+				item_1 = True
+
+			listitems += ['Search item']
+			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			Utils.hide_busy()
+			if selection == 0 and item_1 == True:
+				if self.type == 'tv':
+					url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;tmdb_id=%s&amp;type=episode&amp;season=%s&amp;episode=%s' % (item_id, self.listitem.getProperty('season'), self.listitem.getProperty('episode'))
+				else:
+					url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;tmdb_id=%s&amp;type=movie' % (item_id)
+				PLAYER.play_from_button(url, listitem=None, window=self)
+
+			if selection == 1:
+				import urllib
+				item_title = self.listitem.getProperty('TVShowTitle') or self.listitem.getProperty('Title')
+				item_title = urllib.parse.quote_plus(item_title)
+#				xbmc.executebuiltin('RunPlugin(plugin://script.extendedinfo/?info=search_string&str=%s' % item_title)
+#				xbmc.log(str('RunPlugin(plugin://script.extendedinfo/?info=search_string&str=%s)' % item_title)+'===>TMDB_HELPER_3', level=xbmc.LOGNOTICE)
+				self.close()
+				xbmc.executebuiltin('RunScript(script.diamondinfo,info=search_string,str=%s)' % item_title)
+
+
 		@ch.click(150)
 		@ch.click(250)
 		def open_movie_info(self):
@@ -167,7 +208,8 @@ def get_movie_window(window_type):
 				url = ''
 				PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=dbid)
 			else:
-				url = 'plugin://plugin.video.diamondplayer/movies/play/tmdb/%s' % self.info.get('id', '')
+				#url = 'plugin://plugin.video.diamondplayer/movies/play/tmdb/%s' % self.info.get('id', '')
+				url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=movie&amp;tmdb_id=%s' % self.info.get('id', '')
 				xbmc.executebuiltin('RunPlugin(%s)' % url)
 
 		@ch.action('contextmenu', 8)
@@ -177,7 +219,8 @@ def get_movie_window(window_type):
 				url = ''
 				PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=dbid)
 			else:
-				url = 'plugin://plugin.video.diamondplayer/movies/play_choose_player/tmdb/%s/False' % self.info.get('id', '')
+				#url = 'plugin://plugin.video.diamondplayer/movies/play_choose_player/tmdb/%s/False' % self.info.get('id', '')
+				url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=movie&amp;tmdb_id=%s' % self.info.get('id', '')
 				xbmc.executebuiltin('RunPlugin(%s)' % url)
 
 		@ch.click(445)
