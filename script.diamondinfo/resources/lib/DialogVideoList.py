@@ -67,7 +67,6 @@ def get_tmdb_window(window_type):
 				self.listitems = Utils.create_listitems(self.listitem_list)
 				self.total_items = len(self.listitem_list)
 			else:
-				##custom addition to add english, not horror + votes > 1000 by default
 				self.add_filter('with_original_language', 'en', 'Original language', 'English')
 				self.add_filter('without_genres', '27', 'Genres', 'NOT Horror')
 				self.add_filter('vote_count.gte', '1000', '%s (%s)' % ('Vote count', '>'), '1000')
@@ -134,7 +133,8 @@ def get_tmdb_window(window_type):
 			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
 			if selection == 0:
 				if self.listitem.getProperty('TVShowTitle'):
-					url = 'plugin://plugin.video.diamondplayer/tv/play/%s/1/1' % tvdb_id
+					#url = 'plugin://plugin.video.diamondplayer/tv/play/%s/1/1' % tvdb_id
+					url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=%s&amp;season=1&amp;episode=1' % tvdb_id
 					PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
 				else:
 					if self.listitem.getProperty('dbid'):
@@ -142,7 +142,8 @@ def get_tmdb_window(window_type):
 						url = ''
 					else:
 						dbid = 0
-						url = 'plugin://plugin.video.diamondplayer/movies/play/tmdb/%s' % item_id
+						#url = 'plugin://plugin.video.diamondplayer/movies/play/tmdb/%s' % item_id
+						url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=movie&amp;tmdb_id=%s' % item_id
 					PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=dbid)
 			if selection == 1:
 				if self.listitem.getProperty('TVShowTitle'):
