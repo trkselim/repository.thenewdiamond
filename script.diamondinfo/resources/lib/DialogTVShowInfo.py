@@ -160,12 +160,14 @@ def get_tvshow_window(window_type):
 
 		@ch.click(9)
 		def play_tvshow(self):
-			url = 'plugin://plugin.video.diamondplayer/tv/play/%s/1/1' % self.info['tvdb_id']
+			#url = 'plugin://plugin.video.diamondplayer/tv/play/%s/1/1' % self.info['tvdb_id']
+			url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=%s&amp;season=1&amp;episode=1' % self.tvshow_id
 			xbmc.executebuiltin('RunPlugin(%s)' % url)
 
 		@ch.action('contextmenu', 9)
 		def play_tvshow_choose_player(self):
-			url = 'plugin://plugin.video.diamondplayer/tv/play_choose_player/%s/1/1/False' % self.info['tvdb_id']
+			#url = 'plugin://plugin.video.diamondplayer/tv/play_choose_player/%s/1/1/False' % self.info['tvdb_id']
+			url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=%s&amp;season=1&amp;episode=1' % self.tvshow_id
 			xbmc.executebuiltin('RunPlugin(%s)' % url)
 
 		@ch.click(20)
