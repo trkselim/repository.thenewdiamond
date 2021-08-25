@@ -113,12 +113,10 @@ def get_movie_window(window_type):
 				listitems = ['Play - TMDB Helper ']
 			else:
 				listitems = ['Play - TMDB Helper']
-				item_1 = True
-
 			listitems += ['Search item']
 			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
 			Utils.hide_busy()
-			if selection == 0 and item_1 == True:
+			if selection == 0:
 				if self.type == 'tv':
 					url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;tmdb_id=%s&amp;type=episode&amp;season=%s&amp;episode=%s' % (item_id, self.listitem.getProperty('season'), self.listitem.getProperty('episode'))
 				else:
