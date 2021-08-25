@@ -78,14 +78,42 @@ def get_season_window(window_type):
 		def open_episode_info(self):
 			wm.open_episode_info(prev_window=self, tvshow=self.info['TVShowTitle'], tvshow_id=self.tvshow_id, season=self.listitem.getProperty('season'), episode=self.listitem.getProperty('episode'))
 
+		@ch.action('contextmenu', 2000)
+		def context_menu(self):
+			Utils.show_busy()
+			if self.listitem.getProperty('dbid') and self.listitem.getProperty('dbid') != 0:
+				dbid = self.listitem.getProperty('dbid')
+			else:
+				dbid = 0
+			item_id = self.listitem.getProperty('id')
+			episode_id = self.listitem.getProperty('episode')
+#			season_id = self.listitem.getProperty('season')
+#			xbmc.log(str(dbid)+'===>OPENINFO', level=xbmc.LOGNOTICE)
+			imdb_id = Utils.fetch(TheMovieDB.get_tvshow_ids(self.tvshow_id), 'imdb_id')
+			tvdb_id = Utils.fetch(TheMovieDB.get_tvshow_ids(self.tvshow_id), 'tvdb_id')
+			listitems = ['Play - TMDB Helper']
+			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			if selection == 0:
+				url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;tmdb_id=%s&amp;type=episode&amp;season=%s&amp;episode=%s' % (self.tvshow_id, self.listitem.getProperty('season'), episode_id)
+#				xbmc.log(str(self.data)+'===>OPENINFO', level=xbmc.LOGNOTICE)
+#				xbmc.log(str(self.info['poster_original'])+'===>OPENINFO', level=xbmc.LOGNOTICE)
+#				self.close()
+#				Utils.hide_busy()
+#				xbmc.executebuiltin('RunPlugin(%s)' % url)
+#				xbmc.log(str(url)+'===>OPENINFO', level=xbmc.LOGNOTICE)
+				PLAYER.play_from_button(url, listitem=None, window=self)
+#			Utils.hide_busy()
+
 		@ch.click(10)
 		def play_season(self):
-			url = 'plugin://plugin.video.diamondplayer/tv/play/%s/%s/1' % (self.info['tvdb_id'], self.info['season'])
+			#url = 'plugin://plugin.video.diamondplayer/tv/play/%s/%s/1' % (self.info['tvdb_id'], self.info['season'])
+			url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=%s&amp;season=%s&amp;episode=1' % (self.tvshow_id, self.info['season'])
 			xbmc.executebuiltin('RunPlugin(%s)' % url)
 
 		@ch.action('contextmenu', 10)
 		def play_season_choose_player(self):
-			url = 'plugin://plugin.video.diamondplayer/tv/play_choose_player/%s/%s/1/False' % (self.info['tvdb_id'], self.info['season'])
+			#url = 'plugin://plugin.video.diamondplayer/tv/play_choose_player/%s/%s/1/False' % (self.info['tvdb_id'], self.info['season'])
+			url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=%s&amp;season=%s&amp;episode=1' % (self.tvshow_id, self.info['season'])
 			xbmc.executebuiltin('RunPlugin(%s)' % url)
 
 		@ch.click(445)
