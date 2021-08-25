@@ -55,6 +55,25 @@ def start_info_actions(infos, params):
 			search_str = params['str']
 			return wm.open_video_list(search_str=search_str, mode='search')
 
+		elif info == 'search_person':
+			search_str = params['person']
+			if params.get('person'):
+				person = TheMovieDB.get_person_info(person_label=params['person'])
+				if person and person.get('id'):
+					movies = TheMovieDB.get_person(person['id'])
+					newlist = sorted(movies, key=lambda k: k['Popularity'], reverse=True)
+					movies = {}
+					movies['cast_crew'] = []
+					for i in newlist:
+						try:
+							if str("'id': " + str(i['id'])) not in str(movies['cast_crew']) and i['poster'] != None:
+								if str("'id': '" + str(i['id']) + "'") not in str(movies['cast_crew']):
+									movies['cast_crew'].append(i)
+						except KeyError:
+							pass
+					newlist = None
+					return wm.open_video_list(mode='filter', listitems=movies['cast_crew'])
+
 		elif info == 'studio':
 			if 'id' in params and params['id']:
 				return wm.open_video_list(media_type='tv', mode='filter', listitems=TheMovieDB.get_company_data(params['id']))
