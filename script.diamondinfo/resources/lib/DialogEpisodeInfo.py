@@ -62,6 +62,22 @@ def get_episode_window(window_type):
 		def open_actor_info(self):
 			wm.open_actor_info(prev_window=self, actor_id=self.listitem.getProperty('id'))
 
+		@ch.action('contextmenu', 750)
+		@ch.action('contextmenu', 1000)
+		def context_menu(self):
+			listitems = ['TV Show Info']
+			listitems += ['Season Info']
+			listitems += ['Search Person']
+			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			if selection == 0:
+				wm.open_tvshow_info(prev_window=self, tmdb_id=self.tvshow_id, dbid=0)
+			if selection == 1:
+				wm.open_season_info(prev_window=self, tvshow_id=self.tvshow_id, season=self.info['season'], tvshow='')
+			if selection == 2:
+				#xbmc.executebuiltin('RunScript(script.diamondinfo,info=search_string,str=%s)' % self.listitem.getLabel())
+				self.close()
+				xbmc.executebuiltin('RunScript(script.diamondinfo,info=search_person,person=%s)' % self.listitem.getLabel())
+
 		@ch.click(132)
 		def open_text(self):
 			wm.open_textviewer(header='Overview', text=self.info['Plot'], color='FFFFFFFF')
