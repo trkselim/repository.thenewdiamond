@@ -63,7 +63,7 @@ def get_tmdb_window(window_type):
 			self.sort = kwargs.get('sort', 'popularity')
 			self.sort_label = kwargs.get('sort_label', 'Popularity')
 			self.order = kwargs.get('order', 'desc')
-			xbmc.log(str(self.filters)+'===>PHIL', level=xbmc.LOGINFO)
+
 			if self.listitem_list:
 				self.listitems = Utils.create_listitems(self.listitem_list)
 				self.total_items = len(self.listitem_list)
