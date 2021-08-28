@@ -94,6 +94,15 @@ def get_movie_window(window_type):
 		def open_actor_info(self):
 			wm.open_actor_info(prev_window=self, actor_id=self.listitem.getProperty('id'))
 
+		@ch.action('contextmenu', 750)
+		@ch.action('contextmenu', 1000)
+		def actor_context_menu(self):
+			listitems = ['Search Person']
+			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			if selection == 0:
+				self.close()
+				xbmc.executebuiltin('RunScript(script.diamondinfo,info=search_person,person=%s)' % self.listitem.getLabel())
+			
 		@ch.action('contextmenu', 150)
 		@ch.action('contextmenu', 250)
 		def context_menu(self):
@@ -113,10 +122,12 @@ def get_movie_window(window_type):
 				listitems = ['Play - TMDB Helper ']
 			else:
 				listitems = ['Play - TMDB Helper']
+				item_1 = True
+
 			listitems += ['Search item']
 			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
 			Utils.hide_busy()
-			if selection == 0:
+			if selection == 0 and item_1 == True:
 				if self.type == 'tv':
 					url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;tmdb_id=%s&amp;type=episode&amp;season=%s&amp;episode=%s' % (item_id, self.listitem.getProperty('season'), self.listitem.getProperty('episode'))
 				else:
@@ -126,7 +137,7 @@ def get_movie_window(window_type):
 			if selection == 1:
 				import urllib
 				item_title = self.listitem.getProperty('TVShowTitle') or self.listitem.getProperty('Title')
-				item_title = urllib.parse.quote_plus(item_title)
+				#item_title = urllib.parse.quote_plus(item_title)
 #				xbmc.executebuiltin('RunPlugin(plugin://script.extendedinfo/?info=search_string&str=%s' % item_title)
 #				xbmc.log(str('RunPlugin(plugin://script.extendedinfo/?info=search_string&str=%s)' % item_title)+'===>TMDB_HELPER_3', level=xbmc.LOGNOTICE)
 				self.close()
@@ -206,9 +217,23 @@ def get_movie_window(window_type):
 				url = ''
 				PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=dbid)
 			else:
-				#url = 'plugin://plugin.video.diamondplayer/movies/play/tmdb/%s' % self.info.get('id', '')
+				
+				#wm.add_to_stack(self)
+				##url = 'plugin://plugin.video.diamondplayer/movies/play/tmdb/%s' % self.info.get('id', '')
 				url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=movie&amp;tmdb_id=%s' % self.info.get('id', '')
-				xbmc.executebuiltin('RunPlugin(%s)' % url)
+				#PLAYER.play_from_button(url, listitem=None, window=self)
+				xbmc.executebuiltin('Dialog.Close(busydialog)')
+				PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=0)
+				#self.close()
+				#xbmc.executebuiltin('Dialog.Close(movieinformation)')
+				#xbmc.executebuiltin('Dialog.Close(all,true)')
+				#xbmc.executebuiltin('RunPlugin(%s)' % url)
+				#xbmcgui.Window(10000).clearProperty('infodialogs.active')
+				#xbmcgui.Window(10000).clearProperty('diamondinfo_running')
+				#PLAYER.wait_for_video_end()
+				#xbmcgui.Window(10000).setProperty('diamondinfo_running', 'True')
+				#xbmcgui.Window(10000).setProperty('infodialogs.active', 'true')
+				#return wm.pop_stack()
 
 		@ch.action('contextmenu', 8)
 		def play_movie_choose_player(self):

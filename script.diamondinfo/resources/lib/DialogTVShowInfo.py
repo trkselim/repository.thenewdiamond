@@ -98,6 +98,15 @@ def get_tvshow_window(window_type):
 			if selection == 1:
 				self.open_credit_dialog(self.listitem.getProperty('credit_id'))
 
+		@ch.action('contextmenu', 750)
+		@ch.action('contextmenu', 1000)
+		def actor_context_menu(self):
+			listitems = ['Search Person']
+			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			if selection == 0:
+				self.close()
+				xbmc.executebuiltin('RunScript(script.diamondinfo,info=search_person,person=%s)' % self.listitem.getLabel())
+
 		@ch.click(150)
 		def open_tvshow_dialog(self):
 			wm.open_tvshow_info(prev_window=self, tmdb_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'))
@@ -106,6 +115,15 @@ def get_tvshow_window(window_type):
 		def open_season_dialog(self):
 			wm.open_season_info(prev_window=self, tvshow_id=self.info['id'], season=self.listitem.getProperty('season'), tvshow=self.info['title'])
 
+		@ch.action('contextmenu', 250)
+		def season_context_menu(self):
+			listitems = ['Play Season']
+			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			if selection == 0:
+				self.close()
+				url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=%s&amp;season=1&amp;episode=1' % self.info['id']
+				xbmc.executebuiltin('RunPlugin(%s)' % url)
+
 		@ch.click(550)
 		def open_company_info(self):
 			filters = [
@@ -113,7 +131,7 @@ def get_tvshow_window(window_type):
 					'id': self.listitem.getProperty('id'),
 					'type': 'with_companies',
 					'typelabel': 'Studios',
-					'label': self.listitem.getLabel().decode('utf-8')
+					'label': self.listitem.getLabel()#.decode('utf-8')
 				}]
 			wm.open_video_list(prev_window=self, filters=filters)
 
@@ -124,7 +142,7 @@ def get_tvshow_window(window_type):
 					'id': self.listitem.getProperty('id'),
 					'type': 'with_genres',
 					'typelabel': 'Genres',
-					'label': self.listitem.getLabel().decode('utf-8')
+					'label': self.listitem.getLabel()#.decode('utf-8')
 				}]
 			wm.open_video_list(prev_window=self, filters=filters, media_type='tv')
 
@@ -135,7 +153,7 @@ def get_tvshow_window(window_type):
 					'id': self.listitem.getProperty('id'),
 					'type': 'with_networks',
 					'typelabel': 'Networks',
-					'label': self.listitem.getLabel().decode('utf-8')
+					'label': self.listitem.getLabel()#.decode('utf-8')
 				}]
 			wm.open_video_list(prev_window=self, filters=filters, media_type='tv')
 

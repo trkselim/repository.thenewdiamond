@@ -74,6 +74,15 @@ def get_season_window(window_type):
 		def open_actor_info(self):
 			wm.open_actor_info(prev_window=self, actor_id=self.listitem.getProperty('id'))
 
+		@ch.action('contextmenu', 750)
+		@ch.action('contextmenu', 1000)
+		def actor_context_menu(self):
+			listitems = ['Search Person']
+			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			if selection == 0:
+				self.close()
+				xbmc.executebuiltin('RunScript(script.diamondinfo,info=search_person,person=%s)' % self.listitem.getLabel())
+
 		@ch.click(2000)
 		def open_episode_info(self):
 			wm.open_episode_info(prev_window=self, tvshow=self.info['TVShowTitle'], tvshow_id=self.tvshow_id, season=self.listitem.getProperty('season'), episode=self.listitem.getProperty('episode'))
@@ -92,7 +101,9 @@ def get_season_window(window_type):
 			imdb_id = Utils.fetch(TheMovieDB.get_tvshow_ids(self.tvshow_id), 'imdb_id')
 			tvdb_id = Utils.fetch(TheMovieDB.get_tvshow_ids(self.tvshow_id), 'tvdb_id')
 			listitems = ['Play - TMDB Helper']
+			listitems += ['TV Show Info']
 			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			Utils.hide_busy()
 			if selection == 0:
 				url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;tmdb_id=%s&amp;type=episode&amp;season=%s&amp;episode=%s' % (self.tvshow_id, self.listitem.getProperty('season'), episode_id)
 #				xbmc.log(str(self.data)+'===>OPENINFO', level=xbmc.LOGNOTICE)
@@ -102,7 +113,8 @@ def get_season_window(window_type):
 #				xbmc.executebuiltin('RunPlugin(%s)' % url)
 #				xbmc.log(str(url)+'===>OPENINFO', level=xbmc.LOGNOTICE)
 				PLAYER.play_from_button(url, listitem=None, window=self)
-#			Utils.hide_busy()
+			if selection == 1:
+				wm.open_tvshow_info(prev_window=self, tmdb_id=self.tvshow_id, dbid=0)
 
 		@ch.click(10)
 		def play_season(self):
