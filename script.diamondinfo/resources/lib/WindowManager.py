@@ -62,7 +62,16 @@ class WindowManager(object):
 		elif dbid:
 			tvdb_id = get_imdb_id_from_db(media_type='tvshow', dbid=dbid)
 			if tvdb_id:
-				tmdb_id = get_show_tmdb_id(tvdb_id)
+				try:
+					tmdb_id = get_show_tmdb_id(tvdb_id)
+				except IndexError:
+					if name:
+						tmdb_id = search_media(media_name=name, year='', media_type='tv')
+					else:
+						name = xbmc.getInfoLabel('listitem.TvShowTitle')
+						if str(name) != '':
+							name = xbmc.getInfoLabel('listitem.Label')
+						tmdb_id = search_media(media_name=name, year='', media_type='tv')
 		elif name:
 			tmdb_id = search_media(media_name=name, year='', media_type='tv')
 		tvshow_class = get_tvshow_window(DialogXML)
