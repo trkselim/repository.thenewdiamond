@@ -1,9 +1,10 @@
 {
 	"imdb_list" : [
-		{"ls020525837" : "Marvel"},
-		{"ls068561553" : "Disney"},
-		{"ls026465600" : "X-Men"},
+		{"ls020525837" : "Marvel movies in chronological order"},
+		{"ls068561553" : "Disney Movies - Complete List"},
+		{"ls026465600" : "X-Men - In Order"},
+		{"ls027138048" : "Best Sci-Fi Movies!"},
 		{"ls091520106" : "Top 100 Movies Bucket List"},
-		{"ls069203520" : "*** Best Crime Films ***"}
+		{"ls069203520" : "*** Best Crime Films ***"},
 		]
 }
