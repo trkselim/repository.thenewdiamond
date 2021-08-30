@@ -2,9 +2,9 @@ import os, re, time, json, urllib.request, urllib.parse, urllib.error, hashlib, 
 import xbmc, xbmcgui, xbmcvfs, xbmcaddon, xbmcplugin
 from functools import wraps
 
-ADDON_PATH = xbmc.translatePath('special://home/addons/script.diamondinfo')
-ADDON_DATA_PATH = xbmc.translatePath('special://profile/addon_data/script.diamondinfo')
-IMAGES_DATA_PATH = xbmc.translatePath('special://profile/addon_data/script.diamondinfo/images')
+ADDON_PATH = xbmcvfs.translatePath('special://home/addons/script.diamondinfo')
+ADDON_DATA_PATH = xbmcvfs.translatePath('special://profile/addon_data/script.diamondinfo')
+IMAGES_DATA_PATH = xbmcvfs.translatePath('special://profile/addon_data/script.diamondinfo/images')
 SKIN_DIR = xbmc.getSkinDir()
 AUTOPLAY_TRAILER = xbmcaddon.Addon().getSetting('autoplay_trailer')
 NETFLIX_VIEW = xbmcaddon.Addon().getSetting('netflix_view')
@@ -43,7 +43,7 @@ def run_async(func):
 	return async_func
 
 def translate_path(*args):
-	return xbmc.translatePath(os.path.join(*args))
+	return xbmcvfs.translatePath(os.path.join(*args))
 
 def after_add(type=False):
 	basepath = os.path.join(ADDON_DATA_PATH, 'TheMovieDB')

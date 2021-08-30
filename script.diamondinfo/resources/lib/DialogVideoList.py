@@ -1,5 +1,5 @@
 import os, shutil, urllib.request, urllib.parse, urllib.error
-import xbmc, xbmcgui, xbmcaddon
+import xbmc, xbmcgui, xbmcaddon, xbmcvfs
 from resources.lib import Utils
 from resources.lib import TheMovieDB
 from resources.lib.WindowManager import wm
@@ -155,8 +155,8 @@ def get_tmdb_window(window_type):
 					TVLibrary = xbmcaddon.Addon('plugin.video.diamondplayer').getSetting('tv_library_folder')
 					if self.listitem.getProperty('dbid'):
 						Utils.get_kodi_json(method='VideoLibrary.RemoveTVShow', params='{"tvshowid": %s}' % dbid)
-						if os.path.exists(xbmc.translatePath('%s%s/' % (TVLibrary, tvdb_id))):
-							shutil.rmtree(xbmc.translatePath('%s%s/' % (TVLibrary, tvdb_id)))
+						if os.path.exists(xbmcvfs.translatePath('%s%s/' % (TVLibrary, tvdb_id))):
+							shutil.rmtree(xbmcvfs.translatePath('%s%s/' % (TVLibrary, tvdb_id)))
 							Utils.after_add(type='tv')
 							Utils.notify(header='[B]%s[/B]' % self.listitem.getProperty('TVShowTitle'), message='Removed from library', icon=self.listitem.getProperty('poster'), time=5000, sound=False)
 							xbmc.sleep(250)
@@ -172,8 +172,8 @@ def get_tmdb_window(window_type):
 						if xbmcgui.Dialog().yesno('diamondinfo', 'Remove [B]%s[/B] from library?' % self.listitem.getProperty('title')):
 							Utils.get_kodi_json(method='VideoLibrary.RemoveMovie', params='{"movieid": %s}' % dbid)
 							MovieLibrary = xbmcaddon.Addon('plugin.video.diamondplayer').getSetting('movies_library_folder')
-							if os.path.exists(xbmc.translatePath('%s%s/' % (MovieLibrary, imdb_id))):
-								shutil.rmtree(xbmc.translatePath('%s%s/' % (MovieLibrary, imdb_id)))
+							if os.path.exists(xbmcvfs.translatePath('%s%s/' % (MovieLibrary, imdb_id))):
+								shutil.rmtree(xbmcvfs.translatePath('%s%s/' % (MovieLibrary, imdb_id)))
 								Utils.after_add(type='movie')
 								Utils.notify(header='[B]%s[/B]' % self.listitem.getProperty('title'), message='Removed from library', icon=self.listitem.getProperty('poster'), time=5000, sound=False)
 								xbmc.sleep(250)
@@ -361,6 +361,7 @@ def get_tmdb_window(window_type):
 		@ch.click(5009)
 		def set_keyword_filter(self):
 			result = xbmcgui.Dialog().input(heading='Enter search string', type=xbmcgui.INPUT_ALPHANUM)
+			xbmc.log(str(result)+'===>PHIL', level=xbmc.LOGINFO)
 			if not result or result == -1:
 				return None
 			response = TheMovieDB.get_keyword_id(result)
@@ -407,6 +408,44 @@ def get_tmdb_window(window_type):
 			self.page = 1
 			self.update()
 
+		@ch.click(5014)
+		def get_IMDB_Lists(self):
+			#xbmc.log(str('get_IMDB_Lists')+'===>PHIL', level=xbmc.LOGINFO)
+			import json
+			file_path = xbmcvfs.translatePath(xbmcaddon.Addon().getAddonInfo('path'))
+			json_file = open(file_path + 'imdb_list.json')
+			data = json.load(json_file)
+			json_file.close()
+			import requests
+			try:
+				data = requests.get('https://bit.ly/2WABGMg').json()
+			except:
+				pass
+			#https://raw.githubusercontent.com/henryjfry/repository.thenewdiamond/main/imdb_list.json
+			listitems = []
+			imdb_list = []
+			imdb_list_name = []
+			for i in data['imdb_list']:
+				list_name = (i[str(list(i)).replace('[\'','').replace('\']','')])
+				list_number = (str(list(i)).replace('[\'','').replace('\']',''))
+				imdb_list.append(list_number)
+				imdb_list_name.append(list_name)
+				listitems += [list_name]
+			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			xbmc.log(str(selection)+'===>PHIL', level=xbmc.LOGINFO)
+			if selection == -1:
+				return
+			self.mode = 'imdb'
+			Utils.show_busy()
+			from imdb import IMDb, IMDbError
+			ia = IMDb()
+			#xbmc.log(str(list_str)+'===>PHIL', level=xbmc.LOGINFO)
+			self.search_str = ia.get_movie_list(imdb_list[selection])
+			self.filter_label = 'Results for:  ' + imdb_list_name[selection]
+			self.fetch_data()
+			Utils.hide_busy()
+			self.update()
+
 		def fetch_data(self, force=False):
 			sort_by = self.sort + '.' + self.order
 			if self.type == 'tv':
@@ -417,6 +456,7 @@ def get_tmdb_window(window_type):
 				temp = 'movies'
 				rated = 'Rated movies'
 				starred = 'Starred movies'
+
 			if self.mode == 'search':
 				url = 'search/multi?query=%s&page=%i&include_adult=%s&' % (urllib.parse.quote_plus(self.search_str), self.page, xbmcaddon.Addon().getSetting('include_adults'))
 				if self.search_str:
@@ -425,6 +465,40 @@ def get_tmdb_window(window_type):
 					self.filter_label = ''
 			elif self.mode == 'list':
 				url = 'list/%s?language=%s&' % (str(self.list_id), xbmcaddon.Addon().getSetting('LanguageID'))
+			elif self.mode == 'imdb':
+				movies = self.search_str
+				#xbmc.log(str(movies)+'===>PHIL', level=xbmc.LOGINFO)
+				x = 0
+				y = 0
+				page = int(self.page)
+				listitems = None
+				for i in str(movies).split(', <'):
+					if x + 1 <= page * 20 and x + 1 > (page - 1) *  20:
+						imdb_id = str('tt' + i.split(':')[1].split('[http]')[0])
+						movie_title = str(i.split(':_')[1].split('_>')[0])
+						response = TheMovieDB.get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 0.3)
+						try:
+							response['movie_results'][0]['media_type'] = 'movie'
+							if listitems == None:
+								listitems = TheMovieDB.handle_tmdb_multi_search(response['movie_results'])
+							else:
+								listitems += TheMovieDB.handle_tmdb_multi_search(response['movie_results'])
+							x = x + 1
+						except:
+							xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
+							continue
+					else:
+						x = x + 1
+				
+				#response['total_pages'] = y 
+				response['total_pages'] = int(x/20) + (1 if x % 20 > 0 else 0)
+				response['total_results'] = x
+				info = {
+					'listitems': listitems,
+					'results_per_page': response['total_pages'],
+					'total_results': response['total_results']
+					}
+				return info
 			else:
 				self.set_filter_url()
 				self.set_filter_label()

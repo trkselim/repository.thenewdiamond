@@ -1,5 +1,5 @@
 import os, shutil
-import xbmc, xbmcgui
+import xbmc, xbmcgui, xbmcvfs
 from resources.lib import Utils
 from resources.lib import ImageTools
 from resources.lib import TheMovieDB
@@ -202,9 +202,9 @@ def get_tvshow_window(window_type):
 			if not xbmc.getCondVisibility('System.HasAddon(plugin.video.diamondplayer)'):
 				xbmc.executebuiltin('RunPlugin(plugin://plugin.video.diamondplayer/setup/total)')
 			if xbmcgui.Dialog().yesno('diamondinfo', 'Remove [B]%s[/B] from library?' % self.info['TVShowTitle']):
-				if os.path.exists(xbmc.translatePath('%s%s/' % (Utils.DIAMONDPLAYER_TV_FOLDER, self.info['tvdb_id']))):
+				if os.path.exists(xbmcvfs.translatePath('%s%s/' % (Utils.DIAMONDPLAYER_TV_FOLDER, self.info['tvdb_id']))):
 					Utils.get_kodi_json(method='VideoLibrary.RemoveTVShow', params='{"tvshowid": %s}' % int(self.info['dbid']))
-					shutil.rmtree(xbmc.translatePath('%s%s/' % (Utils.DIAMONDPLAYER_TV_FOLDER, self.info['tvdb_id'])))
+					shutil.rmtree(xbmcvfs.translatePath('%s%s/' % (Utils.DIAMONDPLAYER_TV_FOLDER, self.info['tvdb_id'])))
 					Utils.after_add(type='tv')
 					Utils.notify(header='Removed [B]%s[/B] from library' % self.info['TVShowTitle'], message='Exit & re-enter to refresh', icon=self.info['poster'], time=5000, sound=False)
 

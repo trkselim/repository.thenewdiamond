@@ -6,7 +6,7 @@ from resources.lib import Utils
 def filter_image(input_img, radius=25):
 	if not xbmcvfs.exists(os.path.join(Utils.IMAGES_DATA_PATH)):
 		xbmcvfs.mkdir(os.path.join(Utils.IMAGES_DATA_PATH))
-	input_img = xbmc.translatePath(input_img.encode('utf-8')).replace('image://', '')
+	input_img = xbmcvfs.translatePath(input_img.encode('utf-8')).replace('image://', '')
 	if input_img.endswith('/'):
 		input_img = input_img[:-1]
 	cachedthumb = xbmc.getCacheThumbName(input_img)
@@ -22,11 +22,11 @@ def filter_image(input_img, radius=25):
 			try:
 				if xbmcvfs.exists(xbmc_cache_file):
 					Utils.log('image already in Kodi cache: ' + xbmc_cache_file)
-					img = Image.open(xbmc.translatePath(xbmc_cache_file))
+					img = Image.open(xbmcvfs.translatePath(xbmc_cache_file))
 					break
 				elif xbmcvfs.exists(xbmc_vid_cache_file):
 					Utils.log('image already in Kodi video cache: ' + xbmc_vid_cache_file)
-					img = Image.open(xbmc.translatePath(xbmc_vid_cache_file))
+					img = Image.open(xbmcvfs.translatePath(xbmc_vid_cache_file))
 					break
 				else:
 					xbmcvfs.copy(str(input_img, 'utf-8', errors='ignore'), targetfile)

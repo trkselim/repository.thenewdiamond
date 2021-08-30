@@ -16,6 +16,8 @@ class Main:
 				xbmcplugin.setContent(self.handle, 'tvshows')
 			elif info.endswith('movies'):
 				xbmcplugin.setContent(self.handle, 'movies')
+			elif 'imdb_list' in str(info):
+				xbmcplugin.setContent(self.handle, 'movies')
 			else:
 				xbmcplugin.setContent(self.handle, 'addons')
 			Utils.pass_list_to_skin(name=info, data=listitems, prefix=self.params.get('prefix', ''), handle=self.handle, limit=self.params.get('limit', 20))
@@ -37,6 +39,34 @@ class Main:
 				('alltvshows', 'All TV Shows'),
 				('search_menu', 'Search...')
 				]
+			import json,xbmcaddon,xbmcvfs
+			file_path = xbmcvfs.translatePath(xbmcaddon.Addon().getAddonInfo('path'))
+			json_file = open(file_path + 'imdb_list.json')
+			data = json.load(json_file)
+			json_file.close()
+			import requests
+			try:
+				data = requests.get('https://bit.ly/2WABGMg').json()
+			except:
+				pass
+			#https://raw.githubusercontent.com/henryjfry/repository.thenewdiamond/main/imdb_list.json
+			#https://raw.githubusercontent.com/henryjfry/repository.thenewdiamond/main/imdb_list.json
+
+			NoFolder_items2 = [
+				('allmovies', 'All Movies'),
+				('alltvshows', 'All TV Shows'),
+				]
+			for i in data['imdb_list']:
+				list_name = (i[str(list(i)).replace('[\'','').replace('\']','')])
+				list_number = (str(list(i)).replace('[\'','').replace('\']',''))
+				new_list = ('imdb_list', [list_name, list_number])
+				NoFolder_items2.append(new_list)
+			NoFolder_items2.append(('search_menu', 'Search...'))
+			#xbmc.log(str(NoFolder_items2)+'===>PHIL', level=xbmc.LOGINFO)
+			
+			xbmc.log(str(file_path)+'===>PHIL', level=xbmc.LOGINFO)
+			NoFolder_items = NoFolder_items2
+
 			xbmcplugin.setContent(self.handle, 'addons')
 			for key, value in items:
 				thumb_path  = 'special://home/addons/script.diamondinfo/resources/skins/Default/media/tmdb/thumb.png'
@@ -49,9 +79,16 @@ class Main:
 				thumb_path  = 'special://home/addons/script.diamondinfo/resources/skins/Default/media/tmdb/thumb.png'
 				fanart_path = 'special://home/addons/script.diamondinfo/resources/skins/Default/media/tmdb/fanart.jpg'
 				url = 'plugin://script.diamondinfo?info=%s' % key
-				li = xbmcgui.ListItem(label=value)
+				if key == 'imdb_list':
+					url = 'plugin://script.diamondinfo?info=imdb_list&script=False&list=%s' % value[1]
+					#xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
+					li = xbmcgui.ListItem(label=value[0])
+					isFolder = True
+				else:
+					li = xbmcgui.ListItem(label=value)
+					isFolder = False
 				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
-				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=False)
+				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=isFolder)
 			xbmcplugin.endOfDirectory(self.handle)
 		xbmcgui.Window(10000).clearProperty('diamondinfo_running')
 

@@ -25,6 +25,7 @@
 			</item>
 		</menu>
 	</extension>
+	<extension point="xbmc.service" library="service2.py"  start="login"/>
 	<extension point="xbmc.addon.metadata">
 		<reuselanguageinvoker>false</reuselanguageinvoker>
 		<platform>all</platform>

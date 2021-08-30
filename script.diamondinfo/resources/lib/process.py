@@ -51,6 +51,76 @@ def start_info_actions(infos, params):
 			search_str = xbmcgui.Dialog().input(heading='Enter search string', type=xbmcgui.INPUT_ALPHANUM)
 			return wm.open_video_list(search_str=search_str, mode='search')
 
+		elif info == 'phil_library':
+			from resources.lib import library
+			import time
+			#xbmc.log(str(library.tmdb_settings_path())+'tmdb_settings===>PHIL', level=xbmc.LOGINFO)
+			#xbmc.log(str(library.main_file_path())+'file_path===>PHIL', level=xbmc.LOGINFO)
+			#xbmc.log(str(library.tmdb_traktapi_path())+'tmdb_traktapi===>PHIL', level=xbmc.LOGINFO)
+			#xbmc.log(str(library.tmdb_traktapi_new_path())+'tmdb_traktapi_new===>PHIL', level=xbmc.LOGINFO)
+			#xbmc.log(str(library.basedir_tv_path())+'basedir_tv===>PHIL', level=xbmc.LOGINFO)
+			#xbmc.log(str(library.basedir_movies_path())+'basedir_movies===>PHIL', level=xbmc.LOGINFO)
+			#xbmc.log(str(library.db_path())+'db_path===>PHIL', level=xbmc.LOGINFO)
+			#xbmc.log(str(library.icon_path())+'icon_path===>PHIL', level=xbmc.LOGINFO)
+			#xbmc.log(str(library.tmdb_api_key())+'tmdb_api===>PHIL', level=xbmc.LOGINFO)
+			#xbmc.log(str(library.fanart_api_key())+'fanart_api===>PHIL', level=xbmc.LOGINFO)
+			#return
+			icon_path = library.icon_path()
+			if not xbmc.Player().isPlaying():
+				xbmcgui.Dialog().notification(heading='Startup Tasks', message='TRAKT_SYNC', icon=icon_path,time=1000,sound=False)
+			library.library_auto_movie()
+			library.library_auto_tv()
+			xbmc.log(str('refresh_recently_added')+'===>PHIL', level=xbmc.LOGFATAL)
+			library.refresh_recently_added()
+			xbmc.log(str('trakt_calendar_list')+'===>PHIL', level=xbmc.LOGFATAL)
+			if not xbmc.Player().isPlaying():
+				xbmcgui.Dialog().notification(heading='Startup Tasks', message='trakt_calendar_list', icon=icon_path,time=1000,sound=False)
+			library.trakt_calendar_list()
+			if not xbmc.Player().isPlaying():
+				xbmcgui.Dialog().notification(heading='Startup Tasks', message='Startup Complete!', icon=icon_path, time=1000,sound=False)
+			#xbmc.log(str('UPDATE_WIDGETS')+'===>PHIL', level=xbmc.LOGFATAL)
+			#if not xbmc.Player().isPlaying():
+			#	xbmc.executebuiltin('UpdateLibrary(video,widget_refresh,true)')
+			xbmc.log(str('UpdateLibrary_MOVIES')+'===>PHIL', level=xbmc.LOGFATAL)
+			xbmc.executebuiltin('UpdateLibrary(video, {})'.format(library.basedir_movies_path()))
+			xbmc.log(str('UpdateLibrary_TV')+'===>PHIL', level=xbmc.LOGFATAL)
+			xbmc.executebuiltin('UpdateLibrary(video, {})'.format(library.basedir_tv_path()))
+
+			time_since_up = time.monotonic()
+			if not xbmc.Player().isPlaying():
+				try:
+					if time_since_up > 600:
+						#print('NOW')
+						hours_since_up = int((time_since_up)/60/60)
+						xbmc.log(str(hours_since_up)+str('=multiple of 8 hours=')+ str(hours_since_up % 8 == 0)+'=hours_since_up===>PHIL', level=xbmc.LOGINFO)
+						if hours_since_up >=1:
+							xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
+				except:
+					if time_since_up > 600:
+						#print('NOW')
+						hours_since_up = int((time_since_up)/60/60)
+						xbmc.log(str(hours_since_up)+str('=multiple of 8 hours=')+ str(hours_since_up % 8 == 0)+'=hours_since_up===>PHIL', level=xbmc.LOGINFO)
+						if hours_since_up >=1:
+							xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
+			#xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
+
+		elif info == 'imdb_list':
+			try:
+				list_script = str(params['script'])
+			except:
+				list_script = 'True'
+			list_str = str(params['list'])
+			Utils.show_busy()
+			if list_script == 'False':
+				return TheMovieDB.get_imdb_list(list_str)
+			#xbmc.log(str('get_imdb_list')+'===>PHIL', level=xbmc.LOGINFO)
+			from imdb import IMDb, IMDbError
+			ia = IMDb()
+			#xbmc.log(str(list_str)+'===>PHIL', level=xbmc.LOGINFO)
+			movies = ia.get_movie_list(list_str)
+			wm.open_video_list(mode='imdb', listitems=[], search_str=movies)
+			return
+
 		elif info == 'search_string':
 			search_str = params['str']
 			return wm.open_video_list(search_str=search_str, mode='search')
