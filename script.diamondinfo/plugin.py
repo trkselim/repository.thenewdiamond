@@ -68,9 +68,7 @@ class Main:
 				new_list = ('imdb_list', [list_name, list_number])
 				NoFolder_items2.append(new_list)
 			NoFolder_items2.append(('search_menu', 'Search...'))
-			#xbmc.log(str(NoFolder_items2)+'===>PHIL', level=xbmc.LOGINFO)
-			
-			xbmc.log(str(file_path)+'===>PHIL', level=xbmc.LOGINFO)
+
 			NoFolder_items = NoFolder_items2
 
 			xbmcplugin.setContent(self.handle, 'addons')
@@ -99,11 +97,12 @@ class Main:
 				thumb_path  = 'special://home/addons/script.diamondinfo/resources/skins/Default/media/tmdb/thumb.png'
 				fanart_path = 'special://home/addons/script.diamondinfo/resources/skins/Default/media/tmdb/fanart.jpg'
 				script = 'False'
-				if value = 'Trakt Watched Movies' or value = 'Trakt Collection Movies':
+				if value == 'Trakt Watched Movies' or value == 'Trakt Collection Movies':
 					trakt_type = 'movie'
-				elif value = 'Trakt Watched TV' or value = 'Trakt Collection TV':
+				elif value == 'Trakt Watched TV' or value == 'Trakt Collection TV':
 					trakt_type = 'tv'
-				url = 'plugin://script.diamondinfo?info=%s&script=False&trakt_type=%s' % key, trakt_type
+				#url = 'plugin://script.diamondinfo?info=%s&script=False&trakt_type=%s' % key, trakt_type
+				url = 'plugin://script.diamondinfo?info='+str(key)+'&script=False&trakt_type=' +str(trakt_type)
 				li = xbmcgui.ListItem(label=value)
 				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
 				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=True)

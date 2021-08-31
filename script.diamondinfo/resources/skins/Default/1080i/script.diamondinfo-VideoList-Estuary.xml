@@ -424,6 +424,7 @@
 					<align>right</align>
 					<textcolor>FFFFFFFF</textcolor>
 					<label>$INFO[Window.Property(TotalItems),[COLOR FF999999]Items:[/COLOR] ]$INFO[Window.Property(CurrentPage),[COLOR FF999999] - Page: [/COLOR]]$INFO[Window.Property(TotalPages), / ]</label>
+					<visible>![ Window.IsActive(notification) | Window.IsActive(volumebar) | Control.IsVisible(881)| Window.IsActive(extendedprogressdialog) | Control.IsVisible(77551) | Control.IsVisible(88888) | Control.IsVisible(88883)]</visible>
 				</control>
 				<control type="label">
 					<posx>470</posx>

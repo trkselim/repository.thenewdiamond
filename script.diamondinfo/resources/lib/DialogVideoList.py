@@ -488,7 +488,9 @@ def get_tmdb_window(window_type):
 			Utils.hide_busy()
 			self.update()
 
-		def reload_trakt():
+		def reload_trakt(self):
+			from resources.lib import library
+			xbmc.log(str('reload_trakt')+'===>PHIL', level=xbmc.LOGINFO)
 			if 'Trakt Watched Movies' in str(self.filter_label):
 				self.search_str = library.trakt_watched_movies()
 			if 'Trakt Watched Shows' in str(self.filter_label):

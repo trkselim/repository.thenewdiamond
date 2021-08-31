@@ -105,6 +105,7 @@ def start_info_actions(infos, params):
 			#xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
 
 		elif info == 'trakt_watched' or info == 'trakt_coll':
+			from resources.lib import library
 		#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_watched&trakt_type=movie&script=True)'
 		#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_watched&trakt_type=tv&script=True)'
 		#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_coll&trakt_type=movie&script=True)'
@@ -116,15 +117,15 @@ def start_info_actions(infos, params):
 			except:
 				trakt_script = 'True'
 			if trakt_script == 'False':
-				return TheMovieDB.get_trakt(trakt_type,info)
+				return TheMovieDB.get_trakt(trakt_type=trakt_type,info=info)
 			else:
-				if info == 'trakt_watched' and trakt_type = 'movie':
+				if info == 'trakt_watched' and trakt_type == 'movie':
 					movies = library.trakt_watched_movies()
-				elif info == 'trakt_watched' and trakt_type = 'tv':
+				elif info == 'trakt_watched' and trakt_type == 'tv':
 					movies = library.trakt_watched_tv_shows()
-				elif info == 'trakt_coll' and trakt_type = 'movie':
+				elif info == 'trakt_coll' and trakt_type == 'movie':
 					movies = library.trakt_collection_movies()
-				elif info == 'trakt_coll' and trakt_type = 'tv':
+				elif info == 'trakt_coll' and trakt_type == 'tv':
 					movies = library.trakt_collection_shows()
 				return wm.open_video_list(mode='trakt', listitems=[], search_str=movies)
 
