@@ -490,6 +490,10 @@ def trakt_collection_movies():
 	#for i in response:
 	#	i['movie']['title']
 	#	i['movie']['ids']['tmdb']
+	new_list = []
+	for i in response:
+		new_list.append(i['movie'])
+	response = sorted(new_list , key=lambda k: k['title'], reverse=False)
 	return response
 
 def trakt_collection_shows():
@@ -502,6 +506,10 @@ def trakt_collection_shows():
 	#for i in response:
 	#	i['movie']['title']
 	#	i['movie']['ids']['tmdb']
+	new_list = []
+	for i in response:
+		new_list.append(i['show'])
+	response = sorted(new_list , key=lambda k: k['title'], reverse=False)
 	return response
 
 

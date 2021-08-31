@@ -538,9 +538,12 @@ def get_tmdb_window(window_type):
 				for i in movies:
 					if x + 1 <= page * 20 and x + 1 > (page - 1) *  20:
 						try:
-							imdb_id = i['movie']['ids']['imdb']
+							try:
+								imdb_id = i['movie']['ids']['imdb']
+							except:
+								imdb_id = i['show']['ids']['imdb']
 						except:
-							imdb_id = i['show']['ids']['imdb']
+							imdb_id = i['ids']['imdb']
 						response = TheMovieDB.get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 0.3)
 						result_type = False
 						try:
@@ -557,9 +560,7 @@ def get_tmdb_window(window_type):
 							x = x + 1
 					else:
 						x = x + 1
-				#xbmc.log(str(listitems)+'===>PHIL', level=xbmc.LOGINFO)
-				#xbmc.log(str(sort_by)+'===>PHIL', level=xbmc.LOGINFO)
-				response = sorted(response, key=lambda k: k['title'], reverse=false)
+
 				response['total_pages'] = int(x/20) + (1 if x % 20 > 0 else 0)
 				response['total_results'] = x
 				info = {
