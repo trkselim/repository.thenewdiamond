@@ -56,6 +56,12 @@ class Main:
 				('allmovies', 'All Movies'),
 				('alltvshows', 'All TV Shows'),
 				]
+			trakt_items = [
+				('trakt_watched', 'Trakt Watched Movies'),
+				('trakt_watched', 'Trakt Watched TV'),
+				('trakt_coll', 'Trakt Collection Movies'),
+				('trakt_coll', 'Trakt Collection TV'),
+			]
 			for i in data['imdb_list']:
 				list_name = (i[str(list(i)).replace('[\'','').replace('\']','')])
 				list_number = (str(list(i)).replace('[\'','').replace('\']',''))
@@ -89,6 +95,19 @@ class Main:
 					isFolder = False
 				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
 				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=isFolder)
+			for key, value in trakt_items:
+				thumb_path  = 'special://home/addons/script.diamondinfo/resources/skins/Default/media/tmdb/thumb.png'
+				fanart_path = 'special://home/addons/script.diamondinfo/resources/skins/Default/media/tmdb/fanart.jpg'
+				script = 'False'
+				if value = 'Trakt Watched Movies' or value = 'Trakt Collection Movies':
+					trakt_type = 'movie'
+				elif value = 'Trakt Watched TV' or value = 'Trakt Collection TV':
+					trakt_type = 'tv'
+				url = 'plugin://script.diamondinfo?info=%s&script=False&trakt_type=%s' % key, trakt_type
+				li = xbmcgui.ListItem(label=value)
+				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
+				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=True)
+			
 			xbmcplugin.endOfDirectory(self.handle)
 		xbmcgui.Window(10000).clearProperty('diamondinfo_running')
 

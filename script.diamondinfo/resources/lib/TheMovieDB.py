@@ -810,7 +810,49 @@ def get_imdb_list(list_str=None):
 		#break
 	#xbmc.log(str(listitems)+'===>PHIL', level=xbmc.LOGINFO)
 	return listitems
-		
+
+def get_trakt(trakt_type=None,info=None):
+	if trakt_type == 'movie':
+		if info == 'trakt_watched':
+			movies = library.trakt_watched_movies()
+			self.type = 'movie'
+		if info == 'trakt_coll':
+			movies = library.trakt_collection_movies()
+			self.type = 'movie'
+	else:
+		if info == 'trakt_watched':
+			movies = library.trakt_watched_tv_shows()
+			self.type = 'tv'
+		if info == 'trakt_coll':
+			movies = library.trakt_collection_shows()
+			self.type = 'tv'
+
+	listitems = None
+	#xbmc.log(str(movies)+'===>PHIL', level=xbmc.LOGINFO)
+	for i in movies:
+		try:
+			try:
+				imdb_id = i['movie']['ids']['imdb']
+			except:
+				imdb_id = i['show']['ids']['imdb']
+		except:
+			imdb_id = i['ids']['imdb']
+		response = TheMovieDB.get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 0.3)
+		result_type = False
+		try:
+			response['movie_results'][0]['media_type'] = 'movie'
+			result_type = 'movie_results'
+		except:
+			response['tv_results'][0]['media_type'] = 'tv'
+			result_type = 'tv_results'
+		if listitems == None and result_type != False:
+			listitems = TheMovieDB.handle_tmdb_multi_search(response[result_type])
+			x = x + 1
+		elif result_type != False:
+			listitems += TheMovieDB.handle_tmdb_multi_search(response[result_type])
+			x = x + 1
+	return listitems
+
 
 def get_person_movies(person_id):
 	response = get_tmdb_data('person/%s/credits?language=%s&' % (person_id, xbmcaddon.Addon().getSetting('LanguageID')), 14)

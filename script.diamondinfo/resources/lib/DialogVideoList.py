@@ -149,6 +149,7 @@ def get_tmdb_window(window_type):
 					url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=%s&amp;season=1&amp;episode=1' % tvdb_id
 					xbmc.executebuiltin('Dialog.Close(busydialog)')
 					PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
+					self.reload_trakt()
 				else:
 					if self.listitem.getProperty('dbid'):
 						dbid = self.listitem.getProperty('dbid')
@@ -159,6 +160,7 @@ def get_tmdb_window(window_type):
 						url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=movie&amp;tmdb_id=%s' % item_id
 					xbmc.executebuiltin('Dialog.Close(busydialog)')
 					PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=dbid)
+					self.reload_trakt()
 			#if selection == 1:
 			if selection_text == 'Remove from library' or selection_text == 'Add to library':
 				xbmcgui.Window(10000).setProperty('tmdbhelper_tvshow.poster', str(self.listitem.getProperty('poster')))
@@ -200,7 +202,8 @@ def get_tmdb_window(window_type):
 				from resources.lib import library
 				url = library.next_episode_show(tmdb_id_num=item_id,dbid_num=dbid)
 				xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
-				PLAYER.play_from_button(url, listitem=None, window=self, dbid=dbid)
+				PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
+				self.reload_trakt()
 			##if (selection == 3 and self.type == 'tv' and int(dbid) > 0):
 			#if selection_text == 'Play Trakt Next Episode':
 			#	from resources.lib import library
@@ -212,12 +215,14 @@ def get_tmdb_window(window_type):
 				url = library.trakt_next_episode_normal(tmdb_id_num=item_id)
 				xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
 				PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
+				self.reload_trakt()
 			#if (selection == 3 and self.type == 'tv' and int(dbid) == 0):
 			if selection_text == 'Play Trakt Next Episode (Rewatch)':
 				from resources.lib import library
 				url = library.trakt_next_episode_rewatch(tmdb_id_num=item_id)
 				xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
 				PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
+				self.reload_trakt()
 			#2 (movie) #4 (TV+ DBID) #4 (TV + 0 DBID)
 			#if (selection == 2 and not self.type == 'tv') or (selection == 4 and self.type == 'tv' and int(dbid) > 0) or (selection == 4 and self.type == 'tv' and int(dbid) == 0):
 			if selection_text == 'Search item':
@@ -481,6 +486,16 @@ def get_tmdb_window(window_type):
 			self.filter_label = 'Results for:  ' + imdb_list_name[selection]
 			self.fetch_data()
 			Utils.hide_busy()
+			self.update()
+
+		def reload_trakt():
+			if 'Trakt Watched Movies' in str(self.filter_label):
+				self.search_str = library.trakt_watched_movies()
+			if 'Trakt Watched Shows' in str(self.filter_label):
+				self.search_str = library.trakt_watched_tv_shows()
+			else:
+				return
+			self.fetch_data()
 			self.update()
 
 		@ch.click(5015)
