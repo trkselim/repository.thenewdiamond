@@ -432,7 +432,6 @@ def get_tmdb_window(window_type):
 				imdb_list_name.append(list_name)
 				listitems += [list_name]
 			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
-			xbmc.log(str(selection)+'===>PHIL', level=xbmc.LOGINFO)
 			if selection == -1:
 				return
 			self.mode = 'imdb'
@@ -442,6 +441,38 @@ def get_tmdb_window(window_type):
 			#xbmc.log(str(list_str)+'===>PHIL', level=xbmc.LOGINFO)
 			self.search_str = ia.get_movie_list(imdb_list[selection])
 			self.filter_label = 'Results for:  ' + imdb_list_name[selection]
+			self.fetch_data()
+			Utils.hide_busy()
+			self.update()
+
+		@ch.click(5015)
+		def get_trakt_stuff(self):
+			listitems = []
+			xbmc.log(str('get_trakt_stuff')+'===>PHIL', level=xbmc.LOGINFO)
+			listitems = ['Trakt Watched Movies']
+			listitems += ['Trakt Watched Shows']
+			listitems += ['Trakt Collection Movies']
+			listitems += ['Trakt Collection Shows']
+			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			if selection == -1:
+				return
+			self.mode = 'trakt'
+			Utils.show_busy()
+			from resources.lib import library
+			#xbmc.log(str(list_str)+'===>PHIL', level=xbmc.LOGINFO)
+			if selection == 0:
+				self.search_str = library.trakt_watched_movies()
+				self.type = 'movie'
+			elif selection == 1:
+				self.search_str = library.trakt_watched_tv_shows()
+				self.type = 'tv'
+			elif selection == 2:
+				self.search_str = library.trakt_collection_movies()
+				self.type = 'movie'
+			elif selection == 3:
+				self.search_str = library.trakt_collection_shows()
+				self.type = 'tv'
+			self.filter_label = 'Results for:  ' + listitems[selection]
 			self.fetch_data()
 			Utils.hide_busy()
 			self.update()
@@ -491,6 +522,44 @@ def get_tmdb_window(window_type):
 						x = x + 1
 				
 				#response['total_pages'] = y 
+				response['total_pages'] = int(x/20) + (1 if x % 20 > 0 else 0)
+				response['total_results'] = x
+				info = {
+					'listitems': listitems,
+					'results_per_page': response['total_pages'],
+					'total_results': response['total_results']
+					}
+				return info
+			elif self.mode == 'trakt':
+				movies = self.search_str
+				x = 0
+				page = int(self.page)
+				listitems = None
+				for i in movies:
+					if x + 1 <= page * 20 and x + 1 > (page - 1) *  20:
+						try:
+							imdb_id = i['movie']['ids']['imdb']
+						except:
+							imdb_id = i['show']['ids']['imdb']
+						response = TheMovieDB.get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 0.3)
+						result_type = False
+						try:
+							response['movie_results'][0]['media_type'] = 'movie'
+							result_type = 'movie_results'
+						except:
+							response['tv_results'][0]['media_type'] = 'tv'
+							result_type = 'tv_results'
+						if listitems == None and result_type != False:
+							listitems = TheMovieDB.handle_tmdb_multi_search(response[result_type])
+							x = x + 1
+						elif result_type != False:
+							listitems += TheMovieDB.handle_tmdb_multi_search(response[result_type])
+							x = x + 1
+					else:
+						x = x + 1
+				#xbmc.log(str(listitems)+'===>PHIL', level=xbmc.LOGINFO)
+				#xbmc.log(str(sort_by)+'===>PHIL', level=xbmc.LOGINFO)
+				response = sorted(response, key=lambda k: k['title'], reverse=false)
 				response['total_pages'] = int(x/20) + (1 if x % 20 > 0 else 0)
 				response['total_results'] = x
 				info = {

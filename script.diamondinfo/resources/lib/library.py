@@ -456,6 +456,55 @@ def delete_folder_contents(path, delete_subfolders=False):
         xbmc.sleep(80)
         xbmcvfs.rmdir(os.path.join(path, directory)) 
 
+def trakt_watched_movies():
+	headers = trak_auth()
+	url = 'https://api.trakt.tv/sync/watched/movies'
+	response = requests.get(url, headers=headers).json()
+	reverse_order = True
+	response = sorted(response, key=lambda k: k['last_updated_at'], reverse=reverse_order)
+
+	#for i in response:
+	#	i['movie']['title']
+	#	i['movie']['ids']['tmdb']
+	return response
+
+def trakt_watched_tv_shows():
+	headers = trak_auth()
+	url = 'https://api.trakt.tv/sync/watched/shows?extended=noseasons'
+	response = requests.get(url, headers=headers).json()
+	reverse_order = True
+	response = sorted(response, key=lambda k: k['last_updated_at'], reverse=reverse_order)
+
+	#for i in response:
+	#	i['show']['title']
+	#	i['show']['ids']['tmdb']
+	return response
+	
+def trakt_collection_movies():
+	headers = trak_auth()
+	url = 'https://api.trakt.tv/sync/collection/movies'
+	response = requests.get(url, headers=headers).json()
+	reverse_order = True
+	#response = sorted(response, key=lambda k: k['collected_at'], reverse=reverse_order)
+
+	#for i in response:
+	#	i['movie']['title']
+	#	i['movie']['ids']['tmdb']
+	return response
+
+def trakt_collection_shows():
+	headers = trak_auth()
+	url = 'https://api.trakt.tv/sync/collection/shows'
+	response = requests.get(url, headers=headers).json()
+	reverse_order = True
+	#response = sorted(response, key=lambda k: k['collected_at'], reverse=reverse_order)
+
+	#for i in response:
+	#	i['movie']['title']
+	#	i['movie']['ids']['tmdb']
+	return response
+
+
 def trakt_add_movie(tmdb_id_num=None,mode=None):
 	headers = trak_auth()
 	tmdb_id = 188927
@@ -663,7 +712,7 @@ def trakt_add_tv_episode(tmdb_id_num=None,season_num=None,episode_num=None,mode=
 	#delete_folder_contents(show_path, True)
 	#xbmc.executebuiltin('CleanLibrary(video)')
 
-def trak_auth()
+def trak_auth():
 	file_path = main_file_path()
 	tmdb_settings = tmdb_settings_path()
 	tmdb_traktapi = tmdb_traktapi_path()
