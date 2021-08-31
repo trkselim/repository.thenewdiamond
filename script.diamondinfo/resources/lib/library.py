@@ -22,6 +22,7 @@ import urllib.request
 import fnmatch
 from pathlib import Path
 
+import re
 
 def main_file_path():
 	return xbmcvfs.translatePath(xbmcaddon.Addon().getAddonInfo('path'))
@@ -455,6 +456,216 @@ def delete_folder_contents(path, delete_subfolders=False):
         # Give time because the system performs previous op. otherwise it can't delete the folder
         xbmc.sleep(80)
         xbmcvfs.rmdir(os.path.join(path, directory)) 
+
+def next_episode_show(tmdb_id_num=None,dbid_num=None):
+	temp_dbid = dbid_num
+	tmdb_id=tmdb_id_num
+	regex = re.compile('[^0-9a-zA-Z]')
+	##xbmc.log(str(sys.argv)+'===>PHIL', level=xbmc.LOGINFO)
+	#wid = xbmcgui.getCurrentWindowId()
+	#win = xbmcgui.Window(wid)
+	#control = win.getFocus()
+	#listitem = control.getSelectedItem()
+
+	#tvshow_title = xbmc.getInfoLabel('listitem.TVShowTitle')
+
+	#if tvshow_title == '':
+	#	tvshow_title = xbmc.getInfoLabel('listitem.OriginalTitle')
+
+
+	#show_id = tvshow_title
+	#show_id = show_id.replace("'","''")
+	#tvshow_title = show_id 
+
+	#tvshow_title2 = xbmc.getInfoLabel('listitem.TVShowTitle')
+	
+	con = sqlite3.connect(db_path())
+	cur = con.cursor()
+	
+	#temp_dbid = xbmc.getInfoLabel('listitem.DBID')
+	#temp_dbtype = xbmc.getInfoLabel('listitem.DBTYPE')
+	#if str(temp_dbtype) == 'tvshow':
+	#	temp_show_id = temp_dbid
+	#elif str(temp_dbtype) == 'season':
+	#	cur.execute("select distinct idShow from seasons where idseason = " + temp_dbid)
+	#	sql_result = cur.fetchall()
+	#	temp_show_id =  sql_result[0][0]
+	#elif str(temp_dbtype) == 'episode':
+	#	cur.execute("select distinct idShow from episode where idEpisode = " + temp_dbid)
+	#	sql_result = cur.fetchall()
+	#	temp_show_id =  sql_result[0][0]
+	#else:
+	#	temp_show_id = 0
+	temp_show_id = temp_dbid
+	#cur.execute("select c00, strtitle, cast(c12 as int) as c12, cast(c13 as int) as c13, c05,strPath from episode_view where strtitle = '"+str(show_id)+"' and (cast(c13 as int) > (select c13 from (select max(lastplayed) as lastplayed, max(cast(c12 as int)) as c12, max(cast(c13 as int)) as c13 from episode_view where strtitle = '"+str(show_id)+"' and lastplayed is not null group by lastplayed order by lastplayed desc limit 1)) and cast(c12 as int) >= (select c12 from (select max(lastplayed) as lastplayed, max(cast(c12 as int)) as c12, max(cast(c13 as int)) as c13 from episode_view where strtitle = '"+str(show_id)+"' and lastplayed is not null group by lastplayed order by lastplayed desc limit 1)) or cast(c13 as int) < (select c13 from (select max(lastplayed) as lastplayed, max(cast(c12 as int)) as c12, max(cast(c13 as int)) as c13 from episode_view where strtitle = '"+str(show_id)+"' and lastplayed is not null group by lastplayed order by lastplayed desc limit 1)) and cast(c12 as int) > (select c12 from (select max(lastplayed) as lastplayed, max(cast(c12 as int)) as c12, max(cast(c13 as int)) as c13 from episode_view where strtitle = '"+str(show_id)+"' and lastplayed is not null group by lastplayed order by lastplayed desc limit 1))) order by cast(c12 as int), cast(c13 as int) limit 1")
+	#sql_result = cur.fetchall()
+	cur.execute("select c00, strtitle, cast(c12 as int) as c12, cast(c13 as int) as c13, c05, strPath, strFilename from (select *,ROW_NUMBER() OVER (ORDER BY cast(13 as int), cast(c12 as int)) as EN from episode_view where idshow = "+str(temp_show_id)+") as a where a.EN = 1+(select EN from (select *,ROW_NUMBER() OVER (ORDER BY lastplayed desc) as LP from (select *,ROW_NUMBER() OVER (ORDER BY cast(13 as int), cast(c12 as int)) as EN from episode_view where idshow = "+str(temp_show_id)+") as b) as c where LP = 1)")
+	sql_result = cur.fetchall()
+
+	#xbmc.log(str(sql_result)+'===>SQL', level=xbmc.LOGFATAL)
+
+	try: 
+		#xbmc.log(str(1)+'===>SQL', level=xbmc.LOGFATAL)
+		episode_title = sql_result[0][0]
+		episode_title = regex.sub(' ', episode_title.replace('\'','').replace('&','and')).replace('  ',' ')
+		tvshow_title = sql_result[0][1]
+		tvshow_title = regex.sub(' ', tvshow_title.replace('\'','').replace('&','and')).replace('  ',' ')
+		season = sql_result[0][2]
+		episode = sql_result[0][3]
+	except: 
+		sql_result2 = None
+		cur.execute("select c00 from tvshow where idshow = '"+str(temp_show_id)+"'")
+		sql_result2 = cur.fetchall()
+		tvshow_title = sql_result2[0][0]
+		tvshow_title = regex.sub(' ', tvshow_title.replace('\'','').replace('&','and')).replace('  ',' ')
+		season = 1
+		episode = 1
+	con.close()
+
+	url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id='+ str(tmdb_id) + '&amp;season='+str(season)+'&amp;episode='+str(episode)
+	xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
+	#xbmc.executebuiltin('RunPlugin('+str(url)+')')
+	return url
+
+
+def trakt_next_episode_normal(tmdb_id_num=None):
+	tmdb_id=tmdb_id_num
+	headers = trak_auth()
+
+	#title = 'Last Week Tonight with John oliver'
+	#if '?' in str(sys.argv):
+	#	title = str(sys.argv[2].replace('?',''))
+	#	#xbmc.log(str(title)+'title===>PHIL', level=xbmc.LOGINFO)
+	try:
+		response = requests.get('https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=show', headers=headers).json()
+	except:
+		xbmc.executebuiltin('Dialog.Close(busydialog)')
+	#print response[0]
+	id = response[0]['show']['ids']['trakt']
+	title = response[0]['show']['title']
+
+	response1 = ''
+	i = 0
+	while response1 == '' and i < 11:
+		try:
+			response1 = requests.get('https://api.trakt.tv/shows/'+str(id)+'/progress/watched',headers=headers).json()
+		except:
+			i = i + 1
+	#print response1['next_episode']
+	try:	
+		season = response1['next_episode']['season']
+		episode = response1['next_episode']['number']
+	except:
+		season = '1'
+		episode = '1'
+
+	response2 = ''
+	i = 0
+	while response2 == '' and i < 22:
+		try:
+			response2 = requests.get('https://api.trakt.tv/shows/'+str(id)+'/seasons/'+str(season)+'/episodes/'+str(episode)+'?extended=full', headers=headers).json()
+		except:
+			i = i + 1
+
+	first_aired = response2['first_aired']
+	try:
+		  first_aired2 = datetime.strptime(first_aired, '%Y-%m-%dT%H:%M:%S.%fZ')
+	except TypeError:
+		  first_aired2 = datetime(*(time.strptime(first_aired, '%Y-%m-%dT%H:%M:%S.%fZ')[0:6]))
+
+	xbmc.log(str(first_aired2)+'trakt_next_episode_normal===>PHIL', level=xbmc.LOGINFO)
+	now = datetime.now()
+
+	if first_aired2 < now:
+		#url = 'RunPlugin(plugin://plugin.video.themoviedb.helper?info=play&amp;query='+str(title)+'&amp;type=episode&amp;season='+str(season)+'&amp;episode='+str(episode)+')'
+		url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id='+ str(tmdb_id) + '&amp;season='+str(season)+'&amp;episode='+str(episode)
+		xbmc.log(str(url)+'trakt_next_episode', level=xbmc.LOGINFO)
+		#xbmc.executebuiltin(url)
+		xbmc.executebuiltin('Dialog.Close(busydialog)')
+		return url
+
+def trakt_next_episode_rewatch(tmdb_id_num=None):
+	tmdb_id=tmdb_id_num
+	headers = trak_auth()
+
+	response = requests.get('https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=show', headers=headers).json()
+	id = response[0]['show']['ids']['trakt']
+	title = response[0]['show']['title']
+
+	response1 = ''
+	i = 0
+	while response1 == '' and i < 11:
+		try:
+			response1 = requests.get('https://api.trakt.tv/shows/'+str(id)+'/progress/watched',headers=headers).json()
+		except:
+			i = i + 1
+
+	last_watched_at = ''
+	next_season_to_watch  = ''
+	next_ep_to_watch = ''
+	try:
+		for i in response1['seasons']:
+			for j in i['episodes']:
+				if last_watched_at == '':
+					last_watched_at = j['last_watched_at']
+				if last_watched_at != '' and last_watched_at <= j['last_watched_at']:
+					last_watched_at  = j['last_watched_at']
+					next_season_to_watch = i['number']
+					next_ep_to_watch = j['number']
+	except:
+		xbmc.executebuiltin('Dialog.Close(busydialog)')
+		xbmc.executebuiltin('Dialog.Close(busydialognocancel)')
+		xbmcgui.Dialog().notification(heading='Trakt Next Episode Rewatch', message='Not REWATCHING!', icon=icon_path(),time=1000,sound=False)
+		return
+
+	next_flag = 'false'
+	for i in response1['seasons']:
+		for j in i['episodes']:
+			if next_flag == 'true':
+				last_watched_at  = j['last_watched_at']
+				next_season_to_watch = i['number']
+				next_ep_to_watch = j['number']
+				next_flag = 'false'
+				break		
+			if int(i['number']) == int(next_season_to_watch) and int(j['number']) == int(next_ep_to_watch):
+				next_flag = 'true'
+
+	try:	
+		season = int(next_season_to_watch)
+		episode = int(next_ep_to_watch)
+	except:
+		season = '1'
+		episode = '1'
+
+	#response = requests.get('https://api.trakt.tv/shows/'+str(id)+'/seasons/'+str(season)+'/episodes/'+str(episode)+'?extended=full', headers=headers).json()
+	#first_aired = response['first_aired']
+	response2 = ''
+	i = 0
+	while response2 == '' and i < 22:
+		try:
+			response2 = requests.get('https://api.trakt.tv/shows/'+str(id)+'/seasons/'+str(season)+'/episodes/'+str(episode)+'?extended=full', headers=headers).json()
+		except:
+			i = i + 1
+
+	first_aired = response2['first_aired']
+	#first_aired2 = datetime.datetime.strptime(first_aired, '%Y-%m-%dT%H:%M:%S.%fZ')
+	import time
+	try:
+		  first_aired2 = datetime.strptime(first_aired, '%Y-%m-%dT%H:%M:%S.%fZ')
+	except TypeError:
+		  first_aired2 = datetime(*(time.strptime(first_aired, '%Y-%m-%dT%H:%M:%S.%fZ')[0:6]))
+
+
+	xbmc.log(str(first_aired2)+'trakt_next_episode_rewatch===>PHIL', level=xbmc.LOGINFO)
+	now = datetime.now()
+
+	if first_aired2 < now:
+		#url = 'RunPlugin(plugin://plugin.video.themoviedb.helper?info=play&amp;query='+str(title)+'&amp;type=episode&amp;season='+str(season)+'&amp;episode='+str(episode)+')'
+		url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id='+ str(tmdb_id) + '&amp;season='+str(season)+'&amp;episode='+str(episode)
+		xbmc.log(str(url)+'trakt_next_episode', level=xbmc.LOGINFO)
+		#xbmc.executebuiltin(url) 
+		xbmc.executebuiltin('Dialog.Close(busydialog)')
+
 
 def trakt_watched_movies():
 	headers = trak_auth()

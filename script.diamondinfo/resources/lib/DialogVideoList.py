@@ -123,17 +123,27 @@ def get_tmdb_window(window_type):
 			else:
 				imdb_id = TheMovieDB.get_imdb_id_from_movie_id(item_id)
 			if self.listitem.getProperty('TVShowTitle'):
-				listitems = ['Play first episode']
+				listitems = ['Play first episode'] #0
 			else:
-				listitems = ['Play']
+				listitems = ['Play'] #0
 			if self.listitem.getProperty('dbid'):
-				listitems += ['Remove from library']
+				listitems += ['Remove from library'] #1
+				if self.type == 'tv':
+					listitems += ['Play Kodi Next Episode'] #2 (TV+ DBID)
+					listitems += ['Play Trakt Next Episode'] #3 (TV + DBID)
 			else:
-				listitems += ['Add to library']
-			listitems += ['Search item']
-			listitems += ['Trailer']
+				listitems += ['Add to library'] #1
+				if self.type == 'tv':
+					listitems += ['Play Trakt Next Episode'] #2 (TV + 0 DBID)
+					listitems += ['Play Trakt Next Episode (Rewatch)'] #3 (TV + 0 DBID)
+			listitems += ['Search item'] #2 (movie) #4 (TV+ DBID) #4 (TV + 0 DBID)
+			listitems += ['Trailer'] #3 (movie) #5 (TV+ DBID) #5 (TV + 0 DBID)
 			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
-			if selection == 0:
+			selection_text = listitems[selection]
+			if selection == -1:
+				return
+			#if selection == 0:
+			if selection_text == 'Play first episode' or selection_text == 'Play':
 				if self.listitem.getProperty('TVShowTitle'):
 					#url = 'plugin://plugin.video.diamondplayer/tv/play/%s/1/1' % tvdb_id
 					url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=%s&amp;season=1&amp;episode=1' % tvdb_id
@@ -149,7 +159,8 @@ def get_tmdb_window(window_type):
 						url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=movie&amp;tmdb_id=%s' % item_id
 					xbmc.executebuiltin('Dialog.Close(busydialog)')
 					PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=dbid)
-			if selection == 1:
+			#if selection == 1:
+			if selection_text == 'Remove from library' or selection_text == 'Add to library':
 				xbmcgui.Window(10000).setProperty('tmdbhelper_tvshow.poster', str(self.listitem.getProperty('poster')))
 				if self.listitem.getProperty('TVShowTitle'):
 					TVLibrary = xbmcaddon.Addon('plugin.video.diamondplayer').getSetting('tv_library_folder')
@@ -184,14 +195,41 @@ def get_tmdb_window(window_type):
 							xbmc.executebuiltin('RunPlugin(plugin://plugin.video.diamondplayer/movies/add_to_library/tmdb/%s)' % item_id)
 							Utils.after_add(type='movie')
 							Utils.notify(header='[B]%s[/B] added to library' % self.listitem.getProperty('title'), message='Exit & re-enter to refresh', icon=self.listitem.getProperty('poster'), time=5000, sound=False)
-			if selection == 2:
+			#if (selection == 2 and self.type == 'tv' and int(dbid) > 0):
+			if selection_text == 'Play Kodi Next Episode':
+				from resources.lib import library
+				url = library.next_episode_show(tmdb_id_num=item_id,dbid_num=dbid)
+				xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
+				PLAYER.play_from_button(url, listitem=None, window=self, dbid=dbid)
+			##if (selection == 3 and self.type == 'tv' and int(dbid) > 0):
+			#if selection_text == 'Play Trakt Next Episode':
+			#	from resources.lib import library
+			#	url = library.trakt_next_episode_normal(tmdb_id_num=item_id)
+			#	xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
+			#if (selection == 2 and self.type == 'tv' and int(dbid) == 0):
+			if selection_text == 'Play Trakt Next Episode':
+				from resources.lib import library
+				url = library.trakt_next_episode_normal(tmdb_id_num=item_id)
+				xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
+				PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
+			#if (selection == 3 and self.type == 'tv' and int(dbid) == 0):
+			if selection_text == 'Play Trakt Next Episode (Rewatch)':
+				from resources.lib import library
+				url = library.trakt_next_episode_rewatch(tmdb_id_num=item_id)
+				xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
+				PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
+			#2 (movie) #4 (TV+ DBID) #4 (TV + 0 DBID)
+			#if (selection == 2 and not self.type == 'tv') or (selection == 4 and self.type == 'tv' and int(dbid) > 0) or (selection == 4 and self.type == 'tv' and int(dbid) == 0):
+			if selection_text == 'Search item':
 				item_title = self.listitem.getProperty('TVShowTitle') or self.listitem.getProperty('Title')
 				#item_title = urllib.parse.quote_plus(item_title)
 #				xbmc.executebuiltin('RunPlugin(plugin://script.extendedinfo/?info=search_string&str=%s' % item_title)
 #				xbmc.log(str('RunPlugin(plugin://script.extendedinfo/?info=search_string&str=%s)' % item_title)+'===>TMDB_HELPER_3', level=xbmc.LOGNOTICE)
 				self.close()
 				xbmc.executebuiltin('RunScript(script.diamondinfo,info=search_string,str=%s)' % item_title)
-			if selection == 3:
+			#3 (movie) #5 (TV+ DBID) #5 (TV + 0 DBID)
+			#if (selection == 3 and not self.type == 'tv') or (selection == 5 and self.type == 'tv' and int(dbid) > 0) or (selection == 5 and self.type == 'tv' and int(dbid) == 0):
+			if selection_text == 'Trailer':
 				if self.listitem.getProperty('TVShowTitle'):
 					url = 'plugin://script.diamondinfo?info=playtvtrailer&&id=' + item_id
 				else:
