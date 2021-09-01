@@ -760,14 +760,16 @@ def trakt_add_movie(tmdb_id_num=None,mode=None):
 		]
 	  }
 	"""
-	response_collect = requests.post('https://api.trakt.tv/sync/collection', data=values, headers=headers)
-	xbmc.log(str(movie_title + 'added: ' + str(response_collect.json()['added']))+'===>PHIL', level=xbmc.LOGINFO)
-	#library_auto_movie()
-	#xbmc.executebuiltin('UpdateLibrary(video, {})'.format(movie_path))
-	#response_collect = requests.post('https://api.trakt.tv/sync/collection/remove', data=values, headers=headers)
-	#xbmc.log(str(movie_title + 'removed: ' + str(response_collect.json()['deleted']))+'===>PHIL', level=xbmc.LOGINFO)
-	#delete_folder_contents(movie_path, True)
-	#xbmc.executebuiltin('CleanLibrary(video)')
+	if mode == 'Add':
+		response_collect = requests.post('https://api.trakt.tv/sync/collection', data=values, headers=headers)
+		xbmc.log(str(movie_title + 'added: ' + str(response_collect.json()['added']))+'===>PHIL', level=xbmc.LOGINFO)
+		library_auto_movie()
+		xbmc.executebuiltin('UpdateLibrary(video, {})'.format(movie_path))
+	if mode == 'Remove':
+		response_collect = requests.post('https://api.trakt.tv/sync/collection/remove', data=values, headers=headers)
+		xbmc.log(str(movie_title + 'removed: ' + str(response_collect.json()['deleted']))+'===>PHIL', level=xbmc.LOGINFO)
+		#delete_folder_contents(movie_path, True)
+		#xbmc.executebuiltin('CleanLibrary(video)')
 
 def trakt_add_tv(tmdb_id_num=None,mode=None):
 	headers = trak_auth()
@@ -801,13 +803,15 @@ def trakt_add_tv(tmdb_id_num=None,mode=None):
 		]
 	  }
 	"""
-	response_collect = requests.post('https://api.trakt.tv/sync/collection', data=values, headers=headers)
-	xbmc.log(str(show_title + ' episodes added: ' + str(response_collect.json()['added']))+'===>PHIL', level=xbmc.LOGINFO)
-	#library_auto_tv()
-	#refresh_recently_added()
-	#xbmc.executebuiltin('UpdateLibrary(video, {})'.format(show_path))
-	#response_collect = requests.post('https://api.trakt.tv/sync/collection/remove', data=values, headers=headers)
-	#xbmc.log(str(show_title + ' episodes removed: ' + str(response_collect.json()['deleted']))+'===>PHIL', level=xbmc.LOGINFO)
+	if mode == 'Add':
+		response_collect = requests.post('https://api.trakt.tv/sync/collection', data=values, headers=headers)
+		xbmc.log(str(show_title + ' episodes added: ' + str(response_collect.json()['added']))+'===>PHIL', level=xbmc.LOGINFO)
+		library_auto_tv()
+		refresh_recently_added()
+		xbmc.executebuiltin('UpdateLibrary(video, {})'.format(show_path))
+	if mode == 'Remove'
+		response_collect = requests.post('https://api.trakt.tv/sync/collection/remove', data=values, headers=headers)
+		xbmc.log(str(show_title + ' episodes removed: ' + str(response_collect.json()['deleted']))+'===>PHIL', level=xbmc.LOGINFO)
 	#delete_folder_contents(show_path, True)
 	#xbmc.executebuiltin('CleanLibrary(video)')
 

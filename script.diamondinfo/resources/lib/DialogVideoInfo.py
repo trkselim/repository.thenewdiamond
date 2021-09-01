@@ -7,6 +7,7 @@ from resources.lib.WindowManager import wm
 from resources.lib.VideoPlayer import PLAYER
 from resources.lib.OnClickHandler import OnClickHandler
 from resources.lib.DialogBaseInfo import DialogBaseInfo
+from resources.lib import library
 
 ch = OnClickHandler()
 
@@ -201,7 +202,8 @@ def get_movie_window(window_type):
 
 		@ch.click(120)
 		def search_in_meta_by_title(self):
-			url = 'plugin://plugin.video.diamondplayer/movies/tmdb/search_term/%s/1/' % self.info.get('title', '')
+			#url = 'plugin://plugin.video.diamondplayer/movies/tmdb/search_term/%s/1/' % self.info.get('title', '')
+			url =  'plugin://plugin.video.themoviedb.helper/?info=details&amp;type=movie&amp;query=%s' % self.info.get('title', '')
 			self.close()
 			xbmc.executebuiltin('ActivateWindow(videos,%s,return)' % url)
 
@@ -249,7 +251,7 @@ def get_movie_window(window_type):
 		def show_manage_dialog(self):
 			manage_list = []
 			manage_list.append(["Diamond Info's settings", 'Addon.OpenSettings("script.diamondinfo")'])
-			manage_list.append(["Diamond Player's settings", 'Addon.OpenSettings("plugin.video.diamondplayer")'])
+			#manage_list.append(["Diamond Player's settings", 'Addon.OpenSettings("plugin.video.diamondplayer")'])
 			manage_list.append(["YouTube's settings", 'Addon.OpenSettings("plugin.video.youtube")'])
 			selection = xbmcgui.Dialog().select(heading='Settings', list=[i[0] for i in manage_list])
 			if selection > -1:
@@ -258,23 +260,25 @@ def get_movie_window(window_type):
 
 		@ch.click(18)
 		def add_movie_to_library(self):
-			if not xbmc.getCondVisibility('System.HasAddon(plugin.video.diamondplayer)'):
-				xbmc.executebuiltin('RunPlugin(plugin://plugin.video.diamondplayer/setup/total)')
+			#if not xbmc.getCondVisibility('System.HasAddon(plugin.video.diamondplayer)'):
+			#	xbmc.executebuiltin('RunPlugin(plugin://plugin.video.diamondplayer/setup/total)')
 			if xbmcgui.Dialog().yesno('diamondinfo', 'Add [B]%s[/B] to library?' % self.info['title']):
-				xbmc.executebuiltin('RunPlugin(plugin://plugin.video.diamondplayer/movies/add_to_library/tmdb/%s)' % self.info.get('id', ''))
+				#xbmc.executebuiltin('RunPlugin(plugin://plugin.video.diamondplayer/movies/add_to_library/tmdb/%s)' % self.info.get('id', ''))
+				library.trakt_add_movie(self.info['id'],'Add')
 				Utils.after_add(type='movie')
-				Utils.notify(header='[B]%s[/B] added to library' % self.info['title'], message='Exit & re-enter to refresh', icon=self.info['poster'], time=5000, sound=False)
+				Utils.notify(header='[B]%s[/B] added to library' % self.info['title'], message='Exit & re-enter to refresh', icon=self.info['poster'], time=1000, sound=False)
 
 		@ch.click(19)
 		def remove_movie_from_library(self):
-			if not xbmc.getCondVisibility('System.HasAddon(plugin.video.diamondplayer)'):
-				xbmc.executebuiltin('RunPlugin(plugin://plugin.video.diamondplayer/setup/total)')
+			#if not xbmc.getCondVisibility('System.HasAddon(plugin.video.diamondplayer)'):
+			#	xbmc.executebuiltin('RunPlugin(plugin://plugin.video.diamondplayer/setup/total)')
 			if xbmcgui.Dialog().yesno('diamondinfo', 'Remove [B]%s[/B] from library?' % self.info['title']):
-				if os.path.exists(xbmcvfs.translatePath('%s%s/' % (Utils.DIAMONDPLAYER_MOVIE_FOLDER, self.info['imdb_id']))):
+				if os.path.exists(xbmcvfs.translatePath('%s%s/' % (Utils.DIAMONDPLAYER_MOVIE_FOLDER, self.info['id']))):
 					Utils.get_kodi_json(method='VideoLibrary.RemoveMovie', params='{"movieid": %d}' % int(self.info['dbid']))
-					shutil.rmtree(xbmcvfs.translatePath('%s%s/' % (Utils.DIAMONDPLAYER_MOVIE_FOLDER, self.info['imdb_id'])))
+					shutil.rmtree(xbmcvfs.translatePath('%s%s/' % (Utils.DIAMONDPLAYER_MOVIE_FOLDER, self.info['id'])))
+					library.trakt_add_movie(self.info['id'],'Remove')
 					Utils.after_add(type='movie')
-					Utils.notify(header='Removed [B]%s[/B] from library' % self.info.get('title', ''), message='Exit & re-enter to refresh', icon=self.info['poster'], time=5000, sound=False)
+					Utils.notify(header='Removed [B]%s[/B] from library' % self.info.get('title', ''), message='Exit & re-enter to refresh', icon=self.info['poster'], time=1000, sound=False)
 
 		@ch.click(350)
 		@ch.click(1150)

@@ -3,7 +3,7 @@ import xbmc, xbmcgui, xbmcaddon
 from resources.lib import Utils
 
 class WindowManager(object):
-
+	Utils.show_busy()
 	window_stack = []
 
 	def __init__(self):

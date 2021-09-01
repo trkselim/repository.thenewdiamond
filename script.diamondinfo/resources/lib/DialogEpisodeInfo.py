@@ -6,6 +6,7 @@ from resources.lib.WindowManager import wm
 from resources.lib.VideoPlayer import PLAYER
 from resources.lib.OnClickHandler import OnClickHandler
 from resources.lib.DialogBaseInfo import DialogBaseInfo
+from resources.lib import library
 
 ch = OnClickHandler()
 
@@ -94,7 +95,8 @@ def get_episode_window(window_type):
 				url = ''
 				PLAYER.play_from_button(url, listitem=None, window=self, type='episodeid', dbid=dbid)
 			else:
-				url = 'plugin://plugin.video.diamondplayer/tv/play/%s/%s/%s' % (Utils.fetch(TheMovieDB.get_tvshow_ids(self.tvshow_id), 'tvdb_id'), self.info['season'], self.info['episode'])
+				#url = 'plugin://plugin.video.diamondplayer/tv/play/%s/%s/%s' % (Utils.fetch(TheMovieDB.get_tvshow_ids(self.tvshow_id), 'tvdb_id'), self.info['season'], self.info['episode'])
+				url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;tmdb_id=%s&amp;type=episode&amp;season=%s&amp;episode=%s' % (self.tvshow_id, self.info['season'], self.info['episode'])
 				xbmc.executebuiltin('RunPlugin(%s)' % url)
 
 		@ch.action('contextmenu', 8)
@@ -104,14 +106,15 @@ def get_episode_window(window_type):
 				url = ''
 				PLAYER.play_from_button(url, listitem=None, window=self, type='episodeid', dbid=dbid)
 			else:
-				url = 'plugin://plugin.video.diamondplayer/tv/play_choose_player/%s/%s/%s/False' % (Utils.fetch(TheMovieDB.get_tvshow_ids(self.tvshow_id), 'tvdb_id'), self.info['season'], self.info['episode'])
+				#url = 'plugin://plugin.video.diamondplayer/tv/play_choose_player/%s/%s/%s/False' % (Utils.fetch(TheMovieDB.get_tvshow_ids(self.tvshow_id), 'tvdb_id'), self.info['season'], self.info['episode'])
+				url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;tmdb_id=%s&amp;type=episode&amp;season=%s&amp;episode=%s' % (self.tvshow_id, self.info['season'], self.info['episode'])
 				xbmc.executebuiltin('RunPlugin(%s)' % url)
 
 		@ch.click(445)
 		def show_manage_dialog(self):
 			manage_list = []
 			manage_list.append(["Diamond Info's settings", 'Addon.OpenSettings("script.diamondinfo")'])
-			manage_list.append(["Diamond Player's settings", 'Addon.OpenSettings("plugin.video.diamondplayer")'])
+			#manage_list.append(["Diamond Player's settings", 'Addon.OpenSettings("plugin.video.diamondplayer")'])
 			manage_list.append(["YouTube's settings", 'Addon.OpenSettings("plugin.video.youtube")'])
 			selection = xbmcgui.Dialog().select(heading='Settings', list=[i[0] for i in manage_list])
 			if selection > -1:

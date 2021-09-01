@@ -1,6 +1,8 @@
 import os, re, time, json, urllib.request, urllib.parse, urllib.error, hashlib, datetime, requests, threading
 import xbmc, xbmcgui, xbmcvfs, xbmcaddon, xbmcplugin
 from functools import wraps
+from resources.lib import library
+
 
 ADDON_PATH = xbmcvfs.translatePath('special://home/addons/script.diamondinfo')
 ADDON_DATA_PATH = xbmcvfs.translatePath('special://profile/addon_data/script.diamondinfo')
@@ -8,8 +10,8 @@ IMAGES_DATA_PATH = xbmcvfs.translatePath('special://profile/addon_data/script.di
 SKIN_DIR = xbmc.getSkinDir()
 AUTOPLAY_TRAILER = xbmcaddon.Addon().getSetting('autoplay_trailer')
 NETFLIX_VIEW = xbmcaddon.Addon().getSetting('netflix_view')
-DIAMONDPLAYER_TV_FOLDER = xbmcaddon.Addon('plugin.video.diamondplayer').getSetting('tv_library_folder') if xbmc.getCondVisibility('System.HasAddon(plugin.video.diamondplayer)') else None
-DIAMONDPLAYER_MOVIE_FOLDER = xbmcaddon.Addon('plugin.video.diamondplayer').getSetting('movies_library_folder') if xbmc.getCondVisibility('System.HasAddon(plugin.video.diamondplayer)') else None
+DIAMONDPLAYER_TV_FOLDER = library.basedir_tv_path()
+DIAMONDPLAYER_MOVIE_FOLDER = library.basedir_movies_path()
 
 def show_busy():
 	if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
