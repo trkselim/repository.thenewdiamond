@@ -82,6 +82,7 @@ def handle_tmdb_movies(results=[], local_first=True, sortkey='year'):
 		date = Utils.fetch(movie, 'release_date')
 		movies.append(listitem)
 	movies = local_db.merge_with_local_movie_info(movies, local_first, sortkey)
+	Utils.hide_busy()
 	return movies
 
 def handle_tmdb_tvshows(results, local_first=True, sortkey='year'):

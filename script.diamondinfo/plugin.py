@@ -106,7 +106,7 @@ class Main:
 				li = xbmcgui.ListItem(label=value)
 				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
 				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=True)
-			
+			Utils.hide_busy()
 			xbmcplugin.endOfDirectory(self.handle)
 		xbmcgui.Window(10000).clearProperty('diamondinfo_running')
 
