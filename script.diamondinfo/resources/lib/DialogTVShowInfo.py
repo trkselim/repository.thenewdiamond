@@ -163,7 +163,7 @@ def get_tvshow_window(window_type):
 		def show_manage_dialog(self):
 			manage_list = []
 			manage_list.append(["Diamond Info's settings", 'Addon.OpenSettings("script.diamondinfo")'])
-			#manage_list.append(["Diamond Player's settings", 'Addon.OpenSettings("plugin.video.diamondplayer")'])
+			manage_list.append(["TMDBHelper Context", 'RunScript(plugin.video.themoviedb.helper,sync_trakt,tmdb_type=tv,tmdb_id='+str(self.info['id'])+')'])
 			manage_list.append(["YouTube's settings", 'Addon.OpenSettings("plugin.video.youtube")'])
 			selection = xbmcgui.Dialog().select(heading='Settings', list=[i[0] for i in manage_list])
 			if selection > -1:
@@ -181,13 +181,13 @@ def get_tvshow_window(window_type):
 		@ch.click(9)
 		def play_tvshow(self):
 			#url = 'plugin://plugin.video.diamondplayer/tv/play/%s/1/1' % self.info['tvdb_id']
-			url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=%s&amp;season=1&amp;episode=1' % self.tvshow_id
+			url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=%s&amp;season=1&amp;episode=1' % self.info['id']
 			xbmc.executebuiltin('RunPlugin(%s)' % url)
 
 		@ch.action('contextmenu', 9)
 		def play_tvshow_choose_player(self):
 			#url = 'plugin://plugin.video.diamondplayer/tv/play_choose_player/%s/1/1/False' % self.info['tvdb_id']
-			url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=%s&amp;season=1&amp;episode=1' % self.tvshow_id
+			url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=%s&amp;season=1&amp;episode=1' % self.info['id']
 			xbmc.executebuiltin('RunPlugin(%s)' % url)
 
 		@ch.click(20)
@@ -198,7 +198,7 @@ def get_tvshow_window(window_type):
 			#	xbmc.executebuiltin('RunPlugin(plugin://plugin.video.diamondplayer/tv/add_to_library/%s)' % self.info['tvdb_id'])
 				library.trakt_add_tv(self.info['id'],'Add')
 				Utils.after_add(type='tv')
-				Utils.notify(header='[B]%s[/B] added to library' % self.info['TVShowTitle'], message='Exit & re-enter to refresh', icon=self.info['poster'], time=5000, sound=False)
+				Utils.notify(header='[B]%s[/B] added to library' % self.info['TVShowTitle'], message='Exit & re-enter to refresh', icon=self.info['poster'], time=1000, sound=False)
 
 		@ch.click(21)
 		def remove_tvshow_from_library(self):
@@ -210,7 +210,7 @@ def get_tvshow_window(window_type):
 					shutil.rmtree(xbmcvfs.translatePath('%s%s/' % (Utils.DIAMONDPLAYER_TV_FOLDER, self.info['tvdb_id'])))
 					library.trakt_add_tv(item_id,'Remove')
 					Utils.after_add(type='tv')
-					Utils.notify(header='Removed [B]%s[/B] from library' % self.info['TVShowTitle'], message='Exit & re-enter to refresh', icon=self.info['poster'], time=5000, sound=False)
+					Utils.notify(header='Removed [B]%s[/B] from library' % self.info['TVShowTitle'], message='Exit & re-enter to refresh', icon=self.info['poster'], time=1000, sound=False)
 
 		@ch.click(132)
 		def open_text(self):

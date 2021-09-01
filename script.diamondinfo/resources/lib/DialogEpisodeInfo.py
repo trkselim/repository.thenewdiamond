@@ -114,7 +114,7 @@ def get_episode_window(window_type):
 		def show_manage_dialog(self):
 			manage_list = []
 			manage_list.append(["Diamond Info's settings", 'Addon.OpenSettings("script.diamondinfo")'])
-			#manage_list.append(["Diamond Player's settings", 'Addon.OpenSettings("plugin.video.diamondplayer")'])
+			manage_list.append(["TMDBHelper Context", 'RunScript(plugin.video.themoviedb.helper,sync_trakt,tmdb_type=tv,tmdb_id='+str(self.info['season'])+',season='+str(self.tvshow_id)+',episode='+str(self.info['episode'])+')'])
 			manage_list.append(["YouTube's settings", 'Addon.OpenSettings("plugin.video.youtube")'])
 			selection = xbmcgui.Dialog().select(heading='Settings', list=[i[0] for i in manage_list])
 			if selection > -1:

@@ -809,7 +809,7 @@ def trakt_add_tv(tmdb_id_num=None,mode=None):
 		library_auto_tv()
 		refresh_recently_added()
 		xbmc.executebuiltin('UpdateLibrary(video, {})'.format(show_path))
-	if mode == 'Remove'
+	if mode == 'Remove':
 		response_collect = requests.post('https://api.trakt.tv/sync/collection/remove', data=values, headers=headers)
 		xbmc.log(str(show_title + ' episodes removed: ' + str(response_collect.json()['deleted']))+'===>PHIL', level=xbmc.LOGINFO)
 	#delete_folder_contents(show_path, True)
