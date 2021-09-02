@@ -107,7 +107,7 @@ def start_info_actions(infos, params):
 							xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
 			#xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
 
-		elif info == 'trakt_watched' or info == 'trakt_coll':
+		elif info == 'trakt_watched' or info == 'trakt_coll' or info == 'trakt_list':
 			#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_watched&trakt_type=movie&script=True)'
 			#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_watched&trakt_type=tv&script=True)'
 			#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_coll&trakt_type=movie&script=True)'
@@ -118,7 +118,7 @@ def start_info_actions(infos, params):
 				trakt_script = str(params['script'])
 			except:
 				trakt_script = 'True'
-			if trakt_script == 'False':
+			if trakt_script == 'False' and (info == 'trakt_watched' or info == 'trakt_coll'):
 				return TheMovieDB.get_trakt(trakt_type=trakt_type,info=info)
 			else:
 				if info == 'trakt_watched' and trakt_type == 'movie':

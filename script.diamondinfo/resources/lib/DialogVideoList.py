@@ -54,7 +54,7 @@ LANGUAGES = [
 ]
 
 def get_tmdb_window(window_type):
-
+    Utils.show_busy()
     class DialogVideoList(DialogBaseList, window_type):
 
         def __init__(self, *args, **kwargs):
@@ -565,11 +565,14 @@ def get_tmdb_window(window_type):
                         info_line = 'info=trakt_list&script=False&trakt_type=' +str(trakt_type)+'&list_slug='+str(takt_list_slug)+'&user_id=' +str(trakt_user_id)+'&trakt_sort_by='+str(trakt_sort_by)+'&trakt_sort_order='+str(trakt_sort_order)+'&trakt_list_name='+str(i['name'])
                         xbmcgui.Window(10000).setProperty('diamond_info_var', info_line)
             self.filter_label = 'Results for:  ' + listitems[selection]
+            Utils.show_busy()
             self.fetch_data()
-            Utils.hide_busy()
+            Utils.show_busy()
             self.update()
+            Utils.hide_busy()
 
         def fetch_data(self, force=False):
+            Utils.show_busy()
             sort_by = self.sort + '.' + self.order
             if self.mode != 'trakt':
                 xbmcgui.Window(10000).clearProperty('diamond_info_var')
@@ -644,8 +647,11 @@ def get_tmdb_window(window_type):
                             response['movie_results'][0]['media_type'] = 'movie'
                             result_type = 'movie_results'
                         except:
-                            response['tv_results'][0]['media_type'] = 'tv'
-                            result_type = 'tv_results'
+                            try:
+                                response['tv_results'][0]['media_type'] = 'tv'
+                                result_type = 'tv_results'
+                            except:
+                                result_type = False
                         if listitems == None and result_type != False:
                             listitems = TheMovieDB.handle_tmdb_multi_search(response[result_type])
                             x = x + 1
@@ -689,4 +695,5 @@ def get_tmdb_window(window_type):
                 'total_results': response['total_results']
                 }
             return info
+    Utils.hide_busy()
     return DialogVideoList

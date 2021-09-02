@@ -110,7 +110,7 @@ class Main:
 					trakt_type = 'tv'
 				elif key == 'trakt_list':
 					trakt_type = 'movie'
-					for i in trakt_data:
+					for i in trakt_data['trakt_list']:
 						if value == i['name']:
 							user_id = i['user_id']
 							list_slug = i['list_slug']

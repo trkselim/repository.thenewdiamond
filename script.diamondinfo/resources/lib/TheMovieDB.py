@@ -82,7 +82,7 @@ def handle_tmdb_movies(results=[], local_first=True, sortkey='year'):
 		date = Utils.fetch(movie, 'release_date')
 		movies.append(listitem)
 	movies = local_db.merge_with_local_movie_info(movies, local_first, sortkey)
-	Utils.hide_busy()
+	#Utils.hide_busy()
 	return movies
 
 def handle_tmdb_tvshows(results, local_first=True, sortkey='year'):
@@ -814,7 +814,7 @@ def get_imdb_list(list_str=None):
 
 def get_trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_order=None):
 	from resources.lib import library
-	movies = library.trakt_lists(list_name=trakt_list_name,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
+	movies = library.trakt_lists(list_name,user_id,list_slug,sort_by,sort_order)
 	listitems = None
 	for i in movies:
 		imdb_id = i['ids']['imdb']
