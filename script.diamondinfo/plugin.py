@@ -71,6 +71,13 @@ class Main:
 
 			NoFolder_items = NoFolder_items2
 
+			json_file = open(file_path + 'trakt_list.json')
+			trakt_data = json.load(json_file)
+			json_file.close()
+			for i in trakt_data['trakt_list']:
+				if str(i['name']) != '':
+					trakt_items.append(('trakt_list', i['name']))
+
 			xbmcplugin.setContent(self.handle, 'addons')
 			for key, value in items:
 				thumb_path  = 'special://home/addons/script.diamondinfo/resources/skins/Default/media/tmdb/thumb.png'
@@ -101,8 +108,18 @@ class Main:
 					trakt_type = 'movie'
 				elif value == 'Trakt Watched TV' or value == 'Trakt Collection TV':
 					trakt_type = 'tv'
+				elif key == 'trakt_list':
+					trakt_type = 'movie'
+					for i in trakt_data:
+						if value == i['name']:
+							user_id = i['user_id']
+							list_slug = i['list_slug']
+							trakt_sort_by = i['sort_by']
+							trakt_sort_order = i['sort_order']
+					url = 'plugin://script.diamondinfo?info='+str(key)+'&script=False&trakt_type=' +str(trakt_type)+'&list_slug='+str(list_slug)+'&user_id=' +str(user_id)+'&trakt_sort_by='+str(trakt_sort_by)+'&trakt_sort_order='+str(trakt_sort_order)+'&trakt_list_name='+str(value)
 				#url = 'plugin://script.diamondinfo?info=%s&script=False&trakt_type=%s' % key, trakt_type
-				url = 'plugin://script.diamondinfo?info='+str(key)+'&script=False&trakt_type=' +str(trakt_type)
+				if key != 'trakt_list':
+					url = 'plugin://script.diamondinfo?info='+str(key)+'&script=False&trakt_type=' +str(trakt_type)
 				li = xbmcgui.ListItem(label=value)
 				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
 				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=True)

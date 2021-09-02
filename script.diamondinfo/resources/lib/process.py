@@ -5,8 +5,13 @@ from resources.lib import local_db
 from resources.lib import TheMovieDB
 from resources.lib.WindowManager import wm
 from resources.lib.VideoPlayer import PLAYER
+from resources.lib import library
+import time
 
 def start_info_actions(infos, params):
+	addonID = library.addon_ID()
+	addonID_short = library.addon_ID_short()
+
 	if 'imdbid' in params and 'imdb_id' not in params:
 		params['imdb_id'] = params['imdbid']
 	for info in infos:
@@ -52,8 +57,6 @@ def start_info_actions(infos, params):
 			return wm.open_video_list(search_str=search_str, mode='search')
 
 		elif info == 'phil_library':
-			from resources.lib import library
-			import time
 			#xbmc.log(str(library.tmdb_settings_path())+'tmdb_settings===>PHIL', level=xbmc.LOGINFO)
 			#xbmc.log(str(library.main_file_path())+'file_path===>PHIL', level=xbmc.LOGINFO)
 			#xbmc.log(str(library.tmdb_traktapi_path())+'tmdb_traktapi===>PHIL', level=xbmc.LOGINFO)
@@ -105,11 +108,10 @@ def start_info_actions(infos, params):
 			#xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
 
 		elif info == 'trakt_watched' or info == 'trakt_coll':
-			from resources.lib import library
-		#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_watched&trakt_type=movie&script=True)'
-		#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_watched&trakt_type=tv&script=True)'
-		#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_coll&trakt_type=movie&script=True)'
-		#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_coll&trakt_type=tv&script=True)'
+			#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_watched&trakt_type=movie&script=True)'
+			#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_watched&trakt_type=tv&script=True)'
+			#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_coll&trakt_type=movie&script=True)'
+			#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_coll&trakt_type=tv&script=True)'
 			trakt_type = str(params['trakt_type'])
 			Utils.show_busy()
 			try:
@@ -121,17 +123,31 @@ def start_info_actions(infos, params):
 			else:
 				if info == 'trakt_watched' and trakt_type == 'movie':
 					movies = library.trakt_watched_movies()
+					trakt_label = 'Trakt Watched Movies'
 					xbmcgui.Window(10000).setProperty('diamond_info_var', 'info=trakt_watched&trakt_type=movie')
 				elif info == 'trakt_watched' and trakt_type == 'tv':
 					movies = library.trakt_watched_tv_shows()
 					xbmcgui.Window(10000).setProperty('diamond_info_var', 'info=trakt_watched&trakt_type=tv')
+					trakt_label = 'Trakt Watched Shows'
 				elif info == 'trakt_coll' and trakt_type == 'movie':
 					movies = library.trakt_collection_movies()
 					xbmcgui.Window(10000).setProperty('diamond_info_var', 'info=trakt_coll&trakt_type=movie')
+					trakt_label = 'Trakt Collection Movies'
 				elif info == 'trakt_coll' and trakt_type == 'tv':
 					movies = library.trakt_collection_shows()
 					xbmcgui.Window(10000).setProperty('diamond_info_var', 'info=trakt_watched&trakt_type=tv')
-				return wm.open_video_list(mode='trakt', listitems=[], search_str=movies, media_type=trakt_type)
+					trakt_label = 'Trakt Collection Shows'
+				elif info == 'trakt_list':
+					trakt_type = str(params['trakt_type'])
+					trakt_list_name = str(params['trakt_list_name'])
+					trakt_user_id = str(params['user_id'])
+					takt_list_slug = str(params['list_slug'])
+					trakt_sort_by = str(params['trakt_sort_by'])
+					trakt_sort_order = str(params['trakt_sort_order'])
+					movies = library.trakt_lists(list_name=trakt_list_name,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
+					if trakt_script == 'False':
+						return TheMovieDB.get_trakt_lists(list_name=trakt_list_name,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
+				return wm.open_video_list(mode='trakt', listitems=[], search_str=movies, media_type=trakt_type, filter_label=trakt_list_name)
 
 		elif info == 'imdb_list':
 			try:

@@ -812,6 +812,31 @@ def get_imdb_list(list_str=None):
 	#xbmc.log(str(listitems)+'===>PHIL', level=xbmc.LOGINFO)
 	return listitems
 
+def get_trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_order=None):
+	from resources.lib import library
+	movies = library.trakt_lists(list_name=trakt_list_name,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
+	listitems = None
+	for i in movies:
+		imdb_id = i['ids']['imdb']
+		response = get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 0.3)
+		result_type = False
+		try:
+			response['movie_results'][0]['media_type'] = 'movie'
+			result_type = 'movie_results'
+		except:
+			try:
+				response['tv_results'][0]['media_type'] = 'tv'
+				result_type = 'tv_results'
+			except:
+				result_type = False
+				pass
+		if listitems == None and result_type != False:
+			listitems = handle_tmdb_multi_search(response[result_type])
+		elif result_type != False:
+			listitems += handle_tmdb_multi_search(response[result_type])
+	Utils.show_busy()
+	return listitems
+
 def get_trakt(trakt_type=None,info=None):
 	from resources.lib import library
 	if trakt_type == 'movie':

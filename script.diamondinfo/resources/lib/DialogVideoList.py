@@ -511,18 +511,30 @@ def get_tmdb_window(window_type):
 
         @ch.click(5015)
         def get_trakt_stuff(self):
+            import json
+            file_path = xbmcvfs.translatePath(xbmcaddon.Addon().getAddonInfo('path'))
+            json_file = open(file_path + 'trakt_list.json')
+            trakt_data = json.load(json_file)
+            json_file.close()
+
             listitems = []
-            xbmc.log(str('get_trakt_stuff')+'===>PHIL', level=xbmc.LOGINFO)
             listitems = ['Trakt Watched Movies']
             listitems += ['Trakt Watched Shows']
             listitems += ['Trakt Collection Movies']
             listitems += ['Trakt Collection Shows']
+            for i in trakt_data['trakt_list']:
+                if str(i['name']) != '':
+                    listitems += [i['name']]
+
             selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
             if selection == -1:
                 return
             self.mode = 'trakt'
             Utils.show_busy()
             #xbmc.log(str(list_str)+'===>PHIL', level=xbmc.LOGINFO)
+            if selection == -1:
+                Utils.hide_busy()
+                return
             if selection == 0:
                 self.search_str = library.trakt_watched_movies()
                 self.type = 'movie'
@@ -539,6 +551,19 @@ def get_tmdb_window(window_type):
                 self.search_str = library.trakt_collection_shows()
                 self.type = 'tv'
                 xbmcgui.Window(10000).setProperty('diamond_info_var', 'info=trakt_coll&trakt_type=tv')
+            else:
+                for i in trakt_data['trakt_list']:
+                    if i['name'] == listitems[selection]:
+                        self.type = 'movie'
+                        trakt_type = 'movie'
+                        trakt_list_name = str(i['name'])
+                        trakt_user_id = str(i['user_id'])
+                        takt_list_slug = str(i['list_slug'])
+                        trakt_sort_by = str(i['sort_by'])
+                        trakt_sort_order = str(i['sort_order'])
+                        self.search_str = library.trakt_lists(list_name=trakt_list_name,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
+                        info_line = 'info=trakt_list&script=False&trakt_type=' +str(trakt_type)+'&list_slug='+str(takt_list_slug)+'&user_id=' +str(trakt_user_id)+'&trakt_sort_by='+str(trakt_sort_by)+'&trakt_sort_order='+str(trakt_sort_order)+'&trakt_list_name='+str(i['name'])
+                        xbmcgui.Window(10000).setProperty('diamond_info_var', info_line)
             self.filter_label = 'Results for:  ' + listitems[selection]
             self.fetch_data()
             Utils.hide_busy()

@@ -24,6 +24,15 @@ from pathlib import Path
 
 import re
 
+def addon_ID():
+	addonID = xbmcaddon.Addon().getAddonInfo('id')
+	return addonID
+
+def addon_ID_short():
+	addonID = xbmcaddon.Addon().getAddonInfo('id')
+	addonID_short = addonID.replace('script.','')
+	return addonID_short
+
 def main_file_path():
 	return xbmcvfs.translatePath(xbmcaddon.Addon().getAddonInfo('path'))
 
@@ -32,27 +41,27 @@ def tmdb_settings_path():
 	addon_path = addon.getAddonInfo('path')
 	addonID = addon.getAddonInfo('id')
 	addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
-	return addonUserDataFolder.replace('script.diamondinfo','plugin.video.themoviedb.helper') + '/settings.xml'
+	return addonUserDataFolder.replace(addonID,'plugin.video.themoviedb.helper') + '/settings.xml'
 
 def tmdb_traktapi_path():
-	return main_file_path().replace('script.diamondinfo','plugin.video.themoviedb.helper') + 'resources/lib/traktapi.py'
+	return main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/lib/traktapi.py'
 
 def tmdb_traktapi_new_path():
-	return main_file_path().replace('script.diamondinfo','plugin.video.themoviedb.helper') + 'resources/lib/trakt/api.py'
+	return main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/lib/trakt/api.py'
 	
 def basedir_tv_path():
 	addon = xbmcaddon.Addon()
 	addon_path = addon.getAddonInfo('path')
 	addonID = addon.getAddonInfo('id')
 	addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
-	return addonUserDataFolder.replace('script.diamondinfo','plugin.video.openmeta') + '/TVShows'
+	return addonUserDataFolder.replace(addon_ID(),'plugin.video.openmeta') + '/TVShows'
 
 def basedir_movies_path():
 	addon = xbmcaddon.Addon()
 	addon_path = addon.getAddonInfo('path')
 	addonID = addon.getAddonInfo('id')
 	addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
-	return addonUserDataFolder.replace('script.diamondinfo','plugin.video.openmeta') + '/Movies'
+	return addonUserDataFolder.replace(addon_ID(),'plugin.video.openmeta') + '/Movies'
 	
 def db_path():
 	home = expanduser("~")
@@ -666,6 +675,27 @@ def trakt_next_episode_rewatch(tmdb_id_num=None):
 		#xbmc.executebuiltin(url) 
 		xbmc.executebuiltin('Dialog.Close(busydialog)')
 
+def trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_order=None):
+	headers = trak_auth()
+	url = 'https://api.trakt.tv/users/'+str(user_id)+'/lists/'+str(list_slug)+'/items'
+	response = requests.get(url, headers=headers).json()
+	if sort_order == 'asc':
+		reverse_order = False
+	if sort_order == 'desc':
+		reverse_order = True
+	response = sorted(response, key=lambda k: k[sort_by], reverse=reverse_order)
+	movies = []
+	for i in response:
+		try: 
+			tmdb_id = i['movie']
+			tmdb_id['type'] = 'movie'
+		except:
+			tmdb_id = i['show']
+			tmdb_id['type'] = 'show'
+		if tmdb_id not in movies:
+			movies.append(tmdb_id)
+	return response
+	
 
 def trakt_watched_movies():
 	headers = trak_auth()
