@@ -1,5 +1,5 @@
 import os, shutil
-import xbmc, xbmcgui, xbmcplugin, xbmcaddon
+import xbmc, xbmcgui, xbmcplugin, xbmcaddon, xbmcvfs
 from resources.lib import Utils
 from resources.lib import local_db
 from resources.lib import TheMovieDB
@@ -56,13 +56,17 @@ def start_info_actions(infos, params):
 			search_str = xbmcgui.Dialog().input(heading='Enter search string', type=xbmcgui.INPUT_ALPHANUM)
 			return wm.open_video_list(search_str=search_str, mode='search')
 
+		elif info == 'test_basedir':
+			xbmc.log(str(library.basedir_tv_path())+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(library.basedir_movies_path())+'===>PHIL', level=xbmc.LOGINFO)
+
 		elif info == 'setup_sources':
 			library_tv_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_tv_sync'))
 			library_movies_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_movies_sync'))
-			library_folder = basedir_tv_path()
+			library_folder = library.basedir_tv_path()
 			if not xbmcvfs.exists(library_folder):
 				xbmcvfs.mkdir(library_folder)
-			library_folder = basedir_movies_path()
+			library_folder = library.basedir_movies_path()
 			if not xbmcvfs.exists(library_folder):
 				xbmcvfs.mkdir(library_folder)
 			if not library.library_source_exists_tv() and library_tv_sync == 'true':

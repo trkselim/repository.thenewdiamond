@@ -775,6 +775,7 @@ def trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_ord
 	headers = trak_auth()
 	url = 'https://api.trakt.tv/users/'+str(user_id)+'/lists/'+str(list_slug)+'/items'
 	response = requests.get(url, headers=headers).json()
+	xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
 	if sort_order == 'asc':
 		reverse_order = False
 	if sort_order == 'desc':
@@ -790,6 +791,7 @@ def trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_ord
 			tmdb_id['type'] = 'show'
 		if tmdb_id not in movies:
 			movies.append(tmdb_id)
+	xbmc.log(str(movies)+'===>PHIL', level=xbmc.LOGINFO)
 	return movies
 	
 
