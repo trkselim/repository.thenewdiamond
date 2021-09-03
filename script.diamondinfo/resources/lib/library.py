@@ -24,7 +24,7 @@ import fnmatch
 from pathlib import Path
 
 import re
-
+from resources.lib import Utils
 
 
 def addon_ID():
@@ -851,6 +851,7 @@ def trakt_collection_shows():
 
 
 def trakt_add_movie(tmdb_id_num=None,mode=None):
+	Utils.show_busy()
 	headers = trak_auth()
 	#tmdb_id = 188927
 
@@ -896,8 +897,10 @@ def trakt_add_movie(tmdb_id_num=None,mode=None):
 		xbmc.log(str(movie_title + 'removed: ' + str(response_collect.json()['deleted']))+'===>PHIL', level=xbmc.LOGINFO)
 		delete_folder_contents(movie_path, True)
 		xbmc.executebuiltin('CleanLibrary(video)')
+	Utils.hide_busy()
 
 def trakt_add_tv(tmdb_id_num=None,mode=None):
+	Utils.show_busy()
 	headers = trak_auth()
 	#tmdb_id = 91363
 
@@ -940,8 +943,10 @@ def trakt_add_tv(tmdb_id_num=None,mode=None):
 		xbmc.log(str(show_title + ' episodes removed: ' + str(response_collect.json()['deleted']))+'===>PHIL', level=xbmc.LOGINFO)
 		delete_folder_contents(show_path, True)
 		xbmc.executebuiltin('CleanLibrary(video)')
+	Utils.hide_busy()
 
 def trakt_add_tv_season(tmdb_id_num=None,season_num=None,mode=None):
+	Utils.show_busy()
 #/search/tmdb/:id?type=show
 	headers = trak_auth()
 	#tmdb_id = 91363
@@ -1003,8 +1008,10 @@ def trakt_add_tv_season(tmdb_id_num=None,season_num=None,mode=None):
 		xbmc.log(str(show_title + ' episodes removed: ' + str(response_collect.json()['deleted']))+'===>PHIL', level=xbmc.LOGINFO)
 		delete_folder_contents(show_path, True)
 		xbmc.executebuiltin('CleanLibrary(video)')
+	Utils.hide_busy()
 
 def trakt_add_tv_episode(tmdb_id_num=None,season_num=None,episode_num=None,mode=None):
+	Utils.show_busy()
 #/search/tmdb/:id?type=episode
 	headers = trak_auth()
 	#tmdb_id = 91363
@@ -1064,6 +1071,7 @@ def trakt_add_tv_episode(tmdb_id_num=None,season_num=None,episode_num=None,mode=
 		xbmc.log(str(show_title + ' episodes removed: ' + str(response_collect.json()['deleted']))+'===>PHIL', level=xbmc.LOGINFO)
 		delete_folder_contents(show_path, True)
 		xbmc.executebuiltin('CleanLibrary(video)')
+	Utils.hide_busy()
 
 def trak_auth():
 	file_path = main_file_path()

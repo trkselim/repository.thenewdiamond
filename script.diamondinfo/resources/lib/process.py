@@ -59,6 +59,12 @@ def start_info_actions(infos, params):
 		elif info == 'setup_sources':
 			library_tv_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_tv_sync'))
 			library_movies_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_movies_sync'))
+			library_folder = basedir_tv_path()
+			if not xbmcvfs.exists(library_folder):
+				xbmcvfs.mkdir(library_folder)
+			library_folder = basedir_movies_path()
+			if not xbmcvfs.exists(library_folder):
+				xbmcvfs.mkdir(library_folder)
 			if not library.library_source_exists_tv() and library_tv_sync == 'true':
 				response = library.setup_library_tv()
 				xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)

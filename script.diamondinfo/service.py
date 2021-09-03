@@ -184,8 +184,8 @@ class PlayerMonitor(xbmc.Player):
             json_object['result']['VideoPlayer.MovieTitle'] = movie_title
             year = json_object['result']['VideoPlayer.Year']
 
-        if 'tt' in str(imdb_id):
-            tmdb_id = TheMovieDB.get_show_tmdb_id(imdb_id=imdb_id)
+        if 'tt' in str(imdb_id) and type == 'movie':
+            tmdb_id = TheMovieDB.get_movie_tmdb_id(imdb_id=imdb_id)
         elif type == 'episode':
             tmdb_id = TheMovieDB.search_media(media_name=tv_title, media_type='tv')
             if str(tmdb_id) == '' or str(tmdb_id) == None or tmdb_id == None:
@@ -200,10 +200,14 @@ class PlayerMonitor(xbmc.Player):
                 url = 'https://api.themoviedb.org/3/search/movie?api_key='+str(tmdb_api)+'&query=' +str(movie_title) + '&language=en-US&include_image_language=en,null&year=' +str(year)
                 response = requests.get(url).json()
                 tmdb_id = response['results'][0]['id']
-        if not (str(tmdb_id) == '' or str(tmdb_id) == None or tmdb_id == None):
+        if not (str(tmdb_id) == '' or str(tmdb_id) == None or tmdb_id == None) and type == 'movie':
             imdb_id = TheMovieDB.get_imdb_id_from_movie_id(tmdb_id)
             if not 'tt' in str(json_object['result']['VideoPlayer.IMDBNumber']):
                 json_object['result']['VideoPlayer.IMDBNumber'] = imdb_id
+        if not (str(tmdb_id) == '' or str(tmdb_id) == None or tmdb_id == None) and type != 'movie':
+            response = TheMovieDB.get_tvshow_ids(tmdb_id)
+            imdb_id = response['imdb_id']
+            json_object['result']['VideoPlayer.IMDBNumber'] = imdb_id
 
         #TheMovieDB.get_show_tmdb_id(tvdb_id=None, db=None, imdb_id=None)
         dbID = json_object['result']['VideoPlayer.DBID']
@@ -240,7 +244,7 @@ class PlayerMonitor(xbmc.Player):
             clean_tv_title = regex.sub(' ', tv_title.replace('\'','').replace('&',' ')).replace('  ',' ')
             clean_tv_title = clean_tv_title.replace('  ','%').replace(' ','%')
             sql_result = cur.execute("""
-            select idEpisode,strTitle* from episode_view where strTitle like
+            select idEpisode,strTitle,* from episode_view where strTitle like
             '{clean_tv_title}' and c12 = {tv_season} and c13 = {tv_episode}
             """.format(clean_tv_title=clean_tv_title,tv_season=tv_season,tv_episode=tv_episode)
             ).fetchall()
