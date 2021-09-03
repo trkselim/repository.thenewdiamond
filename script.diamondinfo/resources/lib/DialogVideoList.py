@@ -1,5 +1,6 @@
 import os, shutil, urllib.request, urllib.parse, urllib.error
 import xbmc, xbmcgui, xbmcaddon, xbmcvfs
+import requests, json
 from resources.lib import Utils
 from resources.lib import TheMovieDB
 from resources.lib.WindowManager import wm
@@ -152,7 +153,7 @@ def get_tmdb_window(window_type):
                     url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=%s&amp;season=1&amp;episode=1' % tvdb_id
                     xbmc.executebuiltin('Dialog.Close(busydialog)')
                     PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
-                    self.reload_trakt()
+                    #self.reload_trakt()
                 else:
                     if self.listitem.getProperty('dbid'):
                         dbid = self.listitem.getProperty('dbid')
@@ -163,7 +164,7 @@ def get_tmdb_window(window_type):
                         url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=movie&amp;tmdb_id=%s' % item_id
                     xbmc.executebuiltin('Dialog.Close(busydialog)')
                     PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=dbid)
-                    self.reload_trakt()
+                    #self.reload_trakt()
             #if selection == 1:
             if selection_text == 'Remove from library' or selection_text == 'Add to library':
                 if self.listitem.getProperty('TVShowTitle'):
@@ -212,7 +213,7 @@ def get_tmdb_window(window_type):
                 url = library.next_episode_show(tmdb_id_num=item_id,dbid_num=dbid)
                 xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
                 PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
-                self.reload_trakt()
+                #self.reload_trakt()
             ##if (selection == 3 and self.type == 'tv' and int(dbid) > 0):
             #if selection_text == 'Play Trakt Next Episode':
             #    url = library.trakt_next_episode_normal(tmdb_id_num=item_id)
@@ -222,13 +223,13 @@ def get_tmdb_window(window_type):
                 url = library.trakt_next_episode_normal(tmdb_id_num=item_id)
                 xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
                 PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
-                self.reload_trakt()
+                #self.reload_trakt()
             #if (selection == 3 and self.type == 'tv' and int(dbid) == 0):
             if selection_text == 'Play Trakt Next Episode (Rewatch)':
                 url = library.trakt_next_episode_rewatch(tmdb_id_num=item_id)
                 xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
                 PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
-                self.reload_trakt()
+                #self.reload_trakt()
             #2 (movie) #4 (TV+ DBID) #4 (TV + 0 DBID)
             #if (selection == 2 and not self.type == 'tv') or (selection == 4 and self.type == 'tv' and int(dbid) > 0) or (selection == 4 and self.type == 'tv' and int(dbid) == 0):
             if selection_text == 'Search item':
@@ -459,18 +460,19 @@ def get_tmdb_window(window_type):
 
         @ch.click(5014)
         def get_IMDB_Lists(self):
-            #xbmc.log(str('get_IMDB_Lists')+'===>PHIL', level=xbmc.LOGINFO)
-            import json
             file_path = xbmcvfs.translatePath(xbmcaddon.Addon().getAddonInfo('path'))
-            json_file = open(file_path + 'imdb_list.json')
-            data = json.load(json_file)
-            json_file.close()
-            import requests
-            try:
-                data = requests.get('https://bit.ly/2WABGMg').json()
-            except:
-                pass
+            imdb_json = xbmcaddon.Addon(library.addon_ID()).getSetting('imdb_json')
+            custom_imdb_json = xbmcaddon.Addon(library.addon_ID()).getSetting('custom_imdb_json')
             #https://raw.githubusercontent.com/henryjfry/repository.thenewdiamond/main/imdb_list.json
+            if str(imdb_json) != '' and custom_imdb_json == 'true':
+                data = requests.get(imdb_json).json()
+                xbmc.log(str(imdb_json)+'===>PHIL', level=xbmc.LOGINFO)
+            else:
+                imdb_json = file_path + 'imdb_list.json'
+                json_file = open(imdb_json)
+                data = json.load(json_file)
+                json_file.close()
+
             listitems = []
             imdb_list = []
             imdb_list_name = []
@@ -494,7 +496,6 @@ def get_tmdb_window(window_type):
             Utils.hide_busy()
             self.update()
 
-        @ch.click(999999)
         def reload_trakt(self):
             xbmc.log(str('reload_trakt')+'===>PHIL', level=xbmc.LOGINFO)
             if 'Trakt Watched Movies' in str(self.filter_label):
@@ -511,11 +512,17 @@ def get_tmdb_window(window_type):
 
         @ch.click(5015)
         def get_trakt_stuff(self):
-            import json
-            file_path = xbmcvfs.translatePath(xbmcaddon.Addon().getAddonInfo('path'))
-            json_file = open(file_path + 'trakt_list.json')
-            trakt_data = json.load(json_file)
-            json_file.close()
+            #https://raw.githubusercontent.com/henryjfry/repository.thenewdiamond/main/trakt_list.json
+            trakt_json = xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_json')
+            custom_trakt_json = xbmcaddon.Addon(library.addon_ID()).getSetting('custom_trakt_json')
+            if str(trakt_json) != '' and custom_trakt_json == 'true':
+                trakt_data = requests.get(trakt_json).json()
+                xbmc.log(str(trakt_json)+'===>PHIL', level=xbmc.LOGINFO)
+            else:
+                trakt_json = file_path + 'trakt_list.json'
+                json_file = open(trakt_json)
+                trakt_data = json.load(json_file)
+                json_file.close()
 
             listitems = []
             listitems = ['Trakt Watched Movies']

@@ -1,5 +1,5 @@
 import os, shutil
-import xbmc, xbmcgui, xbmcplugin
+import xbmc, xbmcgui, xbmcplugin, xbmcaddon
 from resources.lib import Utils
 from resources.lib import local_db
 from resources.lib import TheMovieDB
@@ -68,44 +68,59 @@ def start_info_actions(infos, params):
 			#xbmc.log(str(library.tmdb_api_key())+'tmdb_api===>PHIL', level=xbmc.LOGINFO)
 			#xbmc.log(str(library.fanart_api_key())+'fanart_api===>PHIL', level=xbmc.LOGINFO)
 			#return
+			library_tv_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_tv_sync'))
+			if library_tv_sync == 'true':
+				library_tv_sync = True
+			if library_tv_sync == 'false':
+				library_tv_sync = False
+			library_movies_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_movies_sync'))
+			if library_movies_sync == 'true':
+				library_movies_sync = True
+			if library_movies_sync == 'false':
+				library_movies_sync = False
+
 			icon_path = library.icon_path()
-			if not xbmc.Player().isPlaying():
+			if not xbmc.Player().isPlaying() and (library_tv_sync or library_movies_sync):
 				xbmcgui.Dialog().notification(heading='Startup Tasks', message='TRAKT_SYNC', icon=icon_path,time=1000,sound=False)
-			library.library_auto_movie()
-			library.library_auto_tv()
-			xbmc.log(str('refresh_recently_added')+'===>PHIL', level=xbmc.LOGFATAL)
-			library.refresh_recently_added()
-			xbmc.log(str('trakt_calendar_list')+'===>PHIL', level=xbmc.LOGFATAL)
-			if not xbmc.Player().isPlaying():
-				xbmcgui.Dialog().notification(heading='Startup Tasks', message='trakt_calendar_list', icon=icon_path,time=1000,sound=False)
-			library.trakt_calendar_list()
-			if not xbmc.Player().isPlaying():
+			if library_movies_sync:
+				library.library_auto_movie()
+			if library_tv_sync:
+				library.library_auto_tv()
+				xbmc.log(str('refresh_recently_added')+'===>PHIL', level=xbmc.LOGFATAL)
+				library.refresh_recently_added()
+				xbmc.log(str('trakt_calendar_list')+'===>PHIL', level=xbmc.LOGFATAL)
+				if not xbmc.Player().isPlaying():
+					xbmcgui.Dialog().notification(heading='Startup Tasks', message='trakt_calendar_list', icon=icon_path,time=1000,sound=False)
+				library.trakt_calendar_list()
+			if not xbmc.Player().isPlaying() and (library_tv_sync or library_movies_sync):
 				xbmcgui.Dialog().notification(heading='Startup Tasks', message='Startup Complete!', icon=icon_path, time=1000,sound=False)
 			#xbmc.log(str('UPDATE_WIDGETS')+'===>PHIL', level=xbmc.LOGFATAL)
 			#if not xbmc.Player().isPlaying():
 			#	xbmc.executebuiltin('UpdateLibrary(video,widget_refresh,true)')
-			xbmc.log(str('UpdateLibrary_MOVIES')+'===>PHIL', level=xbmc.LOGFATAL)
-			xbmc.executebuiltin('UpdateLibrary(video, {})'.format(library.basedir_movies_path()))
-			xbmc.log(str('UpdateLibrary_TV')+'===>PHIL', level=xbmc.LOGFATAL)
-			xbmc.executebuiltin('UpdateLibrary(video, {})'.format(library.basedir_tv_path()))
-
-			time_since_up = time.monotonic()
-			if not xbmc.Player().isPlaying():
-				try:
-					if time_since_up > 600:
-						#print('NOW')
-						hours_since_up = int((time_since_up)/60/60)
-						xbmc.log(str(hours_since_up)+str('=multiple of 8 hours=')+ str(hours_since_up % 8 == 0)+'=hours_since_up===>PHIL', level=xbmc.LOGINFO)
-						if hours_since_up >=1:
-							xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
-				except:
-					if time_since_up > 600:
-						#print('NOW')
-						hours_since_up = int((time_since_up)/60/60)
-						xbmc.log(str(hours_since_up)+str('=multiple of 8 hours=')+ str(hours_since_up % 8 == 0)+'=hours_since_up===>PHIL', level=xbmc.LOGINFO)
-						if hours_since_up >=1:
-							xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
-			#xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
+			if library_movies_sync:
+				xbmc.log(str('UpdateLibrary_MOVIES')+'===>PHIL', level=xbmc.LOGFATAL)
+				xbmc.executebuiltin('UpdateLibrary(video, {})'.format(library.basedir_movies_path()))
+			if library_tv_sync:
+				xbmc.log(str('UpdateLibrary_TV')+'===>PHIL', level=xbmc.LOGFATAL)
+				xbmc.executebuiltin('UpdateLibrary(video, {})'.format(library.basedir_tv_path()))
+			if library_tv_sync or library_movies_sync:
+				time_since_up = time.monotonic()
+				if not xbmc.Player().isPlaying():
+					try:
+						if time_since_up > 600:
+							#print('NOW')
+							hours_since_up = int((time_since_up)/60/60)
+							xbmc.log(str(hours_since_up)+str('=multiple of 8 hours=')+ str(hours_since_up % 8 == 0)+'=hours_since_up===>PHIL', level=xbmc.LOGINFO)
+							if hours_since_up >=1:
+								xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
+					except:
+						if time_since_up > 600:
+							#print('NOW')
+							hours_since_up = int((time_since_up)/60/60)
+							xbmc.log(str(hours_since_up)+str('=multiple of 8 hours=')+ str(hours_since_up % 8 == 0)+'=hours_since_up===>PHIL', level=xbmc.LOGINFO)
+							if hours_since_up >=1:
+								xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
+				#xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
 
 		elif info == 'trakt_watched' or info == 'trakt_coll' or info == 'trakt_list':
 			#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_watched&trakt_type=movie&script=True)'
@@ -139,15 +154,15 @@ def start_info_actions(infos, params):
 					trakt_label = 'Trakt Collection Shows'
 				elif info == 'trakt_list':
 					trakt_type = str(params['trakt_type'])
-					trakt_list_name = str(params['trakt_list_name'])
+					trakt_label = str(params['trakt_list_name'])
 					trakt_user_id = str(params['user_id'])
 					takt_list_slug = str(params['list_slug'])
 					trakt_sort_by = str(params['trakt_sort_by'])
 					trakt_sort_order = str(params['trakt_sort_order'])
 					movies = library.trakt_lists(list_name=trakt_list_name,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
 					if trakt_script == 'False':
-						return TheMovieDB.get_trakt_lists(list_name=trakt_list_name,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
-				return wm.open_video_list(mode='trakt', listitems=[], search_str=movies, media_type=trakt_type, filter_label=trakt_list_name)
+						return TheMovieDB.get_trakt_lists(list_name=trakt_label,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
+				return wm.open_video_list(mode='trakt', listitems=[], search_str=movies, media_type=trakt_type, filter_label=trakt_label)
 
 		elif info == 'imdb_list':
 			try:

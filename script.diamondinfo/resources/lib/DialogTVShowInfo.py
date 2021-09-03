@@ -164,8 +164,14 @@ def get_tvshow_window(window_type):
 			manage_list = []
 			manage_list.append(["Diamond Info's settings", 'Addon.OpenSettings("script.diamondinfo")'])
 			manage_list.append(["TMDBHelper Context", 'RunScript(plugin.video.themoviedb.helper,sync_trakt,tmdb_type=tv,tmdb_id='+str(self.info['id'])+')'])
+			manage_list.append(["TmdbHelper settings", 'Addon.OpenSettings("plugin.video.themoviedb.helper")'])
 			manage_list.append(["YouTube's settings", 'Addon.OpenSettings("plugin.video.youtube")'])
-			selection = xbmcgui.Dialog().select(heading='Settings', list=[i[0] for i in manage_list])
+			import xbmcaddon
+			settings_user_config = xbmcaddon.Addon(library.addon_ID()).getSetting('settings_user_config')
+			if settings_user_config == 'Settings Selection Menu':
+				selection = xbmcgui.Dialog().select(heading='Settings', list=[i[0] for i in manage_list])
+			else:
+				selection = 1
 			if selection > -1:
 				for item in manage_list[selection][1].split('||'):
 					xbmc.executebuiltin(item)

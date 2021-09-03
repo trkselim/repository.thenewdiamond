@@ -6,6 +6,7 @@ import os
 import subprocess
 import sys
 from os.path import expanduser
+import glob
 
 import datetime
 from datetime import date, datetime, timedelta
@@ -23,6 +24,8 @@ import fnmatch
 from pathlib import Path
 
 import re
+
+
 
 def addon_ID():
 	addonID = xbmcaddon.Addon().getAddonInfo('id')
@@ -50,32 +53,104 @@ def tmdb_traktapi_new_path():
 	return main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/lib/trakt/api.py'
 	
 def basedir_tv_path():
-	addon = xbmcaddon.Addon()
-	addon_path = addon.getAddonInfo('path')
-	addonID = addon.getAddonInfo('id')
-	addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
-	return addonUserDataFolder.replace(addon_ID(),'plugin.video.openmeta') + '/TVShows'
+	root_dir = xbmcaddon.Addon(addon_ID()).getSetting('library_folder')
+	if root_dir == '':
+		addon = xbmcaddon.Addon()
+		addon_path = addon.getAddonInfo('path')
+		addonID = addon.getAddonInfo('id')
+		addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
+		#addonUserDataFolder.replace(addon_ID(),'plugin.video.openmeta') + '/TVShows'
+		return addonUserDataFolder + '/TVShows'
+	else:
+		if root_dir[-1] != '/':
+			root_dir += '/'
+		return root_dir + 'TVShows'
 
 def basedir_movies_path():
-	addon = xbmcaddon.Addon()
-	addon_path = addon.getAddonInfo('path')
-	addonID = addon.getAddonInfo('id')
-	addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
-	return addonUserDataFolder.replace(addon_ID(),'plugin.video.openmeta') + '/Movies'
+	root_dir = xbmcaddon.Addon(addon_ID()).getSetting('library_folder')
+	if root_dir == '':
+		addon = xbmcaddon.Addon()
+		addon_path = addon.getAddonInfo('path')
+		addonID = addon.getAddonInfo('id')
+		addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
+		#addonUserDataFolder.replace(addon_ID(),'plugin.video.openmeta') + '/Movies'
+		return addonUserDataFolder + '/Movies'
+	else:
+		if root_dir[-1] != '/':
+			root_dir += '/'
+		return root_dir + 'Movies'
 	
 def db_path():
-	home = expanduser("~")
-	return home + '/.kodi/userdata/Database/MyVideos119.db'
+	#home = expanduser("~")
+	#return home + '/.kodi/userdata/Database/MyVideos119.db'
+	db_name = 'MyVideos*.db'
+	path_db = 'special://profile/Database/%s' % db_name
+	filelist = glob.glob(xbmcvfs.translatePath(path_db))
+	if filelist:
+		return filelist[-1]
 
 def icon_path():
 	home = expanduser("~")
 	return home + '/.kodi/addons/plugin.video.themoviedb.helper/resources/icons/tmdb/tv.png'
 
 def tmdb_api_key():
-	return xbmcaddon.Addon('plugin.video.seren').getSetting('tmdb.apikey')
+	#return xbmcaddon.Addon('plugin.video.seren').getSetting('tmdb.apikey')
+	return xbmcaddon.Addon(addon_ID()).getSetting('tmdb_api')
 
 def fanart_api_key():
-	return xbmcaddon.Addon('plugin.video.themoviedb.helper').getSetting('fanarttv_clientkey')
+	#return xbmcaddon.Addon('plugin.video.themoviedb.helper').getSetting('fanarttv_clientkey')
+	return xbmcaddon.Addon(addon_ID()).getSetting('fanart_api')
+
+def show_settings_menu():
+	if xbmcaddon.Addon(addon_ID()).getSetting('settings_user_config') == 'Settings Selection Menu':
+		return True
+	if xbmcaddon.Addon(addon_ID()).getSetting('settings_user_config') == 'TMDBHelper Context Menu':
+		return False
+
+
+
+#OPENMETA METHOD => AddSource.py
+def setup_library_tv():
+	from resources.lib import AddSource
+	library_folder = basedir_tv_path()
+	if library_folder[-1] != '/':
+		library_folder += '/'
+	library_root_folder = xbmcaddon.Addon(addon_ID()).getSetting('library_folder')
+	if library_root_folder[-1] != '/':
+		library_root_folder += '/'
+	if not xbmcvfs.exists(library_root_folder):
+		xbmcvfs.mkdir(library_root_folder)
+	if not xbmcvfs.exists(library_folder):
+		xbmcvfs.mkdir(library_folder)
+		try:
+			source_thumbnail = icon_path()
+			source_name = 'Openinfo TVShows'
+			#source_content = "('%s','tvshows','metadata.tvdb.com','',0,0,'<settings version=\"2\"><setting id=\"absolutenumber\" default=\"true\">false</setting><setting id=\"alsoimdb\">true</setting><setting id=\"dvdorder\" default=\"true\">false</setting><setting id=\"fallback\">true</setting><setting id=\"fallbacklanguage\">es</setting><setting id=\"fanart\">true</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TheTVDB</setting><setting id=\"usefallbacklanguage1\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
+			#source_content = "('%s','tvshows','metadata.themoviedb.org','',0,0,'<settings version=\"2\"><setting id=\"absolutenumber\" default=\"true\">false</setting><setting id=\"alsoimdb\">true</setting><setting id=\"dvdorder\" default=\"true\">false</setting><setting id=\"fallback\">true</setting><setting id=\"fallbacklanguage\">es</setting><setting id=\"fanart\">true</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TheTVDB</setting><setting id=\"usefallbacklanguage1\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
+			source_content = "('%s','tvshows','metadata.tvshows.themoviedb.org.python','',0,0,'<settings version=\"2\"><setting id=\"certprefix\" default=\"true\">Rated </setting><setting id=\"fanart\">true</setting><setting id=\"imdbanyway\">true</setting><setting id=\"keeporiginaltitle\" default=\"true\">false</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TMDb</setting><setting id=\"tmdbcertcountry\" default=\"true\">us</setting><setting id=\"trailer\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
+			AddSource.add_source(source_name, library_folder, source_content, source_thumbnail)
+		except:
+			pass
+	return xbmc.translatePath(library_folder)
+
+#OPENMETA METHOD => AddSource.py
+def setup_library_movies():
+	from resources.lib import AddSource
+	library_folder = basedir_movies_path()
+	if library_folder[-1] != '/':
+		library_folder += '/'
+	library_root_folder = xbmcaddon.Addon(addon_ID()).getSetting('library_folder')
+	if library_root_folder[-1] != '/':
+		library_root_folder += '/'
+	if not xbmcvfs.exists(library_root_folder):
+		xbmcvfs.mkdir(library_root_folder)
+	if not xbmcvfs.exists(library_folder):
+		xbmcvfs.mkdir(library_folder)
+		source_thumbnail = icon_path()
+		source_name = 'Openinfo Movies'
+		source_content = "('%s','movies','metadata.themoviedb.org','',2147483647,1,'<settings version=\"2\"><setting id=\"certprefix\" default=\"true\">Rated </setting><setting id=\"fanart\">true</setting><setting id=\"imdbanyway\">true</setting><setting id=\"keeporiginaltitle\" default=\"true\">false</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TMDb</setting><setting id=\"tmdbcertcountry\" default=\"true\">us</setting><setting id=\"trailer\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
+		AddSource.add_source(source_name, library_folder, source_content, source_thumbnail)
+	return xbmc.translatePath(library_folder)
 
 def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api):
 	#xbmc.log(str(tmdb_id)+'get_art_fanart_movie===>PHIL', level=xbmc.LOGFATAL)

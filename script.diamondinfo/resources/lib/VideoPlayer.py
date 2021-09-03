@@ -5,7 +5,7 @@ from resources.lib.WindowManager import wm
 class VideoPlayer(xbmc.Player):
 
 	def __init__(self, *args, **kwargs):
-		#super(VideoPlayer, self).__init__()
+		super(VideoPlayer, self).__init__()
 		self.stopped = False
 
 	def onPlayBackEnded(self):

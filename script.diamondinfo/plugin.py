@@ -1,7 +1,9 @@
 import sys
 import xbmcgui, xbmcplugin
+import requests,json,xbmcaddon,xbmcvfs
 from resources.lib import process
 from resources.lib import Utils
+from resources.lib import library
 
 class Main:
 	def __init__(self):
@@ -39,18 +41,18 @@ class Main:
 				('alltvshows', 'All TV Shows'),
 				('search_menu', 'Search...')
 				]
-			import json,xbmcaddon,xbmcvfs
 			file_path = xbmcvfs.translatePath(xbmcaddon.Addon().getAddonInfo('path'))
-			json_file = open(file_path + 'imdb_list.json')
-			data = json.load(json_file)
-			json_file.close()
-			import requests
-			try:
-				data = requests.get('https://bit.ly/2WABGMg').json()
-			except:
-				pass
+			imdb_json = xbmcaddon.Addon(library.addon_ID()).getSetting('imdb_json')
+			custom_imdb_json = xbmcaddon.Addon(library.addon_ID()).getSetting('custom_imdb_json')
 			#https://raw.githubusercontent.com/henryjfry/repository.thenewdiamond/main/imdb_list.json
-			#https://raw.githubusercontent.com/henryjfry/repository.thenewdiamond/main/imdb_list.json
+			if str(imdb_json) != '' and custom_imdb_json == 'true':
+				data = requests.get(imdb_json).json()
+				xbmc.log(str(imdb_json)+'===>PHIL', level=xbmc.LOGINFO)
+			else:
+				imdb_json = file_path + 'imdb_list.json'
+				json_file = open(imdb_json)
+				data = json.load(json_file)
+				json_file.close()
 
 			NoFolder_items2 = [
 				('allmovies', 'All Movies'),
@@ -71,9 +73,17 @@ class Main:
 
 			NoFolder_items = NoFolder_items2
 
-			json_file = open(file_path + 'trakt_list.json')
-			trakt_data = json.load(json_file)
-			json_file.close()
+			#https://raw.githubusercontent.com/henryjfry/repository.thenewdiamond/main/trakt_list.json
+			trakt_json = xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_json')
+			custom_trakt_json = xbmcaddon.Addon(library.addon_ID()).getSetting('custom_trakt_json')
+			if str(trakt_json) != '' and custom_trakt_json == 'true':
+				trakt_data = requests.get(trakt_json).json()
+				xbmc.log(str(trakt_json)+'===>PHIL', level=xbmc.LOGINFO)
+			else:
+				trakt_json = file_path + 'trakt_list.json'
+				json_file = open(trakt_json)
+				trakt_data = json.load(json_file)
+				json_file.close()
 			for i in trakt_data['trakt_list']:
 				if str(i['name']) != '':
 					trakt_items.append(('trakt_list', i['name']))
