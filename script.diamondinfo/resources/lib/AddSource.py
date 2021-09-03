@@ -2,7 +2,6 @@ import os, glob
 from sqlite3 import dbapi2
 from xml.etree import ElementTree
 import xbmc, xbmcvfs
-from resources.lib.rpc import RPC
 
 def show_busy():
 	if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
