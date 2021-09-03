@@ -56,7 +56,17 @@ def start_info_actions(infos, params):
 			search_str = xbmcgui.Dialog().input(heading='Enter search string', type=xbmcgui.INPUT_ALPHANUM)
 			return wm.open_video_list(search_str=search_str, mode='search')
 
-		elif info == 'phil_library':
+		elif info == 'setup_sources':
+			library_tv_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_tv_sync'))
+			library_movies_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_movies_sync'))
+			if not library.library_source_exists_tv() and library_tv_sync == 'true':
+				response = library.setup_library_tv()
+				xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
+			if not library.library_source_exists_movies() and library_movies_sync == 'true':
+				response = library.setup_library_movies()
+				xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
+
+		elif info == 'auto_library':
 			#xbmc.log(str(library.tmdb_settings_path())+'tmdb_settings===>PHIL', level=xbmc.LOGINFO)
 			#xbmc.log(str(library.main_file_path())+'file_path===>PHIL', level=xbmc.LOGINFO)
 			#xbmc.log(str(library.tmdb_traktapi_path())+'tmdb_traktapi===>PHIL', level=xbmc.LOGINFO)
