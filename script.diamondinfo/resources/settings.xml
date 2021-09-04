@@ -26,6 +26,7 @@
 		<setting label="Auto Sync TV Collection" type="bool" id="library_tv_sync" default="true"/>
 		<setting label="Auto Sync Movies Collection" type="bool" id="library_movies_sync" default="true"/>
 		<setting label="SETUP SOURCES.XML" type="action" action="RunScript(script.diamondinfo,info=setup_sources)"/>
+		<setting label="Library Auto Sync" type="action" action="RunScript(script.diamondinfo,info=auto_library)"/>
 	</category>
 	<category label="Trakt/IMDB Custom Userlists JSON Location">
 		<setting label="Custom Path/URL to the Trakt/IMDB JSON see addon folder/zip for the correct structure" type="lsep"/>
