@@ -94,6 +94,8 @@ def start_info_actions(infos, params):
 				library_folder += '/'
 			xbmc.log(str(library_folder)+'===>PHIL', level=xbmc.LOGINFO)
 			xbmc.log(str(library.icon_path())+'===>PHIL', level=xbmc.LOGINFO)
+			realizer_test = xbmc.getCondVisibility('System.HasAddon(plugin.video.realizer)')
+			xbmc.log(str(realizer_test)+'===>PHIL', level=xbmc.LOGINFO)
 
 
 		elif info == 'setup_sources':
@@ -165,7 +167,8 @@ def start_info_actions(infos, params):
 				xbmc.executebuiltin('UpdateLibrary(video, {})'.format(library.basedir_tv_path()))
 			if library_tv_sync or library_movies_sync:
 				time_since_up = time.monotonic()
-				if not xbmc.Player().isPlaying():
+				realizer_test = xbmc.getCondVisibility('System.HasAddon(plugin.video.realizer)')
+				if not xbmc.Player().isPlaying() and realizer_test:
 					try:
 						if time_since_up > 600:
 							#print('NOW')

@@ -133,11 +133,11 @@ def db_path():
 		return filelist[-1]
 
 def icon_path():
-	home = expanduser("~")
-	if '\\' in str(home):
-		return home + '\.kodi\\addons\\plugin.video.themoviedb.helper\\resources\\icons\\tmdb\\tv.png'
+	if '\\' in str(main_file_path()):
+		icon_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources\icons\\tmdb\\tv.png'
 	else:
-		return home + '/.kodi/addons/plugin.video.themoviedb.helper/resources/icons/tmdb/tv.png'
+		icon_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/icons/tmdb/tv.png'
+	return icon_path
 
 def tmdb_api_key():
 	#return xbmcaddon.Addon('plugin.video.seren').getSetting('tmdb.apikey')
