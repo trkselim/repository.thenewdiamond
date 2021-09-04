@@ -68,6 +68,12 @@ def start_info_actions(infos, params):
 			xbmc.log(str(library.basedir_movies_path())+'===>PHIL', level=xbmc.LOGINFO)
 
 			library_root_folder = xbmcaddon.Addon(library.addon_ID()).getSetting('library_folder')
+			if library_root_folder == '':
+				addon = xbmcaddon.Addon()
+				addon_path = addon.getAddonInfo('path')
+				addonID = addon.getAddonInfo('id')
+				addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
+				library_root_folder = addonUserDataFolder
 			if '\\' in str(library_root_folder) and str(library_root_folder)[-1] != '\\':
 				library_root_folder += '\\'
 			elif '/' in library_root_folder and str(library_root_folder)[-1] != '/':
@@ -213,7 +219,7 @@ def start_info_actions(infos, params):
 					takt_list_slug = str(params['list_slug'])
 					trakt_sort_by = str(params['trakt_sort_by'])
 					trakt_sort_order = str(params['trakt_sort_order'])
-					movies = library.trakt_lists(list_name=trakt_list_name,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
+					movies = library.trakt_lists(list_name=trakt_label,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
 					if trakt_script == 'False':
 						return TheMovieDB.get_trakt_lists(list_name=trakt_label,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
 				return wm.open_video_list(mode='trakt', listitems=[], search_str=movies, media_type=trakt_type, filter_label=trakt_label)

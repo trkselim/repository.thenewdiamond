@@ -160,6 +160,13 @@ def setup_library_tv():
 	from resources.lib import AddSource
 	
 	library_root_folder = xbmcaddon.Addon(addon_ID()).getSetting('library_folder')
+	if library_root_folder == '':
+		addon = xbmcaddon.Addon()
+		addon_path = addon.getAddonInfo('path')
+		addonID = addon.getAddonInfo('id')
+		addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
+		library_root_folder = addonUserDataFolder
+	
 	if '\\' in str(library_root_folder) and str(library_root_folder)[-1] != '\\':
 		library_root_folder += '\\'
 	elif '/' in library_root_folder and str(library_root_folder)[-1] != '/':
@@ -180,7 +187,7 @@ def setup_library_tv():
 	#source_content = "('%s','tvshows','metadata.tvdb.com','',0,0,'<settings version=\"2\"><setting id=\"absolutenumber\" default=\"true\">false</setting><setting id=\"alsoimdb\">true</setting><setting id=\"dvdorder\" default=\"true\">false</setting><setting id=\"fallback\">true</setting><setting id=\"fallbacklanguage\">es</setting><setting id=\"fanart\">true</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TheTVDB</setting><setting id=\"usefallbacklanguage1\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
 	#source_content = "('%s','tvshows','metadata.themoviedb.org','',0,0,'<settings version=\"2\"><setting id=\"absolutenumber\" default=\"true\">false</setting><setting id=\"alsoimdb\">true</setting><setting id=\"dvdorder\" default=\"true\">false</setting><setting id=\"fallback\">true</setting><setting id=\"fallbacklanguage\">es</setting><setting id=\"fanart\">true</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TheTVDB</setting><setting id=\"usefallbacklanguage1\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
 	#source_content = "('%s','tvshows','metadata.tvshows.themoviedb.org.python','',0,0,'<settings version=\"2\"><setting id=\"certprefix\" default=\"true\">Rated </setting><setting id=\"fanart\">true</setting><setting id=\"imdbanyway\">true</setting><setting id=\"keeporiginaltitle\" default=\"true\">false</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TMDb</setting><setting id=\"tmdbcertcountry\" default=\"true\">us</setting><setting id=\"trailer\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
-	source_content = "('%s','tvshows','metadata.tvshows.themoviedb.org.python','7710e2e5cdba5a3981e83b0347eb643d',0,1,'<settings version=\"2\"><setting id=\"language\" default=\"true\">en-US</setting><setting id=\"tmdbcertcountry\" default=\"true\">us</setting><setting id=\"usecertprefix\" default=\"true\">true</setting><setting id=\"certprefix\" default=\"true\">Rated </setting><setting id=\"keeporiginaltitle\" default=\"true\">false</setting><setting id=\"cat_landscape\" default=\"true\">true</setting><setting id=\"studio_country\" default=\"true\">false</setting><setting id=\"enab_trailer\">true</setting><setting id=\"players_opt\" default=\"true\">Tubed</setting><setting id=\"ratings\">Trakt</setting><setting id=\"imdbanyway\">true</setting><setting id=\"traktanyway\">true</setting><setting id=\"tmdbanyway\" default=\"true\">true</setting><setting id=\"enable_fanarttv\" default=\"true\">true</setting><setting id=\"verboselog\" default=\"true\">false</setting></settings>',0,0,NULL,NULL)"
+	source_content = "('%s','tvshows','metadata.tvshows.themoviedb.org.python','7710e2e5cdba5a3981e83b0347eb643d',0,1,'<settings version=\"2\"><setting id=\"language\" default=\"true\">en-US</setting><setting id=\"tmdbcertcountry\" default=\"true\">us</setting><setting id=\"usecertprefix\" default=\"true\">true</setting><setting id=\"certprefix\" default=\"true\">Rated </setting><setting id=\"keeporiginaltitle\" default=\"true\">false</setting><setting id=\"cat_landscape\" default=\"true\">true</setting><setting id=\"studio_country\" default=\"true\">false</setting><setting id=\"enab_trailer\">true</setting><setting id=\"players_opt\" default=\"true\">Tubed</setting><setting id=\"ratings\">Trakt</setting><setting id=\"imdbanyway\">true</setting><setting id=\"traktanyway\">true</setting><setting id=\"tmdbanyway\" default=\"true\">true</setting><setting id=\"enable_fanarttv\" default=\"true\">true</setting><setting id=\"verboselog\" default=\"true\">false</setting></settings>',0,0,NULL,NULL)" % library_folder
 
 	AddSource.add_source(source_name, library_folder, source_content, source_thumbnail)
 	return xbmc.translatePath(library_folder)
@@ -190,6 +197,13 @@ def setup_library_movies():
 	from resources.lib import AddSource
 	
 	library_root_folder = xbmcaddon.Addon(addon_ID()).getSetting('library_folder')
+	if library_root_folder == '':
+		addon = xbmcaddon.Addon()
+		addon_path = addon.getAddonInfo('path')
+		addonID = addon.getAddonInfo('id')
+		addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
+		library_root_folder = addonUserDataFolder
+
 	if '\\' in str(library_root_folder) and str(library_root_folder)[-1] != '\\':
 		library_root_folder += '\\'
 	elif '/' in library_root_folder and str(library_root_folder)[-1] != '/':
@@ -780,7 +794,6 @@ def trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_ord
 	headers = trak_auth()
 	url = 'https://api.trakt.tv/users/'+str(user_id)+'/lists/'+str(list_slug)+'/items'
 	response = requests.get(url, headers=headers).json()
-	xbmc.log(str(response)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 	if sort_order == 'asc':
 		reverse_order = False
 	if sort_order == 'desc':
@@ -796,7 +809,6 @@ def trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_ord
 			tmdb_id['type'] = 'show'
 		if tmdb_id not in movies:
 			movies.append(tmdb_id)
-	xbmc.log(str(movies)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 	return movies
 	
 
