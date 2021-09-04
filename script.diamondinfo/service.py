@@ -33,39 +33,6 @@ class PlayerMonitor(xbmc.Player):
         #self.property_prefix = 'Player'
         #self.reset_properties()
 
-    def onAVStarted(self):
-        xbmc.log(str('onAVStarted')+'===>PHIL', level=xbmc.LOGINFO)
-        #self.reset_properties()
-        #self.get_playingitem()
-
-    def onPlayBackEnded(self):
-        xbmc.log(str('onPlayBackEnded')+'===>PHIL', level=xbmc.LOGINFO)
-        #self.set_watched()
-        #self.reset_properties()
-
-    def onPlayBackStopped(self):
-        xbmc.log(str('onPlayBackStopped')+'===>PHIL', level=xbmc.LOGINFO)
-        #self.set_watched()
-        #self.reset_properties()
-
-    def reset_properties(self):
-        xbmc.log(str('reset_properties')+'===>PHIL', level=xbmc.LOGINFO)
-        #self.clear_properties()
-        #self.properties = set()
-        #self.index_properties = set()
-        #self.total_time = 0
-        #self.current_time = 0
-        #self.dbtype = None
-        #self.imdb_id = None
-        #self.query = None
-        #self.year = None
-        #self.season = None
-        #self.episode = None
-        #self.dbid = None
-        #self.tmdb_id = None
-        #self.details = {}
-        #self.tmdb_type = None
-
     def movietitle_to_id(self, title):
         query = {
             "jsonrpc": "2.0",
@@ -98,8 +65,235 @@ class PlayerMonitor(xbmc.Player):
         except Exception:
             return '-1' 
 
+    def trakt_scrobble_title(self, movie_title, movie_year, percent):
+        headers = library.trak_auth()
+
+        url = 'https://api.themoviedb.org/3/search/movie?api_key='+str(tmdb_api)+'&query=' +str(movie_title) + '&language=en-US&include_image_language=en,null&year=' +str(movie_year)
+        response = requests.get(url).json()
+        tmdb_id = response['results'][0]['id']
+
+        response = requests.get('https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=movie', headers=headers).json()
+        trakt = response[0]['movie']['ids']['trakt']
+        slug = response[0]['movie']['ids']['slug']
+        imdb = response[0]['movie']['ids']['imdb']
+        tmdb = response[0]['movie']['ids']['tmdb']
+        year = response[0]['movie']['year']
+        try:
+            title = response[0]['movie']['title']
+        except:
+            title = str(u''.join(response[0]['movie']['title']).encode('utf-8').strip())
+
+        values = """
+          {
+            "movie": {
+              "title": """+'"'+title+'"'+ """,
+              "year": """+str(year)+""",
+              "ids": {
+                "trakt": """+str(trakt)+""",
+                "slug": """+'"'+slug+'"'+ """,
+                "imdb": """+'"'+imdb+'"'+ """,
+                "tmdb": """+str(tmdb)+"""
+              }
+            },
+            "progress": """+str(percent)+""",
+            "app_version": "1.0",
+            "app_date": "2014-09-22"
+          }
+        """
+        action = 'start'
+        if percent > 80:
+            action = 'stop'
+        response = requests.post('https://api.trakt.tv/scrobble/' + str(action), data=values, headers=headers)
+    #    xbmc.log(str(response.json())+'===>TRAKT_SCROBBLE_TITLE____service.next_playlist2', level=xbmc.LOGFATAL)
+        if percent < 10 or percent >= 80: 
+            xbmc.log(str(response.json())+'===>TRAKT_SCROBBLE_TITLE____service.next_playlist2', level=xbmc.LOGFATAL)
+
+    def trakt_scrobble_tmdb(self, tmdb_id, percent):
+        headers = library.trak_auth()
+
+        response = requests.get('https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=movie', headers=headers).json()
+        trakt = response[0]['movie']['ids']['trakt']
+        slug = response[0]['movie']['ids']['slug']
+        imdb = response[0]['movie']['ids']['imdb']
+        tmdb = response[0]['movie']['ids']['tmdb']
+        year = response[0]['movie']['year']
+        try:
+            title = response[0]['movie']['title']
+        except:
+            title = str(u''.join(response[0]['movie']['title']).encode('utf-8').strip())
+
+        try:
+            values = """
+              {
+                "movie": {
+                  "title": """+'"'+title+'"'+ """,
+                  "year": """+str(year)+""",
+                  "ids": {
+                    "trakt": """+str(trakt)+""",
+                    "slug": """+'"'+slug+'"'+ """,
+                    "imdb": """+'"'+imdb+'"'+ """,
+                    "tmdb": """+str(tmdb)+"""
+                  }
+                },
+                "progress": """+str(percent)+""",
+                "app_version": "1.0",
+                "app_date": "2014-09-22"
+              }
+            """
+        except:
+            values = """
+              {
+                "movie": {
+                  "year": """+str(year)+""",
+                  "ids": {
+                    "trakt": """+str(trakt)+""",
+                    "slug": """+'"'+slug+'"'+ """,
+                    "imdb": """+'"'+imdb+'"'+ """,
+                    "tmdb": """+str(tmdb)+"""
+                  }
+                },
+                "progress": """+str(percent)+""",
+                "app_version": "1.0",
+                "app_date": "2014-09-22"
+              }
+            """
+        action = 'start'
+        if percent > 80:
+            action = 'stop'
+        response = requests.post('https://api.trakt.tv/scrobble/' + str(action), data=values, headers=headers)
+    #    xbmc.log(str(response.json())+'===>TRAKT_SCROBBLE_TMDB____service.next_playlist2', level=xbmc.LOGFATAL)
+        if percent < 10 or percent >= 80: 
+            try:    xbmc.log(str(response.json())+'===>TRAKT_SCROBBLE_TMDB____service.next_playlist2', level=xbmc.LOGFATAL)
+            except: pass
+
+    def trakt_scrobble_tv(self, title, season, episode, percent):
+        headers = library.trak_auth()
+
+        if 'tmdb_id=' in str(title):
+            tmdb_id = str(title).replace('tmdb_id=','')
+            response = requests.get('https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=show', headers=headers).json()
+            tvdb = response[0]['show']['ids']['tvdb']
+            imdb = response[0]['show']['ids']['imdb']
+            trakt = response[0]['show']['ids']['trakt']
+            title = response[0]['show']['title']
+            year = response[0]['show']['year']
+        else:
+            response = requests.get('https://api.trakt.tv/search/show?query='+str(title), headers=headers).json()
+            #print(response[0])
+            trakt = response[0]['show']['ids']['trakt']
+            tvdb = response[0]['show']['ids']['tvdb']
+            year = response[0]['show']['year']
+            try:
+                title = response[0]['show']['title']
+            except:
+                title = str(u''.join(response[0]['show']['title']).encode('utf-8').strip())
+
+        values = """
+          {
+            "show": {
+              "title": """+'"'+title+'"'+ """,
+              "year": """+str(year)+""",
+              "ids": {
+                "trakt": """+str(trakt)+""",
+                "tvdb": """+str(tvdb)+"""
+              }
+            },
+            "episode": {
+              "season": """+str(season)+""",
+              "number": """+str(episode)+"""
+            },
+            "progress": """+str(percent)+""",
+            "app_version": "1.0",
+            "app_date": "2014-09-22"
+          }
+        """
+        action = 'start'
+        if percent > 80:
+            action = 'stop'
+        response = requests.post('https://api.trakt.tv/scrobble/' + str(action), data=values, headers=headers)
+        if percent < 10 or percent >= 80: 
+            try: xbmc.log(str(response.json())+'===>TRAKT_SCROBBLE_TV____service.next_playlist2', level=xbmc.LOGFATAL)
+            except: pass
+        return response.json()
+
+    def onAVStarted(self):
+        xbmc.log(str('onAVStarted')+'===>PHIL', level=xbmc.LOGINFO)
+        #self.reset_properties()
+        #self.get_playingitem()
+
+    def onPlayBackEnded(self):
+        xbmc.log(str('onPlayBackEnded')+'===>PHIL', level=xbmc.LOGINFO)
+        #self.set_watched()
+        #self.reset_properties()
+
+    def onPlayBackStopped(self):
+        xbmc.log(str('onPlayBackStopped')+'===>PHIL', level=xbmc.LOGINFO)
+        global global_movie_flag
+        global resume_position
+        global resume_duration
+        global percentage
+        global dbID
+
+        try: percentage = (resume_position / resume_duration) * 100
+        except: percentage = 100
+
+        try: 
+            dbID = int(dbID)
+            if dbID == 0:
+                dbID = None
+        except: 
+            dbID = None
+
+        try:
+            if global_movie_flag == 'true' and dbID != None and percentage < 85 and percentage > 3 and resume_duration > 300:
+                json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"VideoLibrary.SetMovieDetails","params":{"movieid":'+str(dbID)+', "resume": {"position":'+str(resume_position)+',"total":'+str(resume_duration)+'}},"id":"1"}')
+                json_object  = json.loads(json_result)
+                xbmc.log(str(json_object)+'=movie resume set, '+str(dbID)+'=dbID', level=xbmc.LOGFATAL)
+            if global_movie_flag == 'false' and dbID != None and percentage < 85 and percentage > 3 and resume_duration > 300:
+                json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"VideoLibrary.SetEpisodeDetails","params":{"episodeid":'+str(dbID)+', "resume": {"position":'+str(resume_position)+',"total":'+str(resume_duration)+'}},"id":"1"}')
+                json_object  = json.loads(json_result)
+                xbmc.log(str(json_object)+'=episode resume set, '+str(dbID)+'=dbID', level=xbmc.LOGFATAL)
+            if global_movie_flag == 'true' and dbID != None and resume_duration < 300:
+                json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"VideoLibrary.SetMovieDetails","params":{"movieid":'+str(dbID)+', "resume": {"position":'+str(0)+',"total":'+str(resume_duration)+'}},"id":"1"}')
+                json_object  = json.loads(json_result)
+                xbmc.log(str(json_object)+'=movie resume set, '+str(dbID)+'=dbID', level=xbmc.LOGFATAL)
+            if global_movie_flag == 'false' and dbID != None and resume_duration < 300 and resume_duration != 60:
+                json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"VideoLibrary.SetEpisodeDetails","params":{"episodeid":'+str(dbID)+', "resume": {"position":'+str(0)+',"total":'+str(resume_duration)+'}},"id":"1"}')
+                json_object  = json.loads(json_result)
+                xbmc.log(str(json_object)+'=episode resume set, '+str(dbID)+'=dbID', level=xbmc.LOGFATAL)
+        except:
+            xbmc.log(str('Line ')+str(getframeinfo(currentframe()).lineno)+'___'+str(getframeinfo(currentframe()).filename)+'===>PHIL', level=xbmc.LOGFATAL)
+            return
+
+        #self.set_watched()
+        #self.reset_properties()
+
+    def reset_properties(self):
+        xbmc.log(str('reset_properties')+'===>PHIL', level=xbmc.LOGINFO)
+        #self.clear_properties()
+        #self.properties = set()
+        #self.index_properties = set()
+        #self.total_time = 0
+        #self.current_time = 0
+        #self.dbtype = None
+        #self.imdb_id = None
+        #self.query = None
+        #self.year = None
+        #self.season = None
+        #self.episode = None
+        #self.dbid = None
+        #self.tmdb_id = None
+        #self.details = {}
+        #self.tmdb_type = None
+
+
     def onPlayBackStarted(self):
         xbmc.log(str('onPlayBackStarted')+'===>PHIL', level=xbmc.LOGINFO)
+        trakt_scrobble = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_scrobble'))
+
+        if trakt_scrobble == 'false':
+            return
+
         player = self.player
         global resume_position
         resume_position = None
@@ -109,6 +303,8 @@ class PlayerMonitor(xbmc.Player):
         dbID = None
         global db_path
         db_path = library.db_path()
+        global global_movie_flag
+        global_movie_flag = 'false'
 
         count = 0
         while player.isPlaying()==1 and count < 7501:
@@ -257,106 +453,192 @@ class PlayerMonitor(xbmc.Player):
                 json_object['result']['ListItem.TVShowTitle'] = str(sql_result[0][1])
             except:
                 dbID = ''
-        xbmc.log(str(duration)+'===>PHIL', level=xbmc.LOGINFO)
-        xbmc.log(str(tmdb_id)+'===>PHIL', level=xbmc.LOGINFO)
-        xbmc.log(str(imdb_id)+'===>PHIL', level=xbmc.LOGINFO)
-        xbmc.log(str(PTN_season)+'===>PHIL', level=xbmc.LOGINFO)
-        xbmc.log(str(PTN_episode)+'===>PHIL', level=xbmc.LOGINFO)
-        xbmc.log(str(PTN_movie)+'===>PHIL', level=xbmc.LOGINFO)
-        xbmc.log(str(PTN_show)+'===>PHIL', level=xbmc.LOGINFO)
-        xbmc.log(str(PTN_year)+'===>PHIL', level=xbmc.LOGINFO)
-        xbmc.log(str(dbID)+'===>PHIL', level=xbmc.LOGINFO)
+        #xbmc.log(str(duration)+'===>PHIL', level=xbmc.LOGINFO)
+        #xbmc.log(str(tmdb_id)+'===>PHIL', level=xbmc.LOGINFO)
+        #xbmc.log(str(imdb_id)+'===>PHIL', level=xbmc.LOGINFO)
+        #xbmc.log(str(PTN_season)+'===>PHIL', level=xbmc.LOGINFO)
+        #xbmc.log(str(PTN_episode)+'===>PHIL', level=xbmc.LOGINFO)
+        #xbmc.log(str(PTN_movie)+'===>PHIL', level=xbmc.LOGINFO)
+        #xbmc.log(str(PTN_show)+'===>PHIL', level=xbmc.LOGINFO)
+        #xbmc.log(str(PTN_year)+'===>PHIL', level=xbmc.LOGINFO)
+        #xbmc.log(str(dbID)+'===>PHIL', level=xbmc.LOGINFO)
         xbmc.log(str(json_object)+'===>PHIL', level=xbmc.LOGINFO)
 
-    """
-    def get_playingitem(self):
-        if not self.isPlayingVideo():
-            return  # Not a video so don't get info
-        if self.getVideoInfoTag().getMediaType() not in ['movie', 'episode']:
-            return  # Not a movie or episode so don't get info TODO Maybe get PVR details also?
-        self.playerstring = get_property('PlayerInfoString')
-        self.playerstring = loads(self.playerstring) if self.playerstring else None
+
+        if type != 'episode':
+            movie_id = dbID
+            global_movie_flag = 'true'
+            xbmc.log('PLAYBACK STARTED_tvdb='+str(imdb_id)+ '  ,'+str(dbID)+'=dbID, '+str(duration)+'=duration, '+str(movie_title)+'=movie_title, '+str(title), level=xbmc.LOGFATAL)
+            if tmdb_id != '':
+                try: self.trakt_scrobble_tmdb(tmdb_id, 1)
+                except: pass
+            elif year != '' and movie_title != '':
+                try: 
+                    self.trakt_scrobble_title(movie_title, year, 1)
+                except: 
+                    pass
+        if type == 'episode':
+            global_movie_flag = 'false'
+            xbmc.log('PLAYBACK STARTED_tvdb='+str(tmdb_id)+ '  ,'+str(dbID)+'=dbID, '+str(duration)+'=duration, '+str(tv_title)+'=tv_show_name, '+str(tv_season)+'=season_num, '+str(tv_episode)+'=ep_num, '+str(title), level=xbmc.LOGFATAL)
+            try:
+                response = self.trakt_scrobble_tv('tmdb_id='+str(tmdb_id), tv_season, tv_episode, 1)
+            except: 
+                try:
+                    response = self.trakt_scrobble_tv(tv_title, tv_season, tv_episode, 1)
+                except:
+                    pass
+            try: tmdb_id = response['show']['ids']['tmdb']
+            except: pass
+            try: tvdb_id = response['show']['ids']['tvdb']
+            except: pass
+            try: imdb_id = response['show']['ids']['imdb']
+            except: pass
 
         try:
-            self.total_time = self.getTotalTime()
+            while player.isPlaying()==1 and type != 'episode':
+                percentage = 0
+                next_scrobble = 15
+                watched = 0
+
+                try: movie_id = int(movie_id)
+                except: movie_id = 0
+
+                while player.isPlayingVideo()==1 and watched == 0:
+                    try:
+                        resume_position = player.getTime()
+                        resume_duration = duration
+                        if resume_position > duration:
+                            json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"XBMC.GetInfoLabels","params": {"labels":["VideoPlayer.Duration"]}, "id":1}')
+                            json_object  = json.loads(json_result)
+                            timestamp = json_object['result']['VideoPlayer.Duration']
+                            try: duration = functools.reduce(lambda x, y: x*60+y, [int(i) for i in (timestamp.replace(':',',')).split(',')])
+                            except: duration = 60
+                        percentage = (resume_position / duration) * 100
+                        if percentage >= next_scrobble and percentage < 80:
+                            count = 0
+                            while player.isPlayingVideo()==1 and count < 5001:
+                                xbmc.sleep(100)
+                                count = count + 100            
+                            next_scrobble = next_scrobble + 15    
+                            if tmdb_id != '':
+                                try: self.trakt_scrobble_tmdb(tmdb_id, percentage)
+                                except: pass
+                            elif year != '' and movie_title != '':
+                                try: self.trakt_scrobble_title(movie_title, year, percentage)
+                                except: pass
+                            count = 0
+                            while player.isPlayingVideo()==1 and count < 5001:
+                                xbmc.sleep(100)
+                                count = count + 100
+                    except:
+                        watched = 1
+                        return
+                    if (percentage > 85) and player.isPlayingVideo()==1 and duration > 300:
+                        watched = 1
+                        if tmdb_id != '':
+                            try: self.trakt_scrobble_tmdb(tmdb_id, percentage)
+                            except: pass
+
+                        elif year != '' and movie_title != '':
+                            try: trakt_scrobble_title(movie_title, year, percentage)
+                            except: pass
+                        if int(movie_id) > 0:
+                            json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"VideoLibrary.SetMovieDetails","params":{"movieid":'+str(movie_id)+',"playcount": '+str(play_count)+'},"id":"1"}')
+                            json_object  = json.loads(json_result)
+                            xbmc.log(str(json_object)+'=movie marked watched, '+str(movie_id)+'=dbID', level=xbmc.LOGFATAL)
+                            json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"VideoLibrary.SetMovieDetails","params":{"movieid":'+str(movie_id)+', "resume": {"position":0,"total":'+str(duration)+'}},"id":"1"}')
+                            json_object  = json.loads(json_result)
+                            xbmc.log(str(json_object)+'=movie marked 0 resume, '+str(movie_id)+'=dbID', level=xbmc.LOGFATAL)
+                            dt_string = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                            json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"VideoLibrary.SetMovieDetails","params":{"movieid":'+str(movie_id)+',"lastplayed": "'+str(dt_string)+'"},"id":"1"}')
+                            json_object  = json.loads(json_result)
+                            xbmc.log(str(json_object)+'_LASTPLAYED='+str(dt_string)+'=movie marked watched, '+str(movie_id)+'=dbID', level=xbmc.LOGFATAL)
+                        return
         except:
             return
-        self.dbtype = self.getVideoInfoTag().getMediaType()
-        self.dbid = self.getVideoInfoTag().getDbId()
-        self.imdb_id = self.getVideoInfoTag().getIMDBNumber()
-        self.query = self.getVideoInfoTag().getTVShowTitle() if self.dbtype == 'episode' else self.getVideoInfoTag().getTitle()
-        self.year = self.getVideoInfoTag().getYear() if self.dbtype == 'movie' else None
-        self.epyear = self.getVideoInfoTag().getYear() if self.dbtype == 'episodes' else None
-        self.season = self.getVideoInfoTag().getSeason() if self.dbtype == 'episodes' else None
-        self.episode = self.getVideoInfoTag().getEpisode() if self.dbtype == 'episodes' else None
 
-        self.tmdb_type = 'movie' if self.dbtype == 'movie' else 'tv'
-        self.tmdb_id = self.get_tmdb_id(self.tmdb_type, self.imdb_id, self.query, self.year, self.epyear)
-        self.details = self.tmdb_api.get_details(self.tmdb_type, self.tmdb_id, self.season, self.episode)
+        try:
+            while player.isPlaying()==1 and type == 'episode':
+                percentage = 0
+                next_scrobble = 15
+                watched = 0
+                trakt_watched = 'false'
+                while player.isPlayingVideo()==1 and watched == 0:
+                    try:
+                        resume_position = player.getTime()
+                        resume_duration = duration
+                        if resume_position > duration:
+                            json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"XBMC.GetInfoLabels","params": {"labels":["VideoPlayer.Duration"]}, "id":1}')
+                            json_object  = json.loads(json_result)
+                            timestamp = json_object['result']['VideoPlayer.Duration']
+                            try: duration = functools.reduce(lambda x, y: x*60+y, [int(i) for i in (timestamp.replace(':',',')).split(',')])
+                            except: duration = 60
+                        percentage = (resume_position / duration) * 100
 
-        # Clear everything if we didn't get details because nothing to compare
-        if not self.details:
-            return self.reset_properties()
+                        if percentage >= next_scrobble and percentage < 80:
+                            count = 0
+                            while player.isPlayingVideo()==1 and count < 5001:
+                                resume_position = player.getTime()
+                                xbmc.sleep(100)
+                                count = count + 100        
+                                next_scrobble = next_scrobble + 15    
+                            try: 
+                                trakt_scrobble_tv('tmdb_id='+str(tmdb_id), tv_season, tv_episode, percentage)
+                            except: 
+                                try: 
+                                    trakt_scrobble_tv(tv_title, tv_season, tv_episode, percentage)
+                                except:
+                                    pass
+                    except:
+                        watched = 1
+                        return
+                    if player.isPlaying()==1 and percentage > 85 and trakt_watched != 'true':
+                        watched = 1
+                        resume_position = player.getTime()
+                        resume_duration = duration
+                        percentage = (resume_position / duration) * 100
 
-        # Get ratings (no need for threading since we're only getting one item in player ever)
-        if xbmc.getCondVisibility("!Skin.HasSetting(TMDbHelper.DisableRatings)"):
-            self.details = self.get_omdb_ratings(self.details)
-            if self.tmdb_type == 'movie':
-                self.details = self.get_imdb_top250_rank(self.details)
-            if self.tmdb_type in ['movie', 'tv']:
-                self.details = self.get_trakt_ratings(
-                    self.details, 'movie' if self.tmdb_type == 'movie' else 'show',
-                    season=self.season, episode=self.episode)
-            self.set_iter_properties(self.details.get('infoproperties', {}), SETPROP_RATINGS)
+                        try:
+                            try: 
+                                dbID = int(dbID)
+                                if dbID == 0:
+                                    dbID = None
+                            except: 
+                                dbID = None
+                            if trakt_watched != 'true' and dbID != None:
+                                json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","id":1,"method":"VideoLibrary.GetEpisodeDetails","params":{"episodeid":'+str(dbID)+', "properties": ["playcount"]}}')
+                                json_object  = json.loads(json_result)
+                                play_count = int(json_object['result']['episodedetails']['playcount'])+1
+                                json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"VideoLibrary.SetEpisodeDetails","params":{"episodeid":'+str(dbID)+',"playcount": '+str(play_count)+'},"id":"1"}')
+                                json_object  = json.loads(json_result)
+                                xbmc.log(str(json_object)+'=episode marked watched, '+str(dbID)+'=dbID', level=xbmc.LOGFATAL)
+                                json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"VideoLibrary.SetEpisodeDetails","params":{"episodeid":'+str(dbID)+', "resume": {"position":0,"total":'+str(duration)+'}},"id":"1"}')
+                                json_object  = json.loads(json_result)
+                                xbmc.log(str(json_object)+'=episode marked 0 resume, '+str(dbID)+'=dbID', level=xbmc.LOGFATAL)
+                                dt_string = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                                json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"VideoLibrary.SetEpisodeDetails","params":{"episodeid":'+str(dbID)+',"lastplayed": "'+str(dt_string)+'"},"id":"1"}')
+                                json_object  = json.loads(json_result)
+                                xbmc.log(str(json_object)+'_LASTPLAYED='+str(dt_string)+'=episode marked watched, '+str(dbID)+'=dbID', level=xbmc.LOGFATAL)
+                        except:
+                            pass
 
-        # Get artwork (no need for threading since we're only getting one item in player ever)
-        # No need for merging Kodi DB artwork as we should have access to that via normal player properties
-        if xbmc.getCondVisibility("!Skin.HasSetting(TMDbHelper.DisableArtwork)"):
-            if ADDON.getSettingBool('service_fanarttv_lookup'):
-                self.details = self.get_fanarttv_artwork(self.details, self.tmdb_type)
-            self.set_iter_properties(self.details, SETMAIN_ARTWORK)
-
-        self.set_properties(self.details)
-
-    def set_watched(self):
-        if not self.playerstring or not self.playerstring.get('tmdb_id'):
+                        try:
+                            if trakt_watched != 'true':
+                                trakt_watched = 'true'
+                                try: 
+                                    trakt_scrobble_tv('tmdb_id='+str(tmdb_id), tv_season, tv_episode, percentage)
+                                except: 
+                                    try: 
+                                        trakt_scrobble_tv(tv_title, tv_season, tv_episode, percentage)
+                                    except:
+                                        pass
+                        except:
+                            pass
+                        return
+        except:
             return
-        if not self.current_time or not self.total_time:
-            return
-        if u'{}'.format(self.playerstring.get('tmdb_id')) != u'{}'.format(self.details.get('unique_ids', {}).get('tmdb')):
-            return  # Item in the player doesn't match so don't mark as watched
 
-        # Only update if progress is 75% or more
-        progress = ((self.current_time / self.total_time) * 100)
-        if progress < 75:
-            return
-
-        if self.playerstring.get('tmdb_type') == 'episode':
-            tvshowid = rpc.KodiLibrary('tvshow').get_info(
-                info='dbid',
-                imdb_id=self.playerstring.get('imdb_id'),
-                tmdb_id=self.playerstring.get('tmdb_id'),
-                tvdb_id=self.playerstring.get('tvdb_id'))
-            if not tvshowid:
-                return
-            dbid = rpc.KodiLibrary('episode', tvshowid).get_info(
-                info='dbid',
-                season=self.playerstring.get('season'),
-                episode=self.playerstring.get('episode'))
-            if not dbid:
-                return
-            rpc.set_watched(dbid=dbid, dbtype='episode')
-        elif self.playerstring.get('tmdb_type') == 'movie':
-            dbid = rpc.KodiLibrary('movie').get_info(
-                info='dbid',
-                imdb_id=self.playerstring.get('imdb_id'),
-                tmdb_id=self.playerstring.get('tmdb_id'),
-                tvdb_id=self.playerstring.get('tvdb_id'))
-            if not dbid:
-                return
-            rpc.set_watched(dbid=dbid, dbtype='movie')
-    """
-    
+ 
 class CronJobMonitor(Thread):
     def __init__(self, update_hour=0):
         Thread.__init__(self)

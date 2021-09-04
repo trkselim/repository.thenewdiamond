@@ -154,7 +154,9 @@ def setup_library_tv():
 	source_name = 'Openinfo TVShows'
 	#source_content = "('%s','tvshows','metadata.tvdb.com','',0,0,'<settings version=\"2\"><setting id=\"absolutenumber\" default=\"true\">false</setting><setting id=\"alsoimdb\">true</setting><setting id=\"dvdorder\" default=\"true\">false</setting><setting id=\"fallback\">true</setting><setting id=\"fallbacklanguage\">es</setting><setting id=\"fanart\">true</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TheTVDB</setting><setting id=\"usefallbacklanguage1\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
 	#source_content = "('%s','tvshows','metadata.themoviedb.org','',0,0,'<settings version=\"2\"><setting id=\"absolutenumber\" default=\"true\">false</setting><setting id=\"alsoimdb\">true</setting><setting id=\"dvdorder\" default=\"true\">false</setting><setting id=\"fallback\">true</setting><setting id=\"fallbacklanguage\">es</setting><setting id=\"fanart\">true</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TheTVDB</setting><setting id=\"usefallbacklanguage1\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
-	source_content = "('%s','tvshows','metadata.tvshows.themoviedb.org.python','',0,0,'<settings version=\"2\"><setting id=\"certprefix\" default=\"true\">Rated </setting><setting id=\"fanart\">true</setting><setting id=\"imdbanyway\">true</setting><setting id=\"keeporiginaltitle\" default=\"true\">false</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TMDb</setting><setting id=\"tmdbcertcountry\" default=\"true\">us</setting><setting id=\"trailer\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
+	#source_content = "('%s','tvshows','metadata.tvshows.themoviedb.org.python','',0,0,'<settings version=\"2\"><setting id=\"certprefix\" default=\"true\">Rated </setting><setting id=\"fanart\">true</setting><setting id=\"imdbanyway\">true</setting><setting id=\"keeporiginaltitle\" default=\"true\">false</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TMDb</setting><setting id=\"tmdbcertcountry\" default=\"true\">us</setting><setting id=\"trailer\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
+	source_content = "('%s','tvshows','metadata.tvshows.themoviedb.org.python','7710e2e5cdba5a3981e83b0347eb643d',0,1,'<settings version=\"2\"><setting id=\"language\" default=\"true\">en-US</setting><setting id=\"tmdbcertcountry\" default=\"true\">us</setting><setting id=\"usecertprefix\" default=\"true\">true</setting><setting id=\"certprefix\" default=\"true\">Rated </setting><setting id=\"keeporiginaltitle\" default=\"true\">false</setting><setting id=\"cat_landscape\" default=\"true\">true</setting><setting id=\"studio_country\" default=\"true\">false</setting><setting id=\"enab_trailer\">true</setting><setting id=\"players_opt\" default=\"true\">Tubed</setting><setting id=\"ratings\">Trakt</setting><setting id=\"imdbanyway\">true</setting><setting id=\"traktanyway\">true</setting><setting id=\"tmdbanyway\" default=\"true\">true</setting><setting id=\"enable_fanarttv\" default=\"true\">true</setting><setting id=\"verboselog\" default=\"true\">false</setting></settings>',0,0,NULL,NULL)"
+
 	AddSource.add_source(source_name, library_folder, source_content, source_thumbnail)
 	return xbmc.translatePath(library_folder)
 
@@ -186,8 +188,8 @@ def setup_library_movies():
 	return xbmc.translatePath(library_folder)
 
 def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api):
-	#xbmc.log(str(tmdb_id)+'get_art_fanart_movie===>PHIL', level=xbmc.LOGFATAL)
-	#print(str(tmdb_id)+'get_art_fanart_movie===>PHIL')
+	#xbmc.log(str(tmdb_id)+'get_art_fanart_movie===>OPEN_INFO', level=xbmc.LOGFATAL)
+	#print(str(tmdb_id)+'get_art_fanart_movie===>OPEN_INFO')
 	try: 
 		response = requests.get('http://webservice.fanart.tv/v3/movies/'+str(tmdb_id)+'?api_key='+str(fanart_api)).json()
 		#for i in response:
@@ -268,7 +270,7 @@ def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api)
 	if d1.__contains__('moviebanner'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'banner.jpg'):
 			try:
-				#xbmc.log(str('banner.jpg = ' + d1['moviebanner'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
+				#xbmc.log(str('banner.jpg = ' + d1['moviebanner'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 				urllib.urlretrieve(d1['moviebanner'].replace(' ', '%20'), show_file_path + 'banner.jpg')
 			except:
 				urllib.request.urlretrieve(d1['moviebanner'].replace(' ', '%20'), show_file_path + 'banner.jpg')
@@ -277,7 +279,7 @@ def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api)
 	if d1.__contains__('hdmovielogo'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'clearlogo.png'):
 			try:
-				#xbmc.log(str('clearlogo.png = ' + d1['hdmovielogo'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
+				#xbmc.log(str('clearlogo.png = ' + d1['hdmovielogo'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 				urllib.urlretrieve(d1['hdmovielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
 			except:
 				urllib.request.urlretrieve(d1['hdmovielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
@@ -285,7 +287,7 @@ def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api)
 	elif d1.__contains__('movielogo'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'clearlogo.png'):
 			try:
-				#xbmc.log(str('clearlogo.png = ' + d1['movielogo'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
+				#xbmc.log(str('clearlogo.png = ' + d1['movielogo'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 				urllib.urlretrieve(d1['movielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
 			except:
 				urllib.request.urlretrieve(d1['movielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
@@ -294,7 +296,7 @@ def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api)
 	if d1.__contains__('moviethumb'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'landscape.jpg'):
 			try:
-				#xbmc.log(str('landscape.jpg = ' + d1['moviethumb'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
+				#xbmc.log(str('landscape.jpg = ' + d1['moviethumb'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 				urllib.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
 			except:
 				urllib.request.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
@@ -302,7 +304,7 @@ def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api)
 	elif d1.__contains__('moviebackground'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'landscape.jpg'):
 			try:
-				#xbmc.log(str('landscape.jpg = ' + d1['moviebackground'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
+				#xbmc.log(str('landscape.jpg = ' + d1['moviebackground'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 				urllib.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
 			except:
 				urllib.request.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
@@ -311,7 +313,7 @@ def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api)
 	if d1.__contains__('moviebackground'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'fanart.jpg'):
 			try:
-				#xbmc.log(str('fanart.jpg = ' + d1['moviebackground'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
+				#xbmc.log(str('fanart.jpg = ' + d1['moviebackground'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 				urllib.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
 			except:
 				urllib.request.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
@@ -319,7 +321,7 @@ def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api)
 	elif d1.__contains__('moviethumb'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'fanart.jpg'):
 			try:
-				#xbmc.log(str('fanart.jpg = ' + d1['moviethumb'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
+				#xbmc.log(str('fanart.jpg = ' + d1['moviethumb'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 				urllib.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
 			except:
 				urllib.request.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
@@ -329,12 +331,12 @@ def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api)
 	if d1.__contains__('movieposter'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'poster.jpg'):
 			try:
-				#xbmc.log(str('poster.jpg = ' + d1['movieposter'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
+				#xbmc.log(str('poster.jpg = ' + d1['movieposter'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 				urllib.urlretrieve(d1['movieposter'].replace(' ', '%20'), show_file_path + 'poster.jpg')
 			except:
 				urllib.request.urlretrieve(d1['movieposter'].replace(' ', '%20'), show_file_path + 'poster.jpg')
 				pass
-	xbmc.log(str(d1)+'===>PHIL', level=xbmc.LOGFATAL)
+	xbmc.log(str(d1)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 
 def get_art_fanart_tv(tvdb_id, fanart_api, show_file_path, art_path,tmdb_id,tmdb_api):
 	#home = expanduser("~")
@@ -578,51 +580,17 @@ def next_episode_show(tmdb_id_num=None,dbid_num=None):
 	temp_dbid = dbid_num
 	tmdb_id=tmdb_id_num
 	regex = re.compile('[^0-9a-zA-Z]')
-	##xbmc.log(str(sys.argv)+'===>PHIL', level=xbmc.LOGINFO)
-	#wid = xbmcgui.getCurrentWindowId()
-	#win = xbmcgui.Window(wid)
-	#control = win.getFocus()
-	#listitem = control.getSelectedItem()
 
-	#tvshow_title = xbmc.getInfoLabel('listitem.TVShowTitle')
-
-	#if tvshow_title == '':
-	#	tvshow_title = xbmc.getInfoLabel('listitem.OriginalTitle')
-
-
-	#show_id = tvshow_title
-	#show_id = show_id.replace("'","''")
-	#tvshow_title = show_id 
-
-	#tvshow_title2 = xbmc.getInfoLabel('listitem.TVShowTitle')
-	
 	con = sqlite3.connect(db_path())
 	cur = con.cursor()
-	
-	#temp_dbid = xbmc.getInfoLabel('listitem.DBID')
-	#temp_dbtype = xbmc.getInfoLabel('listitem.DBTYPE')
-	#if str(temp_dbtype) == 'tvshow':
-	#	temp_show_id = temp_dbid
-	#elif str(temp_dbtype) == 'season':
-	#	cur.execute("select distinct idShow from seasons where idseason = " + temp_dbid)
-	#	sql_result = cur.fetchall()
-	#	temp_show_id =  sql_result[0][0]
-	#elif str(temp_dbtype) == 'episode':
-	#	cur.execute("select distinct idShow from episode where idEpisode = " + temp_dbid)
-	#	sql_result = cur.fetchall()
-	#	temp_show_id =  sql_result[0][0]
-	#else:
-	#	temp_show_id = 0
+
 	temp_show_id = temp_dbid
 	#cur.execute("select c00, strtitle, cast(c12 as int) as c12, cast(c13 as int) as c13, c05,strPath from episode_view where strtitle = '"+str(show_id)+"' and (cast(c13 as int) > (select c13 from (select max(lastplayed) as lastplayed, max(cast(c12 as int)) as c12, max(cast(c13 as int)) as c13 from episode_view where strtitle = '"+str(show_id)+"' and lastplayed is not null group by lastplayed order by lastplayed desc limit 1)) and cast(c12 as int) >= (select c12 from (select max(lastplayed) as lastplayed, max(cast(c12 as int)) as c12, max(cast(c13 as int)) as c13 from episode_view where strtitle = '"+str(show_id)+"' and lastplayed is not null group by lastplayed order by lastplayed desc limit 1)) or cast(c13 as int) < (select c13 from (select max(lastplayed) as lastplayed, max(cast(c12 as int)) as c12, max(cast(c13 as int)) as c13 from episode_view where strtitle = '"+str(show_id)+"' and lastplayed is not null group by lastplayed order by lastplayed desc limit 1)) and cast(c12 as int) > (select c12 from (select max(lastplayed) as lastplayed, max(cast(c12 as int)) as c12, max(cast(c13 as int)) as c13 from episode_view where strtitle = '"+str(show_id)+"' and lastplayed is not null group by lastplayed order by lastplayed desc limit 1))) order by cast(c12 as int), cast(c13 as int) limit 1")
 	#sql_result = cur.fetchall()
 	cur.execute("select c00, strtitle, cast(c12 as int) as c12, cast(c13 as int) as c13, c05, strPath, strFilename from (select *,ROW_NUMBER() OVER (ORDER BY cast(13 as int), cast(c12 as int)) as EN from episode_view where idshow = "+str(temp_show_id)+") as a where a.EN = 1+(select EN from (select *,ROW_NUMBER() OVER (ORDER BY lastplayed desc) as LP from (select *,ROW_NUMBER() OVER (ORDER BY cast(13 as int), cast(c12 as int)) as EN from episode_view where idshow = "+str(temp_show_id)+") as b) as c where LP = 1)")
 	sql_result = cur.fetchall()
 
-	#xbmc.log(str(sql_result)+'===>SQL', level=xbmc.LOGFATAL)
-
 	try: 
-		#xbmc.log(str(1)+'===>SQL', level=xbmc.LOGFATAL)
 		episode_title = sql_result[0][0]
 		episode_title = regex.sub(' ', episode_title.replace('\'','').replace('&','and')).replace('  ',' ')
 		tvshow_title = sql_result[0][1]
@@ -640,8 +608,7 @@ def next_episode_show(tmdb_id_num=None,dbid_num=None):
 	con.close()
 
 	url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id='+ str(tmdb_id) + '&amp;season='+str(season)+'&amp;episode='+str(episode)
-	xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
-	#xbmc.executebuiltin('RunPlugin('+str(url)+')')
+	xbmc.log(str(url)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 	return url
 
 
@@ -652,7 +619,7 @@ def trakt_next_episode_normal(tmdb_id_num=None):
 	#title = 'Last Week Tonight with John oliver'
 	#if '?' in str(sys.argv):
 	#	title = str(sys.argv[2].replace('?',''))
-	#	#xbmc.log(str(title)+'title===>PHIL', level=xbmc.LOGINFO)
+	#	#xbmc.log(str(title)+'title===>OPEN_INFO', level=xbmc.LOGINFO)
 	try:
 		response = requests.get('https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=show', headers=headers).json()
 	except:
@@ -690,7 +657,7 @@ def trakt_next_episode_normal(tmdb_id_num=None):
 	except TypeError:
 		  first_aired2 = datetime(*(time.strptime(first_aired, '%Y-%m-%dT%H:%M:%S.%fZ')[0:6]))
 
-	xbmc.log(str(first_aired2)+'trakt_next_episode_normal===>PHIL', level=xbmc.LOGINFO)
+	xbmc.log(str(first_aired2)+'trakt_next_episode_normal===>OPEN_INFO', level=xbmc.LOGINFO)
 	now = datetime.now()
 
 	if first_aired2 < now:
@@ -700,6 +667,8 @@ def trakt_next_episode_normal(tmdb_id_num=None):
 		#xbmc.executebuiltin(url)
 		xbmc.executebuiltin('Dialog.Close(busydialog)')
 		return url
+	else:
+		xbmcgui.Dialog().notification(heading='Trakt Next Episode Normal', message='Next Episode Not aired yet', icon=icon_path(),time=1000,sound=False)
 
 def trakt_next_episode_rewatch(tmdb_id_num=None):
 	tmdb_id=tmdb_id_num
@@ -754,8 +723,6 @@ def trakt_next_episode_rewatch(tmdb_id_num=None):
 		season = '1'
 		episode = '1'
 
-	#response = requests.get('https://api.trakt.tv/shows/'+str(id)+'/seasons/'+str(season)+'/episodes/'+str(episode)+'?extended=full', headers=headers).json()
-	#first_aired = response['first_aired']
 	response2 = ''
 	i = 0
 	while response2 == '' and i < 22:
@@ -773,21 +740,22 @@ def trakt_next_episode_rewatch(tmdb_id_num=None):
 		  first_aired2 = datetime(*(time.strptime(first_aired, '%Y-%m-%dT%H:%M:%S.%fZ')[0:6]))
 
 
-	xbmc.log(str(first_aired2)+'trakt_next_episode_rewatch===>PHIL', level=xbmc.LOGINFO)
+	xbmc.log(str(first_aired2)+'trakt_next_episode_rewatch===>OPEN_INFO', level=xbmc.LOGINFO)
 	now = datetime.now()
 
 	if first_aired2 < now:
-		#url = 'RunPlugin(plugin://plugin.video.themoviedb.helper?info=play&amp;query='+str(title)+'&amp;type=episode&amp;season='+str(season)+'&amp;episode='+str(episode)+')'
 		url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id='+ str(tmdb_id) + '&amp;season='+str(season)+'&amp;episode='+str(episode)
 		xbmc.log(str(url)+'trakt_next_episode', level=xbmc.LOGINFO)
-		#xbmc.executebuiltin(url) 
 		xbmc.executebuiltin('Dialog.Close(busydialog)')
+		return url
+	else:
+		xbmcgui.Dialog().notification(heading='Trakt Next Episode Rewatch', message='Next Episode Not aired yet', icon=icon_path(),time=1000,sound=False)
 
 def trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_order=None):
 	headers = trak_auth()
 	url = 'https://api.trakt.tv/users/'+str(user_id)+'/lists/'+str(list_slug)+'/items'
 	response = requests.get(url, headers=headers).json()
-	xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
+	xbmc.log(str(response)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 	if sort_order == 'asc':
 		reverse_order = False
 	if sort_order == 'desc':
@@ -803,7 +771,7 @@ def trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_ord
 			tmdb_id['type'] = 'show'
 		if tmdb_id not in movies:
 			movies.append(tmdb_id)
-	xbmc.log(str(movies)+'===>PHIL', level=xbmc.LOGINFO)
+	xbmc.log(str(movies)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 	return movies
 	
 
@@ -903,12 +871,12 @@ def trakt_add_movie(tmdb_id_num=None,mode=None):
 	"""
 	if mode == 'Add':
 		response_collect = requests.post('https://api.trakt.tv/sync/collection', data=values, headers=headers)
-		xbmc.log(str(movie_title + 'added: ' + str(response_collect.json()['added']))+'===>PHIL', level=xbmc.LOGINFO)
+		xbmc.log(str(movie_title + 'added: ' + str(response_collect.json()['added']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 		library_auto_movie()
 		xbmc.executebuiltin('UpdateLibrary(video, {})'.format(movie_path))
 	if mode == 'Remove':
 		response_collect = requests.post('https://api.trakt.tv/sync/collection/remove', data=values, headers=headers)
-		xbmc.log(str(movie_title + 'removed: ' + str(response_collect.json()['deleted']))+'===>PHIL', level=xbmc.LOGINFO)
+		xbmc.log(str(movie_title + 'removed: ' + str(response_collect.json()['deleted']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 		delete_folder_contents(movie_path, True)
 		xbmc.executebuiltin('CleanLibrary(video)')
 	Utils.hide_busy()
@@ -948,13 +916,13 @@ def trakt_add_tv(tmdb_id_num=None,mode=None):
 	"""
 	if mode == 'Add':
 		response_collect = requests.post('https://api.trakt.tv/sync/collection', data=values, headers=headers)
-		xbmc.log(str(show_title + ' episodes added: ' + str(response_collect.json()['added']))+'===>PHIL', level=xbmc.LOGINFO)
+		xbmc.log(str(show_title + ' episodes added: ' + str(response_collect.json()['added']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 		library_auto_tv()
 		#refresh_recently_added()
 		xbmc.executebuiltin('UpdateLibrary(video, {})'.format(show_path))
 	if mode == 'Remove':
 		response_collect = requests.post('https://api.trakt.tv/sync/collection/remove', data=values, headers=headers)
-		xbmc.log(str(show_title + ' episodes removed: ' + str(response_collect.json()['deleted']))+'===>PHIL', level=xbmc.LOGINFO)
+		xbmc.log(str(show_title + ' episodes removed: ' + str(response_collect.json()['deleted']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 		delete_folder_contents(show_path, True)
 		xbmc.executebuiltin('CleanLibrary(video)')
 	Utils.hide_busy()
@@ -1013,13 +981,13 @@ def trakt_add_tv_season(tmdb_id_num=None,season_num=None,mode=None):
 	"""
 	if mode == 'Add':
 		response_collect = requests.post('https://api.trakt.tv/sync/collection', data=values, headers=headers)
-		xbmc.log(str(show_title + ' episodes added: ' + str(response_collect.json()['added']))+'===>PHIL', level=xbmc.LOGINFO)
+		xbmc.log(str(show_title + ' episodes added: ' + str(response_collect.json()['added']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 		library_auto_tv()
 		#refresh_recently_added()
 		xbmc.executebuiltin('UpdateLibrary(video, {})'.format(show_path))
 	if mode == 'Remove':
 		response_collect = requests.post('https://api.trakt.tv/sync/collection/remove', data=values, headers=headers)
-		xbmc.log(str(show_title + ' episodes removed: ' + str(response_collect.json()['deleted']))+'===>PHIL', level=xbmc.LOGINFO)
+		xbmc.log(str(show_title + ' episodes removed: ' + str(response_collect.json()['deleted']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 		delete_folder_contents(show_path, True)
 		xbmc.executebuiltin('CleanLibrary(video)')
 	Utils.hide_busy()
@@ -1076,13 +1044,13 @@ def trakt_add_tv_episode(tmdb_id_num=None,season_num=None,episode_num=None,mode=
 	"""
 	if mode == 'Add':
 		response_collect = requests.post('https://api.trakt.tv/sync/collection', data=values, headers=headers)
-		xbmc.log(str(show_title + ' episodes added: ' + str(response_collect.json()['added']))+'===>PHIL', level=xbmc.LOGINFO)
+		xbmc.log(str(show_title + ' episodes added: ' + str(response_collect.json()['added']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 		library_auto_tv()
 		#refresh_recently_added()
 		xbmc.executebuiltin('UpdateLibrary(video, {})'.format(show_path))
 	if mode == 'Remove':
 		response_collect = requests.post('https://api.trakt.tv/sync/collection/remove', data=values, headers=headers)
-		xbmc.log(str(show_title + ' episodes removed: ' + str(response_collect.json()['deleted']))+'===>PHIL', level=xbmc.LOGINFO)
+		xbmc.log(str(show_title + ' episodes removed: ' + str(response_collect.json()['deleted']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 		delete_folder_contents(show_path, True)
 		xbmc.executebuiltin('CleanLibrary(video)')
 	Utils.hide_busy()
@@ -1123,46 +1091,7 @@ def trak_auth():
 	return headers
 
 def trakt_calendar_list():
-	#home = expanduser("~")
-
-	#file_path = xbmcvfs.translatePath(xbmcaddon.Addon().getAddonInfo('path'))
-	file_path = main_file_path()
-	#tmdb_settings = file_path.replace('script.diamondinfo','plugin.video.themoviedb.helper') + 'settings.xml'
-	tmdb_settings = tmdb_settings_path()
-	#tmdb_traktapi = file_path.replace('script.diamondinfo','plugin.video.themoviedb.helper') + 'resources/lib/traktapi.py'
-	tmdb_traktapi = tmdb_traktapi_path()
-	tmdb_traktapi2 = tmdb_traktapi_new_path()
-
-	#tree = ET.parse(home + '/.kodi/userdata/addon_data/plugin.video.themoviedb.helper/settings.xml')
-	tree = ET.parse(tmdb_settings)
-	root = tree.getroot()
-
-	for child in root:
-		if (child.attrib)['id'] == 'trakt_token':
-			token = json.loads(child.text)
-
-	#home = expanduser("~")
-	try:
-		#inFile = open(home + '/.kodi/addons/plugin.video.themoviedb.helper/resources/lib/traktapi.py')
-		inFile = open(tmdb_traktapi)
-		for line in inFile:
-			if 'self.client_id = ' in line:
-				client_id = line.replace('self.client_id = ','').replace('\'','').replace('	','').replace('\n', '')
-			if 'self.client_secret = ' in line:
-				client_secret = line.replace('self.client_secret = ','').replace('\'','').replace('	','').replace('\n', '')
-	except:
-		#inFile = open(home + '/.kodi/addons/plugin.video.themoviedb.helper/resources/lib/trakt/api.py')
-		inFile = open(tmdb_traktapi2)
-		for line in inFile:
-			if 'CLIENT_ID = ' in line:
-				client_id = line.replace('CLIENT_ID = ','').replace('\'','').replace('	','').replace('\n', '')
-			if 'CLIENT_SECRET = ' in line:
-				client_secret = line.replace('CLIENT_SECRET = ','').replace('\'','').replace('	','').replace('\n', '')
-
-	inFile.close()
-
-	headers = {'trakt-api-version': '2', 'trakt-api-key': client_id, 'Content-Type': 'application/json'}
-	headers['Authorization'] = 'Bearer {0}'.format(token.get('access_token'))
+	headers = trak_auth()
 
 	try:
 		date = datetime.date.today() - datetime.timedelta(days = 7)
@@ -1171,13 +1100,6 @@ def trakt_calendar_list():
 	start_date = date.strftime('%Y-%m-%d')
 	days = 16
 
-	#addon = xbmcaddon.Addon()
-	#addon_path = addon.getAddonInfo('path')
-	#addonID = addon.getAddonInfo('id')
-	#addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
-	#basedir_tv = home + '/.kodi/userdata/addon_data/plugin.video.openmeta/TVShows'
-	#file_path = home + '/.kodi/userdata/addon_data/plugin.video.openmeta/TVShows'
-	#basedir_tv = addonUserDataFolder.replace('script.diamondinfo','plugin.video.openmeta') + 'TVShows'
 	basedir_tv = basedir_tv_path()
 	file_path = basedir_tv
 	
@@ -1214,25 +1136,6 @@ def trakt_calendar_list():
 				next_progress_dict['next_ep_air_date'] = str(datetime(*(time.strptime(response2['next_episode']['first_aired'], '%Y-%m-%dT%H:%M:%S.%fZ')[0:6])).strftime('%Y-%m-%d'))
 				complete_dict[dict_count] = next_progress_dict
 				dict_count = dict_count+1
-	#			values = """
-	#			  {
-	#				"shows": [
-	#				  {
-	#				  "title": """+'"'+i['show']['title']+'"'+ """,
-	#				  "year": """+str(i['show']['year'])+""",
-	#				  "ids": {
-	#					"trakt": """+str(i['show']['ids']['trakt'])+""",
-	#					"slug": """+'"'+i['show']['ids']['slug']+'"'+ """,
-	#					"tvdb": """+str(i['show']['ids']['tvdb'])+ """,
-	#					"imdb": """+'"'+str(i['show']['ids']['imdb'])+'"'+ """,
-	#					"tmdb": """+str(i['show']['ids']['tmdb'])+ """
-	#					}
-	#				  }
-	#				]
-	#			  }
-	#			"""
-	#			response_collect = requests.post('https://api.trakt.tv/sync/collection', data=values, headers=headers)
-	#			print(i['show']['title'] + str(response_collect.json()))
 
 		if show_count > 999:
 			break
@@ -1321,16 +1224,12 @@ def trakt_calendar_list():
 			  ]
 			  }
 			"""
-			
-			#print(values2)
 			time.sleep(0.05)
 			try:
 				response_collect = requests.post('https://api.trakt.tv/sync/collection', data=values, headers=headers)
-				#print(n['show']['title'] + ' episodes added: ' + str(response_collect.json()['added']))
-				xbmc.log(str(n['show']['title'] + ' episodes added: ' + str(response_collect.json()['added']))+'===>PHIL', level=xbmc.LOGINFO)
+				xbmc.log(str(n['show']['title'] + ' episodes added: ' + str(response_collect.json()['added']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 				response_collect = requests.post('https://api.trakt.tv/sync/collection', data=values2, headers=headers)
-				#print(n['show']['title'] + ' episodes added: ' + str(response_collect.json()['added']))
-				xbmc.log(str(n['show']['title'] + ' episodes added: ' + str(response_collect.json()['added']))+'===>PHIL', level=xbmc.LOGINFO)
+				xbmc.log(str(n['show']['title'] + ' episodes added: ' + str(response_collect.json()['added']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			except:
 				pass
 			curr_days = str(-1* (datetime.today() - datetime(*(time.strptime(n['first_aired'], '%Y-%m-%dT%H:%M:%S.%fZ')[0:6]))).days)
@@ -1341,7 +1240,6 @@ def trakt_calendar_list():
 
 			strm_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '/' + file_name
 			thumb_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '/' + thumb_file_name
-			#print(strm_path)
 			"""
 			if not os.path.exists(thumb_path):
 				tvdb_url = str('https://api.thetvdb.com/series/' + str(n['show']['ids']['tvdb']) + '/episodes/query?airedSeason=' + str(n['episode']['season']) + '&airedEpisode=' + str(n['episode']['number']))
@@ -1358,8 +1256,6 @@ def trakt_calendar_list():
 	return
 
 def refresh_recently_added():
-	#home = expanduser("~")
-	#con = sqlite3.connect(home + '/.kodi/userdata/Database/MyVideos119.db')
 	con = sqlite3.connect(db_path())
 	cur = con.cursor()
 
@@ -1369,47 +1265,15 @@ def refresh_recently_added():
 
 	##THUMBNAILS
 
-	#home = expanduser("~")
-	#tree = ET.parse(home + '/.kodi/userdata/addon_data/plugin.video.themoviedb.helper/settings.xml')
-	tree = ET.parse(tmdb_settings_path())
-	root = tree.getroot()
-
-	for child in root:
-		if (child.attrib)['id'] == 'trakt_token':
-			token = json.loads(child.text)
-
-	try:
-		#inFile = open(home + '/.kodi/addons/plugin.video.themoviedb.helper/resources/lib/traktapi.py')
-		inFile = open(tmdb_traktapi_path())
-		for line in inFile:
-			if 'self.client_id = ' in line:
-				client_id = line.replace('self.client_id = ','').replace('\'','').replace('	','').replace('\n', '')
-			if 'self.client_secret = ' in line:
-				client_secret = line.replace('self.client_secret = ','').replace('\'','').replace('	','').replace('\n', '')
-	except:
-		#inFile = open(home + '/.kodi/addons/plugin.video.themoviedb.helper/resources/lib/trakt/api.py')
-		inFile = open(tmdb_traktapi_new_path())
-		for line in inFile:
-			if 'CLIENT_ID = ' in line:
-				client_id = line.replace('CLIENT_ID = ','').replace('\'','').replace('	','').replace('\n', '')
-			if 'CLIENT_SECRET = ' in line:
-				client_secret = line.replace('CLIENT_SECRET = ','').replace('\'','').replace('	','').replace('\n', '')
-
-	inFile.close()
-
-	headers = {'trakt-api-version': '2', 'trakt-api-key': client_id, 'Content-Type': 'application/json'}
-	headers['Authorization'] = 'Bearer {0}'.format(token.get('access_token'))
-
+	headers = trak_auth()
 
 	#print(str('##THUMBNAILS'))
-	xbmc.log(str('##THUMBNAILS')+'===>PHIL', level=xbmc.LOGINFO)
+	xbmc.log(str('##THUMBNAILS')+'===>OPEN_INFO', level=xbmc.LOGINFO)
 	x = 0
 	for i in sql_result:
 		x = x + 1
-		#print('(' + str(i[0])+', u\''+str(i[1])+'\')')
-		xbmc.log(str(('(' + str(i[0])+', u\''+str(i[1])+'\')'))+'===>PHIL', level=xbmc.LOGINFO)
-	#print(x)
-	xbmc.log(str(x)+'===>PHIL', level=xbmc.LOGINFO)
+		xbmc.log(str(('(' + str(i[0])+', u\''+str(i[1])+'\')'))+'===>OPEN_INFO', level=xbmc.LOGINFO)
+	xbmc.log(str(x)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 
 	for i in sql_result:
 		tvdb_id = i[2].split('/')[8]
@@ -1422,9 +1286,9 @@ def refresh_recently_added():
 		except:
 			thumbnail_image = 'https://thetvdb.com/banners/'
 		if thumbnail_image != 'https://thetvdb.com/banners/':
-			xbmc.log(str(i)+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(i)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			thumb_path = i[2].replace('.strm','-thumb.jpg')
-			xbmc.log(str(thumb_path)+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(thumb_path)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			if not os.path.exists(thumb_path):
 				try:
 					urllib.urlretrieve(thumbnail_image, thumb_path)
@@ -1435,9 +1299,9 @@ def refresh_recently_added():
 			try:
 				json_data = json.dumps(kodi_response.json(), indent=4, sort_keys=True)
 				json_object  = json.loads(json_data)
-				xbmc.log(str((str(json_object) + ' === '+ str(thumb_path)))+'===>PHIL', level=xbmc.LOGINFO)
+				xbmc.log(str((str(json_object) + ' === '+ str(thumb_path)))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			except:
-				xbmc.log(str((str(kodi_response) + ' === '+ str(thumb_path)))+'===>PHIL', level=xbmc.LOGINFO)
+				xbmc.log(str((str(kodi_response) + ' === '+ str(thumb_path)))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			image_test = False
 		else:
 			thumb_path = i[2].replace('.strm','-thumb.jpg')
@@ -1465,9 +1329,9 @@ def refresh_recently_added():
 				try:
 					json_data = json.dumps(kodi_response.json(), indent=4, sort_keys=True)
 					json_object  = json.loads(json_data)
-					xbmc.log(str((str(json_object) + ' === '+ str(thumb_path)))+'===>PHIL', level=xbmc.LOGINFO)
+					xbmc.log(str((str(json_object) + ' === '+ str(thumb_path)))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 				except:
-					xbmc.log(str((str(kodi_response) + ' === '+ str(thumb_path)))+'===>PHIL', level=xbmc.LOGINFO)
+					xbmc.log(str((str(kodi_response) + ' === '+ str(thumb_path)))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 		
 		if image_test == True:
 			thumb_path = i[2].replace('.strm','-thumb.jpg')
@@ -1496,7 +1360,6 @@ def refresh_recently_added():
 			x = 0
 			for izx in episode_containers:
 				if str(episode_containers[x].meta['content']) == str(show_episode):
-					#print('imdb_id = ' + str(imdb_id))
 					imdb_information['imdb_id'] = imdb_id
 					imdb_information['tvdb_id'] = tvdb_id
 					try:
@@ -1541,10 +1404,7 @@ def refresh_recently_added():
 						y = y + 1
 					imdb_information['imdb_thumb'] = imdb_thumb
 				x = x + 1
-			#print('')
-			#print(imdb_information)
-			#print('')
-			xbmc.log(str(imdb_information)+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(imdb_information)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			try:
 				if imdb_information['imdb_thumb'] != '':
 					if not os.path.exists(thumb_path):
@@ -1556,16 +1416,13 @@ def refresh_recently_added():
 							except:
 								pass
 					kodi_params = ('{"jsonrpc":"2.0","id":1,"method":"VideoLibrary.RefreshEpisode","params":{"episodeid":'+str(i[0])+', "ignorenfo": false}}')
-					#kodi_response = requests.post(kodi_url, headers=kodi_header, data=kodi_params)
 					kodi_response = xbmc.executeJSONRPC(kodi_params)
 					try:
 						json_data = json.dumps(kodi_response.json(), indent=4, sort_keys=True)
 						json_object  = json.loads(json_data)
-						#print(str(json_object) + ' === '+ str(thumb_path))
-						#print(kodi_params)
-						xbmc.log(str((str(json_object) + ' === '+ str(thumb_path)))+'===>PHIL', level=xbmc.LOGINFO)
+						xbmc.log(str((str(json_object) + ' === '+ str(thumb_path)))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 					except:
-						xbmc.log(str((str(kodi_response) + ' === '+ str(thumb_path)))+'===>PHIL', level=xbmc.LOGINFO)
+						xbmc.log(str((str(kodi_response) + ' === '+ str(thumb_path)))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			except:
 				pass
 
@@ -1574,16 +1431,13 @@ def refresh_recently_added():
 	##PLOTS
 
 	sql_result = cur.execute("SELECT distinct idepisode,strFilename,c18,c12,c13 from files,episode,art where episode.idfile = files.idfile and type ='thumb' and (episode.c01 = '') and idepisode=media_id	order by dateadded asc limit 10").fetchall()
-	#xbmc.log(str(sql_result)+'===>PHIL', level=xbmc.LOGINFO)
-	#print(str('##PLOTS'))
-	xbmc.log(str(('##PLOTS'))+'===>PHIL', level=xbmc.LOGINFO)
+	#xbmc.log(str(sql_result)+'===>OPEN_INFO', level=xbmc.LOGINFO)
+	xbmc.log(str(('##PLOTS'))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 	x = 0
 	for i in sql_result:
 		x = x + 1
-		#print('(' + str(i[0])+', u\''+str(i[1])+'\')')
-		xbmc.log(str(('(' + str(i[0])+', u\''+str(i[1])+'\')'))+'===>PHIL', level=xbmc.LOGINFO)
-	#print(x)
-	xbmc.log(str(x)+'===>PHIL', level=xbmc.LOGINFO)
+		xbmc.log(str(('(' + str(i[0])+', u\''+str(i[1])+'\')'))+'===>OPEN_INFO', level=xbmc.LOGINFO)
+	xbmc.log(str(x)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 
 	for i in sql_result:
 		tvdb_id = i[2].split('/')[8]
@@ -1591,30 +1445,23 @@ def refresh_recently_added():
 		episode = i[4]
 		tvdb_url = str('https://api.thetvdb.com/series/' + str(tvdb_id) + '/episodes/query?airedSeason=' + str(season) + '&airedEpisode=' + str(episode))
 		request = requests.get(tvdb_url).json()
-		xbmc.log(str(request)+'===>PHIL', level=xbmc.LOGINFO)
+		xbmc.log(str(request)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 		try: 
 			plot = request['data'][0]['overview'].replace('\n','').replace('\r','').encode("utf8")
 		except:
 			plot = ''
 		plot = str('"')+str(plot).replace('"','\'') +str('"')
-	#	print(request)
-	#	print(plot)
 		if len(plot) > 2:
-			#print(i)
-			xbmc.log(str(i)+'===>PHIL', level=xbmc.LOGINFO)
-			#print(plot)
-			xbmc.log(str(plot)+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(i)+'===>OPEN_INFO', level=xbmc.LOGINFO)
+			xbmc.log(str(plot)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			kodi_params = ('{"jsonrpc":"2.0","id":1,"method":"VideoLibrary.SetEpisodeDetails","params":{"episodeid":'+str(i[0])+',"plot": '+str(plot)+'}}')
-			#kodi_response = requests.post(kodi_url, headers=kodi_header, data=kodi_params)
 			kodi_response = xbmc.executeJSONRPC(kodi_params)
 			try:
 				json_data = json.dumps(kodi_response.json(), indent=4, sort_keys=True)
 				json_object  = json.loads(json_data)
-				#print(json_object)
-				xbmc.log(str(json_object)+'===>PHIL', level=xbmc.LOGINFO)
-				#print(kodi_params)
+				xbmc.log(str(json_object)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			except:
-				xbmc.log(str(kodi_response)+'===>PHIL', level=xbmc.LOGINFO)
+				xbmc.log(str(kodi_response)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			plot_test = False
 		else:
 			response = requests.get('http://api.tvmaze.com/lookup/shows?thetvdb='+str(tvdb_id)).json()
@@ -1633,18 +1480,15 @@ def refresh_recently_added():
 					plot = '"'+plot.replace('"','\'').replace('<br>','').replace('</br>','').replace('<br','').replace('/>','').replace('<br />\xa0','') +'"'
 				except:
 					plot = '"'+response['summary'].replace('<p>','').replace('</p>','').replace('<br>','').replace('</br>','').replace('<br','').replace('/>','').replace('<br />\xa0','')+'"'
-				#xbmc.log(str(plot)+'===>PHIL', level=xbmc.LOGINFO)
+				#xbmc.log(str(plot)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 				kodi_params = ('{"jsonrpc":"2.0","id":1,"method":"VideoLibrary.SetEpisodeDetails","params":{"episodeid":'+str(i[0])+',"plot": '+str(plot)+'}}')
-				#kodi_response = requests.post(kodi_url, headers=kodi_header, data=kodi_params)
 				kodi_response = xbmc.executeJSONRPC(kodi_params)
 				try:
 					json_data = json.dumps(kodi_response.json(), indent=4, sort_keys=True)
 					json_object  = json.loads(json_data)
-					#print(json_object)
-					xbmc.log(str(json_object)+'===>PHIL', level=xbmc.LOGINFO)
+					xbmc.log(str(json_object)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 				except:
-					xbmc.log(str(kodi_response)+'===>PHIL', level=xbmc.LOGINFO)
-				#print(kodi_params)
+					xbmc.log(str(kodi_response)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 				
 		if plot_test == True:
 			response = requests.get('https://api.trakt.tv/search/tvdb/'+str(tvdb_id), headers=headers).json()
@@ -1667,7 +1511,6 @@ def refresh_recently_added():
 			x = 0
 			for izx in episode_containers:
 				if str(episode_containers[x].meta['content']) == str(show_episode):
-					#print('imdb_id = ' + str(imdb_id))
 					imdb_information['imdb_id'] = imdb_id
 					imdb_information['tvdb_id'] = tvdb_id
 					try:
@@ -1712,86 +1555,59 @@ def refresh_recently_added():
 						y = y + 1
 					imdb_information['imdb_thumb'] = imdb_thumb
 				x = x + 1
-				xbmc.log(str(imdb_information)+'===>PHIL', level=xbmc.LOGINFO)
+				xbmc.log(str(imdb_information)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			try:
 				if 'Know what this is about?' not in str(imdb_information['imdb_plot']) and 'Be the first one to add a plot.' not in str(imdb_information['imdb_plot']) :
-					#print(imdb_information)
 					plot = imdb_information['imdb_plot']
 					try:
 						plot = plot.decode('utf-8')
 					except:
 						pass
-					#plot = str(u''.join(imdb_information['imdb_plot']).encode('utf-8').strip())
 					plot = '"' + str(plot).replace('"','\'') + '"'
 					if (plot[-1] == '\'' and plot[:2] == 'b\'') or (plot[-1] == '"' and plot[:2] == 'b"'):
 						plot = plot[:-1]
 						plot = plot[2:]
 					kodi_params = ('{"jsonrpc":"2.0","id":1,"method":"VideoLibrary.SetEpisodeDetails","params":{"episodeid":'+str(i[0])+',"plot": '+str(plot)+'}}')
-					#kodi_response = requests.post(kodi_url, headers=kodi_header, data=kodi_params)
 					kodi_response = xbmc.executeJSONRPC(kodi_params)
 					try:
 						json_data = json.dumps(kodi_response.json(), indent=4, sort_keys=True)
 						json_object  = json.loads(json_data)
-						#print(json_object)
-						xbmc.log(str(json_object)+'===>PHIL', level=xbmc.LOGINFO)
+						xbmc.log(str(json_object)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 					except:
-						xbmc.log(str(kodi_response)+'===>PHIL', level=xbmc.LOGINFO)
-					#print(kodi_params)
+						xbmc.log(str(kodi_response)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			except:
 				pass
 
 	##AIR_DATES
-
 	sql_result = cur.execute("SELECT distinct idepisode,strFilename,episode.c18,episode.c12,episode.c13,episode.c05,tvshow.c00 from files,episode,art,tvshow where episode.idshow = tvshow.idshow and episode.idfile = files.idfile and type ='thumb' and episode.c05 = '1969-12-31' and idepisode=media_id	order by dateadded desc limit 30").fetchall()
-
-	#print(str('##AIR_DATES'))
-	xbmc.log(str(('##AIR_DATES'))+'===>PHIL', level=xbmc.LOGINFO)
+	xbmc.log(str(('##AIR_DATES'))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 	x = 0
 	for i in sql_result:
 		x = x + 1
-		#print('(' + str(i[0])+', u\''+str(i[1])+'\')')
-		xbmc.log(str(('(' + str(i[0])+', u\''+str(i[1])+'\')'))+'===>PHIL', level=xbmc.LOGINFO)
-	xbmc.log(str(x)+'===>PHIL', level=xbmc.LOGINFO)
-	#print(x)
-
+		xbmc.log(str(('(' + str(i[0])+', u\''+str(i[1])+'\')'))+'===>OPEN_INFO', level=xbmc.LOGINFO)
+	xbmc.log(str(x)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 
 	for i in sql_result:
-	#	print('\n\n')
-	#	print(i)
 		tvdb_id = i[2].split('/')[8]
 		season = i[3]
 		episode = i[4]
 		tmdb_query = i[6]
 		tvdb_url = str('https://api.thetvdb.com/series/' + str(tvdb_id) + '/episodes/query?airedSeason=' + str(season) + '&airedEpisode=' + str(episode))
 		request = requests.get(tvdb_url).json()
-	#	print(request)
 		try:
 			firstaired = request['data'][0]['firstAired']
 			#firstaired = '2012-01-01'
 		except:
 			firstaired  = ''
-		if str(i[0]) == '10159':
-			firstaired = '2012-01-01'
-		if str(i[0]) == '10160':
-			firstaired = '2012-01-01'
-		if str(i[0]) == '10161':
-			firstaired = '2012-01-01'
-		if str(i[0]) == '10162':
-			firstaired = '2012-01-01'
 		if firstaired != '':
-	#		print i
-	#		print firstaired 
 			kodi_params = ('{"jsonrpc":"2.0","id":1,"method":"VideoLibrary.SetEpisodeDetails","params":{"episodeid":'+str(i[0])+',"firstaired": "'+str(firstaired)+'"}}')
-			#kodi_response = requests.post(kodi_url, headers=kodi_header, data=kodi_params)
 			kodi_response = xbmc.executeJSONRPC(kodi_params)
 			try:
 				json_data = json.dumps(kodi_response.json(), indent=4, sort_keys=True)
 				json_object  = json.loads(json_data)
-				#print(json_object)
-				xbmc.log(str(json_object)+'===>PHIL', level=xbmc.LOGINFO)
+				xbmc.log(str(json_object)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			except:
-				xbmc.log(str(kodi_response)+'===>PHIL', level=xbmc.LOGINFO)
-			#print(kodi_params)
+				xbmc.log(str(kodi_response)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 		else:
 			response = requests.get('http://api.tvmaze.com/lookup/shows?thetvdb='+str(tvdb_id)).json()
 			show_id = response['id']
@@ -1806,21 +1622,18 @@ def refresh_recently_added():
 				air_date = response['airdate']
 			except: 
 				air_date_test = True
-	#		print response
+
 			#AIRDATE EXAMPLE = str('2021-03-31 00:00:00')
 			if air_date_test != True and episode_id != 0:
 				kodi_params = ('{"jsonrpc":"2.0","id":1,"method":"VideoLibrary.SetEpisodeDetails","params":{"episodeid":'+str(i[0])+',"firstaired": "'+str(air_date)+'"}}')
-				#kodi_response = requests.post(kodi_url, headers=kodi_header, data=kodi_params)
 				kodi_response = xbmc.executeJSONRPC(kodi_params)
 				try:
 					json_data = json.dumps(kodi_response.json(), indent=4, sort_keys=True)
 					json_object  = json.loads(json_data)
-					#print(json_object)
-					xbmc.log(str(json_object)+'===>PHIL', level=xbmc.LOGINFO)
-					#print(kodi_params)
+					xbmc.log(str(json_object)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 				except:
-					xbmc.log(str(kodi_response)+'===>PHIL', level=xbmc.LOGINFO)
-					
+					xbmc.log(str(kodi_response)+'===>OPEN_INFO', level=xbmc.LOGINFO)
+
 	#FIX SQL BAD BYTES to STRING DECODE
 	update_sql = cur.execute("UPDATE episode SET C01 = replace(c01,'<br />\xa0','') where C01 like '%<%' ;").fetchall()
 	con.commit()
@@ -1855,48 +1668,8 @@ def refresh_recently_added():
 	return
 
 def library_auto_tv():
-	xbmc.log(str('TRAKT_SYNC_TV_library_auto_tv')+'===>PHIL', level=xbmc.LOGFATAL)
-	#home = expanduser("~")
-	#tree = ET.parse(home  + '/.kodi/userdata/addon_data/plugin.video.themoviedb.helper/settings.xml')
-	tree = ET.parse(tmdb_settings_path())
-	root = tree.getroot()
-
-	for child in root:
-		if (child.attrib)['id'] == 'trakt_token':
-			token = json.loads(child.text)
-
-	try:
-		#inFile = open(home  + '/.kodi/addons/plugin.video.themoviedb.helper/resources/lib/traktapi.py')
-		inFile = open(tmdb_traktapi_path())
-		for line in inFile:
-			if 'self.client_id = ' in line:
-				client_id = line.replace('self.client_id = ','').replace('\'','').replace('	','').replace('\n', '')
-			if 'self.client_secret = ' in line:
-				client_secret = line.replace('self.client_secret = ','').replace('\'','').replace('	','').replace('\n', '')
-	except:
-		#inFile = open(home  + '/.kodi/addons/plugin.video.themoviedb.helper/resources/lib/trakt/api.py')
-		inFile = open(tmdb_traktapi_new_path())
-		for line in inFile:
-			if 'CLIENT_ID = ' in line:
-				client_id = line.replace('CLIENT_ID = ','').replace('\'','').replace('	','').replace('\n', '')
-			if 'CLIENT_SECRET = ' in line:
-				client_secret = line.replace('CLIENT_SECRET = ','').replace('\'','').replace('	','').replace('\n', '')
-
-	inFile.close()
-	headers = {'trakt-api-version': '2', 'trakt-api-key': client_id, 'Content-Type': 'application/json'}
-	headers['Authorization'] = 'Bearer {0}'.format(token.get('access_token'))
-
-	try:
-		date = datetime.date.today() - datetime.timedelta(days = 1)
-	except:
-		date = datetime.now()- timedelta(days = 1)
-	start_date = date.strftime('%Y-%m-%d')
-	days = 9
-
-	##basedir_tv = __addon__.getSettingString('tvshows_library') or 'special://profile/addon_data/plugin.video.themoviedb.helper/tvshows/'
-	##file_path = str(xbmc.translatePath('special://userdata/addon_data/'))+str(__addonid__) + '/TVShows'
-	#basedir_tv = home  + '/.kodi/userdata/addon_data/plugin.video.openmeta/TVShows'
-	#file_path = home  + '/.kodi/userdata/addon_data/plugin.video.openmeta/TVShows'
+	xbmc.log(str('TRAKT_SYNC_TV_library_auto_tv')+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+	headers = trak_auth()
 	basedir_tv = basedir_tv_path()
 	file_path = basedir_tv
 
@@ -1905,7 +1678,6 @@ def library_auto_tv():
 			os.mkdir(file_path)
 		except:
 			os.makedirs(file_path)
-	#	print(file_path)
 
 	x = 0
 	response = ''
@@ -1953,30 +1725,25 @@ def library_auto_tv():
 				Path(trakt_path).touch()
 		except:
 			pass
-		
 
 		if not os.path.exists(file_path + '/' + str(i['show']['ids']['tvdb'])):
 			os.mkdir(file_path + '/' + str(i['show']['ids']['tvdb']))
-	#		print(str(file_path + '/' + str(i['show']['ids']['tvdb'])))
 
 		if not os.path.exists(nfo_path):
 			file = open(nfo_path, 'w')
 			file.write(nfo)
 			file.close()
-	#		print(nfo_path)
-		
+
 		art_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/' + 'tvshow.fanart'
 		if not os.path.exists(art_path):
-			#tmdb_api = xbmcaddon.Addon('plugin.video.seren').getSetting('tmdb.apikey')
-			#fanart_api = xbmcaddon.Addon('plugin.video.themoviedb.helper').getSetting('fanarttv_clientkey')
 			tmdb_api = tmdb_api_key()
 			fanart_api = fanart_api_key()
-#			show_file_path = home  + '/.kodi/userdata/addon_data/plugin.video.openmeta/TVShows/' + str(i['show']['ids']['tvdb']) + '/'
 			show_file_path = basedir_tv + '/' + str(i['show']['ids']['tvdb']) + '/'
 			get_art_fanart_tv(str(i['show']['ids']['tvdb']), fanart_api, show_file_path, art_path, str(i['show']['ids']['tmdb']),tmdb_api)
 			file = open(art_path, 'w')
 			file.write(str(i['show']['ids']['tvdb']) + ' - '+str(i['show']['title']))
 			file.close()
+
 		"""
 	###OVERWRITE NFO
 		if os.path.exists(nfo_path):
@@ -1985,11 +1752,10 @@ def library_auto_tv():
 			file.close()
 		"""
 
-	##	xbmc.log(str(nfo)+'||'+str(i['show']['ids']['tvdb'])+'||'+str(i['show']['title'])+'||===>TMDB HELPER', level=xbmc.LOGINFO)
+		#xbmc.log(str(nfo)+'||'+str(i['show']['ids']['tvdb'])+'||'+str(i['show']['title'])+'||===>OPEN_INFO', level=xbmc.LOGINFO)
 		for s in i['seasons']:
 			if not os.path.exists(file_path + '/' + str(i['show']['ids']['tvdb']) + '/Season ' + str(s['number'])):
 				os.mkdir(file_path + '/' + str(i['show']['ids']['tvdb']) + '/Season ' + str(s['number']))
-	#			print(str(file_path + '/' + str(i['show']['ids']['tvdb']) + '/Season ' + str(s['number'])))
 
 			for e in s['episodes']:
 				url = "plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=" + str(i['show']['ids']['tmdb']) + "&amp;season=" + str(s['number']) + "&amp;episode=" + str(e['number'])
@@ -2003,11 +1769,12 @@ def library_auto_tv():
 				strm_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/Season ' + str(s['number']) + '/' + file_name
 
 				"""
-	###Overwrite existing strm files.
+				###Overwrite existing strm files.
 				file = open(strm_path, 'w')
 				file.write(url)
 				file.close()
 				"""
+
 				dir = file_path + '/' + str(i['show']['ids']['tvdb']) + '/Season ' + str(s['number']) + '/'
 				match = "*S"+format(s['number'],'02d')+"E"+format(e['number'], '02d')+'.strm'
 				n_match = ''
@@ -2018,7 +1785,6 @@ def library_auto_tv():
 						file = open(strm_path, 'w')
 						file.write(url)
 						file.close()
-	#					print str(strm_path)
 
 	add_calendar = 1
 	x = 0
@@ -2027,7 +1793,7 @@ def library_auto_tv():
 		try: response = requests.get('https://api.trakt.tv/calendars/my/shows/'+start_date+'/'+str(days), headers=headers).json()
 		except: x = x + 1
 	calendar_eps = sorted(response, key=lambda i: i['show']['title'], reverse=False)
-	#xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
+	#xbmc.log(str(response)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 
 	for n in calendar_eps:
 	##Shows can be hidden on the trakt calendar, current config will add all new episodes which show up on calendar so hide any shows not in collection
@@ -2040,16 +1806,15 @@ def library_auto_tv():
 			nfo_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/' + 'tvshow.nfo'
 			
 			if not os.path.exists(file_path + '/' + str(n['show']['ids']['tvdb'])):
-	##			xbmc.log(str(file_path + '/' + str(n['show']['ids']['tvdb'])) + '===>TMDB HELPER', level=xbmc.LOGINFO)
+				#xbmc.log(str(file_path + '/' + str(n['show']['ids']['tvdb'])) + '===>OPEN_INFO', level=xbmc.LOGINFO)
 				os.mkdir(file_path + '/' + str(n['show']['ids']['tvdb']))
-	#			print(str(file_path + '/' + str(n['show']['ids']['tvdb'])))
+
 
 			if not os.path.exists(nfo_path):
-	##			xbmc.log(str(nfo_path) + '===>TMDB HELPER', level=xbmc.LOGINFO)
+				#xbmc.log(str(nfo_path) + '===>OPEN_INFO', level=xbmc.LOGINFO)
 				file = open(nfo_path, 'w')
 				file.write(nfo)
 				file.close()
-	#			print(nfo_path)
 
 
 			try:
@@ -2086,9 +1851,8 @@ def library_auto_tv():
 
 
 			if not os.path.exists(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season'])):
-	##			xbmc.log(str(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season'])) + '===>TMDB HELPER', level=xbmc.LOGINFO)
+				#xbmc.log(str(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season'])) + '===>OPEN_INFO', level=xbmc.LOGINFO)
 				os.mkdir(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']))
-	#			print(str(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season'])))
 
 			url = "plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=" + str(n['show']['ids']['tmdb']) + "&amp;season=" + str(n['episode']['season']) + "&amp;episode=" + str(n['episode']['number'])
 			if str(n['show']['ids']['tmdb']) == 'None':
@@ -2111,7 +1875,6 @@ def library_auto_tv():
 						file = open(strm_path, 'w')
 						file.write(url)
 						file.close()
-	#				print str(strm_path)
 
 			if not os.path.exists(thumb_path) and n_match == '':
 				tvdb_url = str('https://api.thetvdb.com/series/' + str(n['show']['ids']['tvdb']) + '/episodes/query?airedSeason=' + str(n['episode']['season']) + '&airedEpisode=' + str(n['episode']['number']))
@@ -2125,8 +1888,7 @@ def library_auto_tv():
 						urllib.urlretrieve(thumbnail_image, thumb_path)
 					except:
 						urllib.request.urlretrieve(thumbnail_image, thumb_path)
-	#				xbmc.log('WRITE_IMAGE '+str(thumbnail_image)+' to '+str(thumb_path)+'===>TMDB HELPER', level=xbmc.LOGINFO)
-	#				print(thumbnail_image + ' ' + thumb_path)
+					#xbmc.log('WRITE_IMAGE '+str(thumbnail_image)+' to '+str(thumb_path)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 				else:
 					response = requests.get('http://api.tvmaze.com/lookup/shows?thetvdb='+str(n['show']['ids']['tvdb'])).json()
 					show_id = response['id']
@@ -2161,43 +1923,8 @@ def library_auto_tv():
 
 
 def library_auto_movie():
-	xbmc.log(str('TRAKT_SYNC_MOVIE_library_auto_movie')+'===>PHIL', level=xbmc.LOGFATAL)
-
-	#tree = ET.parse(home  + '/.kodi/userdata/addon_data/plugin.video.themoviedb.helper/settings.xml')
-	tree = ET.parse(tmdb_settings_path())
-	root = tree.getroot()
-
-	for child in root:
-		if (child.attrib)['id'] == 'trakt_token':
-			token = json.loads(child.text)
-
-
-	try:
-		#inFile = open(home  + '/.kodi/addons/plugin.video.themoviedb.helper/resources/lib/traktapi.py')
-		inFile = open(tmdb_traktapi_path())
-		for line in inFile:
-			if 'self.client_id = ' in line:
-				client_id = line.replace('self.client_id = ','').replace('\'','').replace('    ','').replace('\n', '')
-			if 'self.client_secret = ' in line:
-				client_secret = line.replace('self.client_secret = ','').replace('\'','').replace('    ','').replace('\n', '')
-	except:
-		#inFile = open(home  + '/.kodi/addons/plugin.video.themoviedb.helper/resources/lib/trakt/api.py')
-		inFile = open(tmdb_traktapi_new_path())
-		for line in inFile:
-			if 'CLIENT_ID = ' in line:
-				client_id = line.replace('CLIENT_ID = ','').replace('\'','').replace('    ','').replace('\n', '')
-			if 'CLIENT_SECRET = ' in line:
-				client_secret = line.replace('CLIENT_SECRET = ','').replace('\'','').replace('    ','').replace('\n', '')
-
-	inFile.close()
-
-	headers = {'trakt-api-version': '2', 'trakt-api-key': client_id, 'Content-Type': 'application/json'}
-	headers['Authorization'] = 'Bearer {0}'.format(token.get('access_token'))
-
-	##basedir_tv = __addon__.getSettingString('tvshows_library') or 'special://profile/addon_data/plugin.video.themoviedb.helper/tvshows/'
-	##file_path = str(xbmc.translatePath('special://userdata/addon_data/'))+str(__addonid__) + '/TVShows'
-	#basedir_tv = home  + '/.kodi/userdata/addon_data/plugin.video.openmeta/Movies'
-	#file_path = home  + '/.kodi/userdata/addon_data/plugin.video.openmeta/Movies'
+	xbmc.log(str('TRAKT_SYNC_MOVIE_library_auto_movie')+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+	headers = trak_auth()
 	basedir_tv = basedir_movies_path()
 	file_path = basedir_tv
 
@@ -2206,7 +1933,7 @@ def library_auto_movie():
 			os.mkdir(file_path)
 		except:
 			os.makedirs(file_path)
-		#xbmc.log(str(file_path)+'===>PHIL', level=xbmc.LOGFATAL)
+		#xbmc.log(str(file_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 
 	x = 0
 	response = ''
@@ -2226,7 +1953,7 @@ def library_auto_movie():
 			tmdb_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' +str(tmdb_id)+ '.tmdb'
 			if not os.path.exists(tmdb_path) and str(tmdb_id).isnumeric():
 				Path(tmdb_path).touch()
-				#xbmc.log(str(tmdb_path)+'===>PHIL', level=xbmc.LOGFATAL)
+				#xbmc.log(str(tmdb_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 		except:
 			pass
 
@@ -2235,7 +1962,7 @@ def library_auto_movie():
 			imdb_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' +str(imdb_id)+ '.imdb'
 			if not os.path.exists(imdb_path) and str(imdb_id[2:]).isnumeric():
 				Path(imdb_path).touch()
-				#xbmc.log(str(imdb_path)+'===>PHIL', level=xbmc.LOGFATAL)
+				#xbmc.log(str(imdb_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 		except:
 			pass
 
@@ -2244,34 +1971,30 @@ def library_auto_movie():
 			trakt_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' +str(trakt_id)+ '.trakt'
 			if not os.path.exists(trakt_path) and str(trakt_id).isnumeric():
 				Path(trakt_path).touch()
-				#xbmc.log(str(trakt_path)+'===>PHIL', level=xbmc.LOGFATAL)
+				#xbmc.log(str(trakt_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 		except:
 			pass
-		
 
 		if not os.path.exists(file_path + '/' + str(i['movie']['ids']['tmdb'])):
 			os.mkdir(file_path + '/' + str(i['movie']['ids']['tmdb']))
-			#xbmc.log(str(str(file_path + '/' + str(i['movie']['ids']['tmdb'])))+'===>PHIL', level=xbmc.LOGFATAL)
+			#xbmc.log(str(str(file_path + '/' + str(i['movie']['ids']['tmdb'])))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 
 		if not os.path.exists(nfo_path):
 			file = open(nfo_path, 'w')
 			file.write(nfo)
 			file.close()
-			#xbmc.log(str(nfo_path)+'===>PHIL', level=xbmc.LOGFATAL)
-		
+			#xbmc.log(str(nfo_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+
 		art_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + 'movie.fanart'
 		if not os.path.exists(art_path):
-			#tmdb_api = xbmcaddon.Addon('plugin.video.seren').getSetting('tmdb.apikey')
-			#fanart_api = xbmcaddon.Addon('plugin.video.themoviedb.helper').getSetting('fanarttv_clientkey')
 			tmdb_api = tmdb_api_key()
 			fanart_api = fanart_api_key()
-			#show_file_path = home  + '/.kodi/userdata/addon_data/plugin.video.openmeta/Movies' + str(i['movie']['ids']['tmdb']) + '/'
 			show_file_path = basedir_tv + '/' + str(i['movie']['ids']['tmdb']) + '/'
 			
-			#xbmc.log(str('get_art_fanart_movie')+'===>PHIL', level=xbmc.LOGFATAL)
+			#xbmc.log(str('get_art_fanart_movie')+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 			get_art_fanart_movie(str(i['movie']['ids']['tmdb']), fanart_api, show_file_path, art_path, tmdb_api)
 			
-			#xbmc.log(str(str(i['movie']['ids']['tmdb']) + ' - '+str(i['movie']['title']))+'===>PHIL', level=xbmc.LOGFATAL)
+			#xbmc.log(str(str(i['movie']['ids']['tmdb']) + ' - '+str(i['movie']['title']))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 			file = open(art_path, 'w')
 			file.write(str(i['movie']['ids']['tmdb']) + ' - '+str(i['movie']['title']))
 			file.close()
@@ -2281,19 +2004,20 @@ def library_auto_movie():
 		for c in r'[]/\;,><&*:%=+@!#^()|?^':
 			file_name = file_name.replace(c,'')
 		url = "plugin://plugin.video.themoviedb.helper?info=play&amp;type=movie&amp;tmdb_id=" + str(i['movie']['ids']['tmdb'])
-		xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGFATAL)
+		xbmc.log(str(url)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 		strm_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + file_name
+
 		"""
-	###OVERWRITE NFO
+		###OVERWRITE NFO
 		if os.path.exists(nfo_path):
 			file = open(nfo_path, 'w')
 			file.write(nfo)
 			file.close()
 		"""
+
 		n_match = ''
 		dir = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/'
 		if not os.path.exists(strm_path):
-			#xbmc.log(str(str(strm_path))+'===>PHIL', level=xbmc.LOGFATAL)
 			try:
 				for n in fnmatch.filter(os.listdir(dir), match):
 					n_match = n
@@ -2301,13 +2025,12 @@ def library_auto_movie():
 					file = open(strm_path, 'w')
 					file.write(url)
 					file.close()
-					#xbmc.log(str(str(strm_path))+'===>PHIL', level=xbmc.LOGFATAL)
 			except:
 				pass
 				
 
 		"""
-	###Overwrite existing strm files.
+		###Overwrite existing strm files.
 		file = open(strm_path, 'w')
 		file.write(url)
 		file.close()
