@@ -217,17 +217,17 @@ class PlayerMonitor(xbmc.Player):
         return response.json()
 
     def onAVStarted(self):
-        xbmc.log(str('onAVStarted')+'===>PHIL', level=xbmc.LOGINFO)
+        xbmc.log(str('onAVStarted')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
         #self.reset_properties()
         #self.get_playingitem()
 
     def onPlayBackEnded(self):
-        xbmc.log(str('onPlayBackEnded')+'===>PHIL', level=xbmc.LOGINFO)
+        xbmc.log(str('onPlayBackEnded')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
         #self.set_watched()
         #self.reset_properties()
 
     def onPlayBackStopped(self):
-        xbmc.log(str('onPlayBackStopped')+'===>PHIL', level=xbmc.LOGINFO)
+        xbmc.log(str('onPlayBackStopped')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
         global global_movie_flag
         global resume_position
         global resume_duration
@@ -262,14 +262,14 @@ class PlayerMonitor(xbmc.Player):
                 json_object  = json.loads(json_result)
                 xbmc.log(str(json_object)+'=episode resume set, '+str(dbID)+'=dbID', level=xbmc.LOGFATAL)
         except:
-            xbmc.log(str('Line ')+str(getframeinfo(currentframe()).lineno)+'___'+str(getframeinfo(currentframe()).filename)+'===>PHIL', level=xbmc.LOGFATAL)
+            xbmc.log(str('Line ')+str(getframeinfo(currentframe()).lineno)+'___'+str(getframeinfo(currentframe()).filename)+'===>___OPEN_INFO', level=xbmc.LOGFATAL)
             return
 
         #self.set_watched()
         #self.reset_properties()
 
     def reset_properties(self):
-        xbmc.log(str('reset_properties')+'===>PHIL', level=xbmc.LOGINFO)
+        xbmc.log(str('reset_properties')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
         #self.clear_properties()
         #self.properties = set()
         #self.index_properties = set()
@@ -288,7 +288,7 @@ class PlayerMonitor(xbmc.Player):
 
 
     def onPlayBackStarted(self):
-        xbmc.log(str('onPlayBackStarted')+'===>PHIL', level=xbmc.LOGINFO)
+        xbmc.log(str('onPlayBackStarted')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
         trakt_scrobble = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_scrobble'))
 
         if trakt_scrobble == 'false':
@@ -343,12 +343,16 @@ class PlayerMonitor(xbmc.Player):
         type = ''
         if json_object['result']['VideoPlayer.TVShowTitle'] == '' and PTN_show != '':
             json_object['result']['VideoPlayer.TVShowTitle'] = PTN_show
+            tv_title = PTN_show
             json_object['result']['VideoPlayer.Season'] = PTN_season
+            tv_season = PTN_season
             json_object['result']['VideoPlayer.Episode'] = PTN_info['episode']
+            tv_episode = PTN_info['episode']
             type = 'episode'
         if json_object['result']['VideoPlayer.MovieTitle'] == '' and PTN_movie != '':
             json_object['result']['VideoPlayer.MovieTitle'] = PTN_movie
             json_object['result']['VideoPlayer.Year'] = PTN_year
+            year = PTN_year
             json_object['result']['VideoPlayer.Title'] = PTN_movie
             movie_title = PTN_movie
             type = 'movie'
@@ -383,10 +387,12 @@ class PlayerMonitor(xbmc.Player):
         if 'tt' in str(imdb_id) and type == 'movie':
             tmdb_id = TheMovieDB.get_movie_tmdb_id(imdb_id=imdb_id)
         elif type == 'episode':
-            tmdb_id = TheMovieDB.search_media(media_name=tv_title, media_type='tv')
+            regex2 = re.compile('(19|20)[0-9][0-9]')
+            clean_tv_title2 = regex2.sub(' ', tv_title.replace('\'','').replace('&',' ')).replace('  ',' ')
+            tmdb_id = TheMovieDB.search_media(media_name=clean_tv_title2, media_type='tv')
             if str(tmdb_id) == '' or str(tmdb_id) == None or tmdb_id == None:
                 tmdb_api = library.tmdb_api_key()
-                url = 'https://api.themoviedb.org/3/search/tv?api_key='+str(tmdb_api)+'&language=en-US&page=1&query='+str(tv_title)+'&include_adult=false'
+                url = 'https://api.themoviedb.org/3/search/tv?api_key='+str(tmdb_api)+'&language=en-US&page=1&query='+str(clean_tv_title2)+'&include_adult=false'
                 response = requests.get(url).json()
                 tmdb_id = response['results'][0]['id']
         else:
@@ -429,7 +435,7 @@ class PlayerMonitor(xbmc.Player):
                 json_object['result']['VideoPlayer.DBID'] = dbID
             #if imdb_id != '' and type != 'episode':
             #    response = trakt_movie_imdb(imdb_id)
-            #    #xbmc.log(str(response)+'Rresponse===>PHIL', level=xbmc.LOGFATAL)
+            #    #xbmc.log(str(response)+'Rresponse===>___OPEN_INFO', level=xbmc.LOGFATAL)
             #    tmdb_id = str(response[0]['movie']['ids']['tmdb'])
             #    try: trakt_scrobble_tmdb(tmdb_id, 1)
             #    except: pass
@@ -453,22 +459,22 @@ class PlayerMonitor(xbmc.Player):
                 json_object['result']['ListItem.TVShowTitle'] = str(sql_result[0][1])
             except:
                 dbID = ''
-        #xbmc.log(str(duration)+'===>PHIL', level=xbmc.LOGINFO)
-        #xbmc.log(str(tmdb_id)+'===>PHIL', level=xbmc.LOGINFO)
-        #xbmc.log(str(imdb_id)+'===>PHIL', level=xbmc.LOGINFO)
-        #xbmc.log(str(PTN_season)+'===>PHIL', level=xbmc.LOGINFO)
-        #xbmc.log(str(PTN_episode)+'===>PHIL', level=xbmc.LOGINFO)
-        #xbmc.log(str(PTN_movie)+'===>PHIL', level=xbmc.LOGINFO)
-        #xbmc.log(str(PTN_show)+'===>PHIL', level=xbmc.LOGINFO)
-        #xbmc.log(str(PTN_year)+'===>PHIL', level=xbmc.LOGINFO)
-        #xbmc.log(str(dbID)+'===>PHIL', level=xbmc.LOGINFO)
-        xbmc.log(str(json_object)+'===>PHIL', level=xbmc.LOGINFO)
+        #xbmc.log(str(duration)+'===>___OPEN_INFO', level=xbmc.LOGINFO)
+        #xbmc.log(str(tmdb_id)+'===>___OPEN_INFO', level=xbmc.LOGINFO)
+        #xbmc.log(str(imdb_id)+'===>___OPEN_INFO', level=xbmc.LOGINFO)
+        #xbmc.log(str(PTN_season)+'===>___OPEN_INFO', level=xbmc.LOGINFO)
+        #xbmc.log(str(PTN_episode)+'===>___OPEN_INFO', level=xbmc.LOGINFO)
+        #xbmc.log(str(PTN_movie)+'===>___OPEN_INFO', level=xbmc.LOGINFO)
+        #xbmc.log(str(PTN_show)+'===>___OPEN_INFO', level=xbmc.LOGINFO)
+        #xbmc.log(str(PTN_year)+'===>___OPEN_INFO', level=xbmc.LOGINFO)
+        #xbmc.log(str(dbID)+'===>___OPEN_INFO', level=xbmc.LOGINFO)
+        xbmc.log(str(json_object)+'===>___OPEN_INFO', level=xbmc.LOGINFO)
 
 
         if type != 'episode':
             movie_id = dbID
             global_movie_flag = 'true'
-            xbmc.log('PLAYBACK STARTED_tvdb='+str(imdb_id)+ '  ,'+str(dbID)+'=dbID, '+str(duration)+'=duration, '+str(movie_title)+'=movie_title, '+str(title), level=xbmc.LOGFATAL)
+            xbmc.log('PLAYBACK STARTED_tvdb='+str(imdb_id)+ '  ,'+str(dbID)+'=dbID, '+str(duration)+'=duration, '+str(movie_title)+'=movie_title, '+str(title)+'___OPEN_INFO', level=xbmc.LOGFATAL)
             if tmdb_id != '':
                 try: self.trakt_scrobble_tmdb(tmdb_id, 1)
                 except: pass
@@ -479,7 +485,7 @@ class PlayerMonitor(xbmc.Player):
                     pass
         if type == 'episode':
             global_movie_flag = 'false'
-            xbmc.log('PLAYBACK STARTED_tvdb='+str(tmdb_id)+ '  ,'+str(dbID)+'=dbID, '+str(duration)+'=duration, '+str(tv_title)+'=tv_show_name, '+str(tv_season)+'=season_num, '+str(tv_episode)+'=ep_num, '+str(title), level=xbmc.LOGFATAL)
+            xbmc.log('PLAYBACK STARTED_tvdb='+str(tmdb_id)+ '  ,'+str(dbID)+'=dbID, '+str(duration)+'=duration, '+str(tv_title)+'=tv_show_name, '+str(tv_season)+'=season_num, '+str(tv_episode)+'=ep_num, '+str(title)+'___OPEN_INFO', level=xbmc.LOGFATAL)
             try:
                 response = self.trakt_scrobble_tv('tmdb_id='+str(tmdb_id), tv_season, tv_episode, 1)
             except: 
@@ -662,18 +668,18 @@ class CronJobMonitor(Thread):
             del self.xbmc_monitor
             return
         while not self.xbmc_monitor.abortRequested() and not self.exit and self.poll_time:
-            xbmc.log(str('CronJobMonitor_STARTED_diamond_info_service_started')+'===>PHIL', level=xbmc.LOGINFO)
+            xbmc.log(str('CronJobMonitor_STARTED_diamond_info_service_started')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
             self.curr_time = datetime.datetime.now().replace(minute=0,second=0, microsecond=0).timestamp()
             if int(time.time()) > self.next_time and library_auto_sync == True:  # Scheduled time has past so lets update
                 library_update_period = int(xbmcaddon.Addon(library.addon_ID()).getSetting('library_sync_hours'))
                 self.next_time = self.curr_time + library_update_period*60*60
                 #xbmc.executebuiltin('RunScript(script.diamondinfo,info=auto_library)')
-                xbmc.log(str(datetime.datetime.now())+'datetime.datetime.now()===>PHIL', level=xbmc.LOGFATAL)
-                xbmc.log(str(self.next_time)+'self.next_time===>PHIL', level=xbmc.LOGFATAL)
-                xbmc.log(str(self.curr_time)+'self.curr_time===>PHIL', level=xbmc.LOGFATAL)
+                xbmc.log(str(datetime.datetime.now())+'datetime.datetime.now()===>___OPEN_INFO', level=xbmc.LOGFATAL)
+                xbmc.log(str(self.next_time)+'self.next_time===>___OPEN_INFO', level=xbmc.LOGFATAL)
+                xbmc.log(str(self.curr_time)+'self.curr_time===>___OPEN_INFO', level=xbmc.LOGFATAL)
                 #self.next_time = datetime.datetime.combine(datetime.datetime.today(),datetime.time(datetime.datetime.today().hour))+ datetime.timedelta(hours=8)
                 #self.next_time = self.next_time.timestamp()
-                #xbmc.log(str(self.next_time)+'self.next_time2===>PHIL', level=xbmc.LOGFATAL)
+                #xbmc.log(str(self.next_time)+'self.next_time2===>___OPEN_INFO', level=xbmc.LOGFATAL)
             self.xbmc_monitor.waitForAbort(self.poll_time)
 
         del self.xbmc_monitor
@@ -681,7 +687,7 @@ class CronJobMonitor(Thread):
 
 class ServiceMonitor(object):
     def __init__(self):
-        xbmc.log(str('ServiceMonitor_diamond_info_service_started')+'===>PHIL', level=xbmc.LOGINFO)
+        xbmc.log(str('ServiceMonitor_diamond_info_service_started')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
         self.exit = False
         self.cron_job = CronJobMonitor(0)
         self.cron_job.setName('Cron Thread')
@@ -778,7 +784,7 @@ class ServiceMonitor(object):
         self._on_exit()
 
     def run(self):
-        xbmc.log(str('run_diamond_info_service_started')+'===>PHIL', level=xbmc.LOGINFO)
+        xbmc.log(str('run_diamond_info_service_started')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
         ServiceStarted = 'True'
         self.cron_job.start()
         self.player_monitor = PlayerMonitor()
