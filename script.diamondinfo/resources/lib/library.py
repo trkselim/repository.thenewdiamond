@@ -52,14 +52,14 @@ def tmdb_settings_path():
 
 def tmdb_traktapi_path():
 	if '\\' in str(main_file_path()):
-		tmdb_traktapi_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources\lib\traktapi.py'
+		tmdb_traktapi_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources\lib\\traktapi.py'
 	else:
 		tmdb_traktapi_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/lib/traktapi.py'
 	return tmdb_traktapi_path
 
 def tmdb_traktapi_new_path():
 	if '\\' in str(main_file_path()):
-		tmdb_traktapi_new_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources\lib\trakt\api.py'
+		tmdb_traktapi_new_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources\lib\\trakt\\api.py'
 	else:
 		tmdb_traktapi_new_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/lib/trakt/api.py'
 	return tmdb_traktapi_new_path
