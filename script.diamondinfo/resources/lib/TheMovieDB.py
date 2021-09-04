@@ -808,7 +808,14 @@ def get_imdb_list(list_str=None):
 				listitems += handle_tmdb_multi_search(response['movie_results'])
 		except:
 			#xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
-			continue
+			try:
+				response['tv_results'][0]['media_type'] = 'tv'
+				if listitems == None:
+					listitems = handle_tmdb_multi_search(response['tv_results'])
+				else:
+					listitems += handle_tmdb_multi_search(response['tv_results'])
+			except:
+				continue
 		#break
 	#xbmc.log(str(listitems)+'===>PHIL', level=xbmc.LOGINFO)
 	return listitems

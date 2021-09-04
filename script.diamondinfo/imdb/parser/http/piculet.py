@@ -35,6 +35,7 @@ from functools import partial
 from operator import itemgetter
 from pkgutil import find_loader
 
+import xbmc
 
 PY2 = sys.version_info < (3, 0)
 
@@ -372,10 +373,14 @@ class Extractor:
         :param transform: Whether the transformation will be applied or not.
         :return: Extracted and optionally transformed data.
         """
-        value = self.apply(element)
-        if (value is None) or (value is _EMPTY) or (not transform):
+        try:
+            value = self.apply(element)
+            if (value is None) or (value is _EMPTY) or (not transform):
+                return value
+            return value if self.transform is None else self.transform(value)
+        except:
+            value = None
             return value
-        return value if self.transform is None else self.transform(value)
 
     @staticmethod
     def from_map(item):
@@ -679,10 +684,12 @@ def build_tree(document, force_html=False):
     :return: Root element of the XML tree.
     """
     content = document.encode('utf-8') if PY2 else document
+    #xbmc.log(str()+'===>PHIL', level=xbmc.LOGINFO)
     #f = open("/home/osmc/content.txt", "a")
     #f.write(content)
     #f.close()
     content = content.replace(' +=""','')
+    #content = content.replace(': ',' - ')
 
     if _USE_LXML and force_html:
         _logger.info('using lxml html builder')

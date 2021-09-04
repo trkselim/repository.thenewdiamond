@@ -629,8 +629,15 @@ def get_tmdb_window(window_type):
                                 listitems += TheMovieDB.handle_tmdb_multi_search(response['movie_results'])
                             x = x + 1
                         except:
-                            xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
-                            continue
+                            try:
+                                #xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
+                                response['tv_results'][0]['media_type'] = 'tv'
+                                if listitems == None:
+                                    listitems = TheMovieDB.handle_tmdb_multi_search(response['tv_results'])
+                                else:
+                                    listitems += TheMovieDB.handle_tmdb_multi_search(response['tv_results'])
+                            except:
+                                continue
                     else:
                         x = x + 1
                 
