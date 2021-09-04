@@ -71,8 +71,12 @@ def start_info_actions(infos, params):
 			if not library.library_source_exists_movies() and library_movies_sync == 'true':
 				response = library.setup_library_movies()
 				xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
+			icon_path = library.icon_path()
+			xbmcgui.Dialog().notification(heading='Setup Sources', message='Sources Setup, Please Reboot to finish setup.', icon=icon_path,time=2000,sound=False)
+			Utils.hide_busy()
 
 		elif info == 'auto_library':
+			Utils.hide_busy()
 			#xbmc.log(str(library.tmdb_settings_path())+'tmdb_settings===>PHIL', level=xbmc.LOGINFO)
 			#xbmc.log(str(library.main_file_path())+'file_path===>PHIL', level=xbmc.LOGINFO)
 			#xbmc.log(str(library.tmdb_traktapi_path())+'tmdb_traktapi===>PHIL', level=xbmc.LOGINFO)

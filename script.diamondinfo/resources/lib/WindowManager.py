@@ -1,9 +1,11 @@
 import re, urllib.request, urllib.parse, urllib.error
 import xbmc, xbmcgui, xbmcaddon
 from resources.lib import Utils
+import sys
 
 class WindowManager(object):
-	Utils.show_busy()
+	if not 'auto_library' in str(sys.argv):
+		Utils.show_busy()
 	window_stack = []
 
 	def __init__(self):
