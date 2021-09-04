@@ -2,7 +2,7 @@ import os, urllib.request, urllib.error, threading
 try:
 	from PIL import Image, ImageFilter
 except:
-	from resources.lib.PIL import Image, ImageFilter
+	from resources.PIL import Image, ImageFilter
 import xbmc, xbmcvfs
 from resources.lib import Utils
 

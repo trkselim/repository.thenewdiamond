@@ -56,10 +56,6 @@ def start_info_actions(infos, params):
 			search_str = xbmcgui.Dialog().input(heading='Enter search string', type=xbmcgui.INPUT_ALPHANUM)
 			return wm.open_video_list(search_str=search_str, mode='search')
 
-		elif info == 'test_basedir':
-			xbmc.log(str(library.basedir_tv_path())+'===>PHIL', level=xbmc.LOGINFO)
-			xbmc.log(str(library.basedir_movies_path())+'===>PHIL', level=xbmc.LOGINFO)
-
 		elif info == 'setup_sources':
 			library_tv_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_tv_sync'))
 			library_movies_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_movies_sync'))
@@ -214,6 +210,7 @@ def start_info_actions(infos, params):
 					newlist = sorted(movies, key=lambda k: k['Popularity'], reverse=True)
 					movies = {}
 					movies['cast_crew'] = []
+					movies['person'] = params['person']
 					for i in newlist:
 						try:
 							if str("'id': " + str(i['id'])) not in str(movies['cast_crew']) and i['poster'] != None:
@@ -222,7 +219,7 @@ def start_info_actions(infos, params):
 						except KeyError:
 							pass
 					newlist = None
-					return wm.open_video_list(mode='filter', listitems=movies['cast_crew'])
+					return wm.open_video_list(mode='person', search_str=movies, listitems=movies['cast_crew'])
 
 		elif info == 'studio':
 			if 'id' in params and params['id']:

@@ -598,6 +598,15 @@ def get_tmdb_window(window_type):
                     self.filter_label = 'Results for:  ' + self.search_str
                 else:
                     self.filter_label = ''
+            elif self.mode == 'person':
+                self.filter_label = 'Results for:  ' + self.search_str['person']
+                listitems = self.search_str['cast_crew']
+                info = {
+                    'listitems': listitems,
+                    'results_per_page': 1,
+                    'total_results': len(self.search_str['cast_crew'])
+                    }
+                return info
             elif self.mode == 'list':
                 url = 'list/%s?language=%s&' % (str(self.list_id), xbmcaddon.Addon().getSetting('LanguageID'))
             elif self.mode == 'imdb':

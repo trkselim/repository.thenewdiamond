@@ -133,44 +133,56 @@ def show_settings_menu():
 #OPENMETA METHOD => AddSource.py
 def setup_library_tv():
 	from resources.lib import AddSource
-	library_folder = basedir_tv_path()
-	if library_folder[-1] != '/':
-		library_folder += '/'
+	
 	library_root_folder = xbmcaddon.Addon(addon_ID()).getSetting('library_folder')
-	if library_root_folder[-1] != '/':
+	if '\\' in str(library_root_folder) and str(library_root_folder)[-1] != '\\':
+		library_root_folder += '\\'
+	elif '/' in library_root_folder and str(library_root_folder)[-1] != '/':
 		library_root_folder += '/'
+	
+	library_folder = basedir_tv_path()
+	if '\\' in str(library_folder) and str(library_folder)[-1] != '\\':
+		library_folder += '\\'
+	elif '/' in library_folder and str(library_folder)[-1] != '/':
+		library_folder += '/'
+
 	if not xbmcvfs.exists(library_root_folder):
 		xbmcvfs.mkdir(library_root_folder)
 	if not xbmcvfs.exists(library_folder):
 		xbmcvfs.mkdir(library_folder)
-		try:
-			source_thumbnail = icon_path()
-			source_name = 'Openinfo TVShows'
-			#source_content = "('%s','tvshows','metadata.tvdb.com','',0,0,'<settings version=\"2\"><setting id=\"absolutenumber\" default=\"true\">false</setting><setting id=\"alsoimdb\">true</setting><setting id=\"dvdorder\" default=\"true\">false</setting><setting id=\"fallback\">true</setting><setting id=\"fallbacklanguage\">es</setting><setting id=\"fanart\">true</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TheTVDB</setting><setting id=\"usefallbacklanguage1\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
-			#source_content = "('%s','tvshows','metadata.themoviedb.org','',0,0,'<settings version=\"2\"><setting id=\"absolutenumber\" default=\"true\">false</setting><setting id=\"alsoimdb\">true</setting><setting id=\"dvdorder\" default=\"true\">false</setting><setting id=\"fallback\">true</setting><setting id=\"fallbacklanguage\">es</setting><setting id=\"fanart\">true</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TheTVDB</setting><setting id=\"usefallbacklanguage1\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
-			source_content = "('%s','tvshows','metadata.tvshows.themoviedb.org.python','',0,0,'<settings version=\"2\"><setting id=\"certprefix\" default=\"true\">Rated </setting><setting id=\"fanart\">true</setting><setting id=\"imdbanyway\">true</setting><setting id=\"keeporiginaltitle\" default=\"true\">false</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TMDb</setting><setting id=\"tmdbcertcountry\" default=\"true\">us</setting><setting id=\"trailer\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
-			AddSource.add_source(source_name, library_folder, source_content, source_thumbnail)
-		except:
-			pass
+	source_thumbnail = icon_path()
+	source_name = 'Openinfo TVShows'
+	#source_content = "('%s','tvshows','metadata.tvdb.com','',0,0,'<settings version=\"2\"><setting id=\"absolutenumber\" default=\"true\">false</setting><setting id=\"alsoimdb\">true</setting><setting id=\"dvdorder\" default=\"true\">false</setting><setting id=\"fallback\">true</setting><setting id=\"fallbacklanguage\">es</setting><setting id=\"fanart\">true</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TheTVDB</setting><setting id=\"usefallbacklanguage1\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
+	#source_content = "('%s','tvshows','metadata.themoviedb.org','',0,0,'<settings version=\"2\"><setting id=\"absolutenumber\" default=\"true\">false</setting><setting id=\"alsoimdb\">true</setting><setting id=\"dvdorder\" default=\"true\">false</setting><setting id=\"fallback\">true</setting><setting id=\"fallbacklanguage\">es</setting><setting id=\"fanart\">true</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TheTVDB</setting><setting id=\"usefallbacklanguage1\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
+	source_content = "('%s','tvshows','metadata.tvshows.themoviedb.org.python','',0,0,'<settings version=\"2\"><setting id=\"certprefix\" default=\"true\">Rated </setting><setting id=\"fanart\">true</setting><setting id=\"imdbanyway\">true</setting><setting id=\"keeporiginaltitle\" default=\"true\">false</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TMDb</setting><setting id=\"tmdbcertcountry\" default=\"true\">us</setting><setting id=\"trailer\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
+	AddSource.add_source(source_name, library_folder, source_content, source_thumbnail)
 	return xbmc.translatePath(library_folder)
 
 #OPENMETA METHOD => AddSource.py
 def setup_library_movies():
 	from resources.lib import AddSource
-	library_folder = basedir_movies_path()
-	if library_folder[-1] != '/':
-		library_folder += '/'
+	
 	library_root_folder = xbmcaddon.Addon(addon_ID()).getSetting('library_folder')
-	if library_root_folder[-1] != '/':
+	if '\\' in str(library_root_folder) and str(library_root_folder)[-1] != '\\':
+		library_root_folder += '\\'
+	elif '/' in library_root_folder and str(library_root_folder)[-1] != '/':
 		library_root_folder += '/'
+	
+	library_folder = basedir_movies_path()
+	if '\\' in str(library_folder) and str(library_folder)[-1] != '\\':
+		library_folder += '\\'
+	elif '/' in library_folder and str(library_folder)[-1] != '/':
+		library_folder += '/'
+
+
 	if not xbmcvfs.exists(library_root_folder):
 		xbmcvfs.mkdir(library_root_folder)
 	if not xbmcvfs.exists(library_folder):
 		xbmcvfs.mkdir(library_folder)
-		source_thumbnail = icon_path()
-		source_name = 'Openinfo Movies'
-		source_content = "('%s','movies','metadata.themoviedb.org','',2147483647,1,'<settings version=\"2\"><setting id=\"certprefix\" default=\"true\">Rated </setting><setting id=\"fanart\">true</setting><setting id=\"imdbanyway\">true</setting><setting id=\"keeporiginaltitle\" default=\"true\">false</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TMDb</setting><setting id=\"tmdbcertcountry\" default=\"true\">us</setting><setting id=\"trailer\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
-		AddSource.add_source(source_name, library_folder, source_content, source_thumbnail)
+	source_thumbnail = icon_path()
+	source_name = 'Openinfo Movies'
+	source_content = "('%s','movies','metadata.themoviedb.org','',2147483647,1,'<settings version=\"2\"><setting id=\"certprefix\" default=\"true\">Rated </setting><setting id=\"fanart\">true</setting><setting id=\"imdbanyway\">true</setting><setting id=\"keeporiginaltitle\" default=\"true\">false</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TMDb</setting><setting id=\"tmdbcertcountry\" default=\"true\">us</setting><setting id=\"trailer\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
+	AddSource.add_source(source_name, library_folder, source_content, source_thumbnail)
 	return xbmc.translatePath(library_folder)
 
 def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api):
@@ -256,71 +268,71 @@ def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api)
 	if d1.__contains__('moviebanner'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'banner.jpg'):
 			try:
-				xbmc.log(str('banner.jpg = ' + d1['moviebanner'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
-				#urllib.urlretrieve(d1['moviebanner'].replace(' ', '%20'), show_file_path + 'banner.jpg')
+				#xbmc.log(str('banner.jpg = ' + d1['moviebanner'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
+				urllib.urlretrieve(d1['moviebanner'].replace(' ', '%20'), show_file_path + 'banner.jpg')
 			except:
-				#urllib.request.urlretrieve(d1['moviebanner'].replace(' ', '%20'), show_file_path + 'banner.jpg')
+				urllib.request.urlretrieve(d1['moviebanner'].replace(' ', '%20'), show_file_path + 'banner.jpg')
 				pass
 
 	if d1.__contains__('hdmovielogo'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'clearlogo.png'):
 			try:
-				xbmc.log(str('clearlogo.png = ' + d1['hdmovielogo'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
-				#urllib.urlretrieve(d1['hdmovielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
+				#xbmc.log(str('clearlogo.png = ' + d1['hdmovielogo'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
+				urllib.urlretrieve(d1['hdmovielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
 			except:
-				#urllib.request.urlretrieve(d1['hdmovielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
+				urllib.request.urlretrieve(d1['hdmovielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
 				pass
 	elif d1.__contains__('movielogo'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'clearlogo.png'):
 			try:
-				xbmc.log(str('clearlogo.png = ' + d1['movielogo'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
-				#urllib.urlretrieve(d1['movielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
+				#xbmc.log(str('clearlogo.png = ' + d1['movielogo'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
+				urllib.urlretrieve(d1['movielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
 			except:
-				#urllib.request.urlretrieve(d1['movielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
+				urllib.request.urlretrieve(d1['movielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
 				pass
 
 	if d1.__contains__('moviethumb'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'landscape.jpg'):
 			try:
-				xbmc.log(str('landscape.jpg = ' + d1['moviethumb'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
-				#urllib.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
+				#xbmc.log(str('landscape.jpg = ' + d1['moviethumb'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
+				urllib.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
 			except:
-				#urllib.request.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
+				urllib.request.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
 				pass
 	elif d1.__contains__('moviebackground'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'landscape.jpg'):
 			try:
-				xbmc.log(str('landscape.jpg = ' + d1['moviebackground'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
-				#urllib.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
+				#xbmc.log(str('landscape.jpg = ' + d1['moviebackground'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
+				urllib.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
 			except:
-				#urllib.request.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
+				urllib.request.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
 				pass
 
 	if d1.__contains__('moviebackground'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'fanart.jpg'):
 			try:
-				xbmc.log(str('fanart.jpg = ' + d1['moviebackground'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
-				#urllib.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
+				#xbmc.log(str('fanart.jpg = ' + d1['moviebackground'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
+				urllib.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
 			except:
-				#urllib.request.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
+				urllib.request.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
 				pass
 	elif d1.__contains__('moviethumb'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'fanart.jpg'):
 			try:
-				xbmc.log(str('fanart.jpg = ' + d1['moviethumb'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
-				#urllib.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
+				#xbmc.log(str('fanart.jpg = ' + d1['moviethumb'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
+				urllib.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
 			except:
-				#urllib.request.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
+				urllib.request.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
 				pass
 
 
 	if d1.__contains__('movieposter'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'poster.jpg'):
 			try:
-				xbmc.log(str('poster.jpg = ' + d1['movieposter'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
-				#urllib.urlretrieve(d1['movieposter'].replace(' ', '%20'), show_file_path + 'poster.jpg')
+				#xbmc.log(str('poster.jpg = ' + d1['movieposter'].replace(' ', '%20'))+'===>PHIL', level=xbmc.LOGFATAL)
+				urllib.urlretrieve(d1['movieposter'].replace(' ', '%20'), show_file_path + 'poster.jpg')
 			except:
-				#urllib.request.urlretrieve(d1['movieposter'].replace(' ', '%20'), show_file_path + 'poster.jpg')
+				urllib.request.urlretrieve(d1['movieposter'].replace(' ', '%20'), show_file_path + 'poster.jpg')
 				pass
 	xbmc.log(str(d1)+'===>PHIL', level=xbmc.LOGFATAL)
 
@@ -1843,7 +1855,7 @@ def refresh_recently_added():
 	return
 
 def library_auto_tv():
-	xbmc.log(str('TRAKT_SYNC_TV')+'===>PHIL', level=xbmc.LOGFATAL)
+	xbmc.log(str('TRAKT_SYNC_TV_library_auto_tv')+'===>PHIL', level=xbmc.LOGFATAL)
 	#home = expanduser("~")
 	#tree = ET.parse(home  + '/.kodi/userdata/addon_data/plugin.video.themoviedb.helper/settings.xml')
 	tree = ET.parse(tmdb_settings_path())
@@ -2149,7 +2161,7 @@ def library_auto_tv():
 
 
 def library_auto_movie():
-	xbmc.log(str('TRAKT_SYNC_MOVIE')+'===>PHIL', level=xbmc.LOGFATAL)
+	xbmc.log(str('TRAKT_SYNC_MOVIE_library_auto_movie')+'===>PHIL', level=xbmc.LOGFATAL)
 
 	#tree = ET.parse(home  + '/.kodi/userdata/addon_data/plugin.video.themoviedb.helper/settings.xml')
 	tree = ET.parse(tmdb_settings_path())
@@ -2190,11 +2202,11 @@ def library_auto_movie():
 	file_path = basedir_tv
 
 	if not os.path.exists(file_path):
-	#	try:
-	#		os.mkdir(file_path)
-	#	except:
-	#		os.makedirs(file_path)
-		xbmc.log(str(file_path)+'===>PHIL', level=xbmc.LOGFATAL)
+		try:
+			os.mkdir(file_path)
+		except:
+			os.makedirs(file_path)
+		#xbmc.log(str(file_path)+'===>PHIL', level=xbmc.LOGFATAL)
 
 	x = 0
 	response = ''
@@ -2213,8 +2225,8 @@ def library_auto_movie():
 			tmdb_id = i['movie']['ids']['tmdb']
 			tmdb_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' +str(tmdb_id)+ '.tmdb'
 			if not os.path.exists(tmdb_path) and str(tmdb_id).isnumeric():
-				#Path(tmdb_path).touch()
-				xbmc.log(str(tmdb_path)+'===>PHIL', level=xbmc.LOGFATAL)
+				Path(tmdb_path).touch()
+				#xbmc.log(str(tmdb_path)+'===>PHIL', level=xbmc.LOGFATAL)
 		except:
 			pass
 
@@ -2222,8 +2234,8 @@ def library_auto_movie():
 			imdb_id = i['movie']['ids']['imdb']
 			imdb_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' +str(imdb_id)+ '.imdb'
 			if not os.path.exists(imdb_path) and str(imdb_id[2:]).isnumeric():
-				#Path(imdb_path).touch()
-				xbmc.log(str(imdb_path)+'===>PHIL', level=xbmc.LOGFATAL)
+				Path(imdb_path).touch()
+				#xbmc.log(str(imdb_path)+'===>PHIL', level=xbmc.LOGFATAL)
 		except:
 			pass
 
@@ -2231,21 +2243,21 @@ def library_auto_movie():
 			trakt_id = i['movie']['ids']['trakt']
 			trakt_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' +str(trakt_id)+ '.trakt'
 			if not os.path.exists(trakt_path) and str(trakt_id).isnumeric():
-				#Path(trakt_path).touch()
-				xbmc.log(str(trakt_path)+'===>PHIL', level=xbmc.LOGFATAL)
+				Path(trakt_path).touch()
+				#xbmc.log(str(trakt_path)+'===>PHIL', level=xbmc.LOGFATAL)
 		except:
 			pass
 		
 
 		if not os.path.exists(file_path + '/' + str(i['movie']['ids']['tmdb'])):
-			#os.mkdir(file_path + '/' + str(i['movie']['ids']['tmdb']))
-			xbmc.log(str(str(file_path + '/' + str(i['movie']['ids']['tmdb'])))+'===>PHIL', level=xbmc.LOGFATAL)
+			os.mkdir(file_path + '/' + str(i['movie']['ids']['tmdb']))
+			#xbmc.log(str(str(file_path + '/' + str(i['movie']['ids']['tmdb'])))+'===>PHIL', level=xbmc.LOGFATAL)
 
 		if not os.path.exists(nfo_path):
-			#file = open(nfo_path, 'w')
-			#file.write(nfo)
-			#file.close()
-			xbmc.log(str(nfo_path)+'===>PHIL', level=xbmc.LOGFATAL)
+			file = open(nfo_path, 'w')
+			file.write(nfo)
+			file.close()
+			#xbmc.log(str(nfo_path)+'===>PHIL', level=xbmc.LOGFATAL)
 		
 		art_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + 'movie.fanart'
 		if not os.path.exists(art_path):
@@ -2256,13 +2268,13 @@ def library_auto_movie():
 			#show_file_path = home  + '/.kodi/userdata/addon_data/plugin.video.openmeta/Movies' + str(i['movie']['ids']['tmdb']) + '/'
 			show_file_path = basedir_tv + '/' + str(i['movie']['ids']['tmdb']) + '/'
 			
-			xbmc.log(str('get_art_fanart_movie')+'===>PHIL', level=xbmc.LOGFATAL)
+			#xbmc.log(str('get_art_fanart_movie')+'===>PHIL', level=xbmc.LOGFATAL)
 			get_art_fanart_movie(str(i['movie']['ids']['tmdb']), fanart_api, show_file_path, art_path, tmdb_api)
 			
-			xbmc.log(str(str(i['movie']['ids']['tmdb']) + ' - '+str(i['movie']['title']))+'===>PHIL', level=xbmc.LOGFATAL)
-			#file = open(art_path, 'w')
-			#file.write(str(i['movie']['ids']['tmdb']) + ' - '+str(i['movie']['title']))
-			#file.close()
+			#xbmc.log(str(str(i['movie']['ids']['tmdb']) + ' - '+str(i['movie']['title']))+'===>PHIL', level=xbmc.LOGFATAL)
+			file = open(art_path, 'w')
+			file.write(str(i['movie']['ids']['tmdb']) + ' - '+str(i['movie']['title']))
+			file.close()
 			
 
 		file_name = str(i['movie']['title']) +' - ' + str(i['movie']['year']) + '.strm'
@@ -2281,15 +2293,15 @@ def library_auto_movie():
 		n_match = ''
 		dir = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/'
 		if not os.path.exists(strm_path):
-			xbmc.log(str(str(strm_path))+'===>PHIL', level=xbmc.LOGFATAL)
+			#xbmc.log(str(str(strm_path))+'===>PHIL', level=xbmc.LOGFATAL)
 			try:
 				for n in fnmatch.filter(os.listdir(dir), match):
 					n_match = n
 				if n_match == '':
-					#file = open(strm_path, 'w')
-					#file.write(url)
-					#file.close()
-					xbmc.log(str(str(strm_path))+'===>PHIL', level=xbmc.LOGFATAL)
+					file = open(strm_path, 'w')
+					file.write(url)
+					file.close()
+					#xbmc.log(str(str(strm_path))+'===>PHIL', level=xbmc.LOGFATAL)
 			except:
 				pass
 				
