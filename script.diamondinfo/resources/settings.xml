@@ -17,6 +17,7 @@
 		<setting label="Enable Trakt/Kodi Scrobbling with PTN" type="bool" id="trakt_scrobble"/>
 		<setting label="Maintenance" type="lsep"/>
 		<setting label="Clear cache..." type="action" action="RunScript(script.diamondinfo,info=deletecache)"/>
+		<setting label="TEST ROUTE type="action" action="RunScript(script.diamondinfo,info=test_route)"/>
 	</category>
     <category label="Trakt Collection Library Options">
         <setting label="Auto Sync Trakt Collection to library" type="bool" id="library_auto_sync" default="false"/>

@@ -56,6 +56,17 @@ def start_info_actions(infos, params):
 			search_str = xbmcgui.Dialog().input(heading='Enter search string', type=xbmcgui.INPUT_ALPHANUM)
 			return wm.open_video_list(search_str=search_str, mode='search')
 
+		elif info == 'test_route':
+			xbmc.log(str(library.basedir_movies_path())+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(library.addon_ID())+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(library.addon_ID_short())+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(library.main_file_path())+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(library.tmdb_settings_path())+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(library.tmdb_traktapi_path())+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(library.tmdb_traktapi_new_path())+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(library.basedir_tv_path())+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(library.basedir_movies_path())+'===>PHIL', level=xbmc.LOGINFO)
+
 		elif info == 'setup_sources':
 			library_tv_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_tv_sync'))
 			library_movies_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_movies_sync'))

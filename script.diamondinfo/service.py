@@ -104,9 +104,9 @@ class PlayerMonitor(xbmc.Player):
         if percent > 80:
             action = 'stop'
         response = requests.post('https://api.trakt.tv/scrobble/' + str(action), data=values, headers=headers)
-    #    xbmc.log(str(response.json())+'===>TRAKT_SCROBBLE_TITLE____service.next_playlist2', level=xbmc.LOGFATAL)
+    #    xbmc.log(str(response.json())+'===>TRAKT_SCROBBLE_TITLE____OPEN_INFO', level=xbmc.LOGFATAL)
         if percent < 10 or percent >= 80: 
-            xbmc.log(str(response.json())+'===>TRAKT_SCROBBLE_TITLE____service.next_playlist2', level=xbmc.LOGFATAL)
+            xbmc.log(str(response.json())+'===>TRAKT_SCROBBLE_TITLE____OPEN_INFO', level=xbmc.LOGFATAL)
 
     def trakt_scrobble_tmdb(self, tmdb_id, percent):
         headers = library.trak_auth()
@@ -161,9 +161,9 @@ class PlayerMonitor(xbmc.Player):
         if percent > 80:
             action = 'stop'
         response = requests.post('https://api.trakt.tv/scrobble/' + str(action), data=values, headers=headers)
-    #    xbmc.log(str(response.json())+'===>TRAKT_SCROBBLE_TMDB____service.next_playlist2', level=xbmc.LOGFATAL)
+    #    xbmc.log(str(response.json())+'===>TRAKT_SCROBBLE_TMDB____OPEN_INFO', level=xbmc.LOGFATAL)
         if percent < 10 or percent >= 80: 
-            try:    xbmc.log(str(response.json())+'===>TRAKT_SCROBBLE_TMDB____service.next_playlist2', level=xbmc.LOGFATAL)
+            try:    xbmc.log(str(response.json())+'===>TRAKT_SCROBBLE_TMDB____OPEN_INFO', level=xbmc.LOGFATAL)
             except: pass
 
     def trakt_scrobble_tv(self, title, season, episode, percent):
@@ -212,7 +212,7 @@ class PlayerMonitor(xbmc.Player):
             action = 'stop'
         response = requests.post('https://api.trakt.tv/scrobble/' + str(action), data=values, headers=headers)
         if percent < 10 or percent >= 80: 
-            try: xbmc.log(str(response.json())+'===>TRAKT_SCROBBLE_TV____service.next_playlist2', level=xbmc.LOGFATAL)
+            try: xbmc.log(str(response.json())+'===>TRAKT_SCROBBLE_TV____OPEN_INFO', level=xbmc.LOGFATAL)
             except: pass
         return response.json()
 

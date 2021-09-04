@@ -44,13 +44,25 @@ def tmdb_settings_path():
 	addon_path = addon.getAddonInfo('path')
 	addonID = addon.getAddonInfo('id')
 	addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
-	return addonUserDataFolder.replace(addonID,'plugin.video.themoviedb.helper') + '/settings.xml'
+	if '\\' in str(addonUserDataFolder):
+		tmdb_settings_path = addonUserDataFolder.replace(addonID,'plugin.video.themoviedb.helper') + '\settings.xml'
+	else:
+		tmdb_settings_path = addonUserDataFolder.replace(addonID,'plugin.video.themoviedb.helper') + '/settings.xml'
+	return tmdb_settings_path
 
 def tmdb_traktapi_path():
-	return main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/lib/traktapi.py'
+	if '\\' in str(main_file_path()):
+		tmdb_traktapi_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources\lib\traktapi.py'
+	else:
+		tmdb_traktapi_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/lib/traktapi.py'
+	return tmdb_traktapi_path
 
 def tmdb_traktapi_new_path():
-	return main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/lib/trakt/api.py'
+	if '\\' in str(main_file_path()):
+		tmdb_traktapi_new_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources\lib\trakt\api.py'
+	else:
+		tmdb_traktapi_new_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/lib/trakt/api.py'
+	return tmdb_traktapi_new_path
 	
 def basedir_tv_path():
 	root_dir = xbmcaddon.Addon(addon_ID()).getSetting('library_folder')
@@ -60,9 +72,14 @@ def basedir_tv_path():
 		addonID = addon.getAddonInfo('id')
 		addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
 		#addonUserDataFolder.replace(addon_ID(),'plugin.video.openmeta') + '/TVShows'
-		return addonUserDataFolder + '/TVShows'
+		if '\\' in str(addonUserDataFolder):
+			return addonUserDataFolder + '\TVShows'
+		else:
+			return addonUserDataFolder + '/TVShows'
 	else:
-		if root_dir[-1] != '/':
+		if root_dir[-1] != '\\' and '\\' in str(root_dir):
+			root_dir += '\\'
+		if root_dir[-1] != '/' and '/' in str(root_dir):
 			root_dir += '/'
 		return root_dir + 'TVShows'
 
@@ -74,9 +91,14 @@ def basedir_movies_path():
 		addonID = addon.getAddonInfo('id')
 		addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
 		#addonUserDataFolder.replace(addon_ID(),'plugin.video.openmeta') + '/Movies'
-		return addonUserDataFolder + '/Movies'
+		if '\\' in str(addonUserDataFolder):
+			return addonUserDataFolder + '\Movies'
+		else:
+			return addonUserDataFolder + '/Movies'
 	else:
-		if root_dir[-1] != '/':
+		if root_dir[-1] != '\\' and '\\' in str(root_dir):
+			root_dir += '\\'
+		if root_dir[-1] != '/' and '/' in str(root_dir):
 			root_dir += '/'
 		return root_dir + 'Movies'
 
@@ -112,7 +134,10 @@ def db_path():
 
 def icon_path():
 	home = expanduser("~")
-	return home + '/.kodi/addons/plugin.video.themoviedb.helper/resources/icons/tmdb/tv.png'
+	if '\\' in str(home):
+		return home + '\.kodi\addons\plugin.video.themoviedb.helper\resources\icons\tmdb\tv.png'
+	else:
+		return home + '/.kodi/addons/plugin.video.themoviedb.helper/resources/icons/tmdb/tv.png'
 
 def tmdb_api_key():
 	#return xbmcaddon.Addon('plugin.video.seren').getSetting('tmdb.apikey')
