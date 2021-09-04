@@ -135,7 +135,7 @@ def db_path():
 def icon_path():
 	home = expanduser("~")
 	if '\\' in str(home):
-		return home + '\.kodi\addons\plugin.video.themoviedb.helper\resources\icons\tmdb\tv.png'
+		return home + '\.kodi\\addons\\plugin.video.themoviedb.helper\\resources\\icons\\tmdb\\tv.png'
 	else:
 		return home + '/.kodi/addons/plugin.video.themoviedb.helper/resources/icons/tmdb/tv.png'
 

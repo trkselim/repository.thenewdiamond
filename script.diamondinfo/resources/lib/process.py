@@ -67,6 +67,29 @@ def start_info_actions(infos, params):
 			xbmc.log(str(library.basedir_tv_path())+'===>PHIL', level=xbmc.LOGINFO)
 			xbmc.log(str(library.basedir_movies_path())+'===>PHIL', level=xbmc.LOGINFO)
 
+			library_root_folder = xbmcaddon.Addon(addon_ID()).getSetting('library_folder')
+			if '\\' in str(library_root_folder) and str(library_root_folder)[-1] != '\\':
+				library_root_folder += '\\'
+			elif '/' in library_root_folder and str(library_root_folder)[-1] != '/':
+				library_root_folder += '/'
+			xbmc.log(str(library_root_folder)+'===>PHIL', level=xbmc.LOGINFO)
+			
+			library_folder = library.basedir_tv_path()
+			if '\\' in str(library_folder) and str(library_folder)[-1] != '\\':
+				library_folder += '\\'
+			elif '/' in library_folder and str(library_folder)[-1] != '/':
+				library_folder += '/'
+			xbmc.log(str(library_folder)+'===>PHIL', level=xbmc.LOGINFO)
+			
+			library_folder = library.basedir_movies_path()
+			if '\\' in str(library_folder) and str(library_folder)[-1] != '\\':
+				library_folder += '\\'
+			elif '/' in library_folder and str(library_folder)[-1] != '/':
+				library_folder += '/'
+			xbmc.log(str(library_folder)+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(library.icon_path())+'===>PHIL', level=xbmc.LOGINFO)
+
+
 		elif info == 'setup_sources':
 			library_tv_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_tv_sync'))
 			library_movies_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_movies_sync'))
