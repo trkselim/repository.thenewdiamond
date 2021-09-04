@@ -67,7 +67,7 @@ def start_info_actions(infos, params):
 			xbmc.log(str(library.basedir_tv_path())+'===>PHIL', level=xbmc.LOGINFO)
 			xbmc.log(str(library.basedir_movies_path())+'===>PHIL', level=xbmc.LOGINFO)
 
-			library_root_folder = xbmcaddon.Addon(addon_ID()).getSetting('library_folder')
+			library_root_folder = xbmcaddon.Addon(library.addon_ID()).getSetting('library_folder')
 			if '\\' in str(library_root_folder) and str(library_root_folder)[-1] != '\\':
 				library_root_folder += '\\'
 			elif '/' in library_root_folder and str(library_root_folder)[-1] != '/':
