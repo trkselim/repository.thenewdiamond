@@ -1,6 +1,7 @@
-import xbmc
+import xbmc, xbmcgui
 from resources.lib import Utils
 from resources.lib.WindowManager import wm
+import time
 
 class VideoPlayer(xbmc.Player):
 
@@ -28,6 +29,7 @@ class VideoPlayer(xbmc.Player):
 		self.stopped = False
 
 	def play(self, url, listitem, window=False):
+		xbmcgui.Window(10000).setProperty('diamond_info_time', str(int(time.time())))
 		super(VideoPlayer, self).play(item=url, listitem=listitem, windowed=False, startpos=-1)
 		for i in range(600):
 			if xbmc.getCondVisibility('VideoPlayer.IsFullscreen'):
@@ -39,6 +41,7 @@ class VideoPlayer(xbmc.Player):
 			xbmc.sleep(50)
 
 	def play_from_button(self, url, listitem, window=False, type='', dbid=0):
+		xbmcgui.Window(10000).setProperty('diamond_info_time', str(int(time.time())))
 		if dbid != 0:
 			item = '{"%s": %s}' % (type, dbid)
 		else:

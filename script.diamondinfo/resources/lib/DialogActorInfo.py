@@ -1,4 +1,4 @@
-import xbmcgui
+import xbmcgui, xbmcaddon
 from resources.lib import Utils
 from resources.lib import ImageTools
 from resources.lib import TheMovieDB
@@ -53,7 +53,11 @@ def get_actor_window(window_type):
 		@ch.click(250)
 		@ch.click(650)
 		def open_tvshow_dialog(self):
-			selection = xbmcgui.Dialog().select(heading='Choose option', list=['Show TV show information', 'Show actor TV show appearances'])
+			#selection = xbmcgui.Dialog().select(heading='Choose option', list=['Show TV show information', 'Show actor TV show appearances'])
+			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
+				selection = xbmcgui.Dialog().contextmenu(['Show TV show information', 'Show actor TV show appearances'])
+			else:
+				selection = xbmcgui.Dialog().select(heading='Choose option', list=['Show TV show information', 'Show actor TV show appearances'])
 			if selection == 0:
 				wm.open_tvshow_info(prev_window=self, tmdb_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'))
 			if selection == 1:
@@ -80,7 +84,11 @@ def get_actor_window(window_type):
 				listitems = ['Play - TMDB Helper']
 
 			listitems += ['Search item']
-			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			#selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
+				selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
+			else:
+				selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
 			Utils.hide_busy()
 			if selection == 0:
 				if self.type == 'tv':

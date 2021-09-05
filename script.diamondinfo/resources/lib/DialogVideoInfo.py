@@ -1,5 +1,5 @@
 import os, shutil, threading
-import xbmc, xbmcgui, xbmcvfs
+import xbmc, xbmcgui, xbmcvfs, xbmcaddon
 from resources.lib import Utils
 from resources.lib import ImageTools
 from resources.lib import TheMovieDB
@@ -99,7 +99,11 @@ def get_movie_window(window_type):
 		@ch.action('contextmenu', 1000)
 		def actor_context_menu(self):
 			listitems = ['Search Person']
-			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			#selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
+				selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
+			else:
+				selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
 			if selection == 0:
 				self.close()
 				xbmc.executebuiltin('RunScript(script.diamondinfo,info=search_person,person=%s)' % self.listitem.getLabel())
@@ -125,7 +129,11 @@ def get_movie_window(window_type):
 				listitems = ['Play - TMDB Helper']
 
 			listitems += ['Search item']
-			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			#selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
+				selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
+			else:
+				selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
 			Utils.hide_busy()
 			if selection == 0:
 				if self.type == 'tv':
@@ -245,7 +253,8 @@ def get_movie_window(window_type):
 			else:
 				#url = 'plugin://plugin.video.diamondplayer/movies/play_choose_player/tmdb/%s/False' % self.info.get('id', '')
 				url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=movie&amp;tmdb_id=%s' % self.info.get('id', '')
-				xbmc.executebuiltin('RunPlugin(%s)' % url)
+				#xbmc.executebuiltin('RunPlugin(%s)' % url)
+				PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=dbid)
 
 		@ch.click(445)
 		def show_manage_dialog(self):
@@ -258,6 +267,10 @@ def get_movie_window(window_type):
 			settings_user_config = xbmcaddon.Addon(library.addon_ID()).getSetting('settings_user_config')
 			if settings_user_config == 'Settings Selection Menu':
 				selection = xbmcgui.Dialog().select(heading='Settings', list=[i[0] for i in manage_list])
+				#if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
+				#	selection = xbmcgui.Dialog().contextmenu([i[0] for i in manage_list])
+				#else:
+				#	selection = xbmcgui.Dialog().select(heading='Settings', list=listitems)
 			else:
 				selection = 1
 			if selection > -1:

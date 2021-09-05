@@ -1,4 +1,4 @@
-import xbmc, xbmcgui
+import xbmc, xbmcgui, xbmcaddon
 from resources.lib import Utils
 from resources.lib import ImageTools
 from resources.lib import TheMovieDB
@@ -80,7 +80,11 @@ def get_season_window(window_type):
 		@ch.action('contextmenu', 1000)
 		def actor_context_menu(self):
 			listitems = ['Search Person']
-			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			#selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
+				selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
+			else:
+				selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
 			if selection == 0:
 				self.close()
 				xbmc.executebuiltin('RunScript(script.diamondinfo,info=search_person,person=%s)' % self.listitem.getLabel())
@@ -104,7 +108,11 @@ def get_season_window(window_type):
 			tvdb_id = Utils.fetch(TheMovieDB.get_tvshow_ids(self.tvshow_id), 'tvdb_id')
 			listitems = ['Play - TMDB Helper']
 			listitems += ['TV Show Info']
-			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			#selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
+				selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
+			else:
+				selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
 			Utils.hide_busy()
 			if selection == 0:
 				url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;tmdb_id=%s&amp;type=episode&amp;season=%s&amp;episode=%s' % (self.tvshow_id, self.listitem.getProperty('season'), episode_id)
@@ -141,6 +149,10 @@ def get_season_window(window_type):
 			settings_user_config = xbmcaddon.Addon(library.addon_ID()).getSetting('settings_user_config')
 			if settings_user_config == 'Settings Selection Menu':
 				selection = xbmcgui.Dialog().select(heading='Settings', list=[i[0] for i in manage_list])
+				#if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
+				#	selection = xbmcgui.Dialog().contextmenu([i[0] for i in manage_list])
+				#else:
+				#	selection = xbmcgui.Dialog().select(heading='Settings', list=listitems)
 			else:
 				selection = 1
 			if selection > -1:

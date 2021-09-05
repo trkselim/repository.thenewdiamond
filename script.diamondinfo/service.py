@@ -1,4 +1,4 @@
-import xbmc, xbmcaddon
+import xbmc, xbmcaddon, xbmcgui
 from threading import Thread
 import datetime
 import time
@@ -295,7 +295,25 @@ class PlayerMonitor(xbmc.Player):
 
 
     def onPlayBackStarted(self):
-
+        global diamond_info_started
+        playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+        playlist_size = playlist.size()
+        diamond_info_time = xbmcgui.Window(10000).getProperty('diamond_info_time')
+        if diamond_info_time == '':
+            diamond_info_time = 0
+        else:
+            diamond_info_time = int(diamond_info_time)
+        if diamond_info_time + 60 > int(time.time()):
+            diamond_info_started = True
+        elif diamond_info_time == 0:
+            diamond_info_started = False
+        elif diamond_info_time + 60 < int(time.time()):
+            if playlist_size > 1:
+                diamond_info_started = True
+            else:
+                diamond_info_started = False
+                xbmcgui.Window(10000).clearProperty('diamond_info_time')
+        xbmc.log(str(diamond_info_started)+'diamond_info_started===>diamond_info_started', level=xbmc.LOGINFO)
         xbmc.log(str('onPlayBackStarted')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
         trakt_scrobble = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_scrobble'))
 
