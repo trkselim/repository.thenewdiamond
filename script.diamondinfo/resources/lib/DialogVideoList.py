@@ -380,14 +380,41 @@ def get_tmdb_window(window_type):
         def open_media(self):
             self.last_position = self.control.getSelectedPosition()
             media_type = self.listitem.getProperty('media_type')
+
             if media_type:
                 self.type = media_type
+            else:
+                self.type = self.media_type
             if self.type == 'tv':
-                wm.open_tvshow_info(prev_window=self, tmdb_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'))
+                if str(self.listitem.getProperty('id')) == '':
+                    import requests, json
+                    ext_key = xbmcaddon.Addon().getSetting('tmdb_api')
+                    if len(ext_key) == 32:
+                        API_key = ext_key
+                    else:
+                        API_key = '1248868d7003f60f2386595db98455ef'
+                    url = 'https://api.themoviedb.org/3/search/tv?api_key='+str(API_key)+'&language='+str(xbmcaddon.Addon().getSetting('LanguageID'))+'&page=1&query='+str(self.listitem.getProperty('title'))+'&include_adult=false&first_air_date_year='+str(self.listitem.getProperty('year'))
+                    response = requests.get(url).json()
+                    tmdb_id = response['results'][0]['id']
+                    wm.open_tvshow_info(prev_window=self, tmdb_id=tmdb_id, dbid=self.listitem.getProperty('dbid'))
+                else:
+                    wm.open_tvshow_info(prev_window=self, tmdb_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'))
             elif self.type == 'person':
                 wm.open_actor_info(prev_window=self, actor_id=self.listitem.getProperty('id'))
             else:
-                wm.open_movie_info(prev_window=self, movie_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'))
+                if str(self.listitem.getProperty('id')) == '':
+                    import requests, json
+                    ext_key = xbmcaddon.Addon().getSetting('tmdb_api')
+                    if len(ext_key) == 32:
+                        API_key = ext_key
+                    else:
+                        API_key = '1248868d7003f60f2386595db98455ef'
+                    url = 'https://api.themoviedb.org/3/search/movie?api_key='+str(API_key)+'&language='+str(xbmcaddon.Addon().getSetting('LanguageID'))+'&page=1&query='+str(self.listitem.getProperty('title'))+'&include_adult=false&primary_release_year='+str(self.listitem.getProperty('year'))
+                    response = requests.get(url).json()
+                    tmdb_id = response['results'][0]['id']
+                    wm.open_movie_info(prev_window=self, movie_id=tmdb_id, dbid=self.listitem.getProperty('dbid'))
+                else:
+                    wm.open_movie_info(prev_window=self, movie_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'))
 
         @ch.click(5010)
         def set_company_filter(self):
@@ -510,6 +537,7 @@ def get_tmdb_window(window_type):
             self.fetch_data()
             self.update()
 
+
         @ch.click(5015)
         def get_trakt_stuff(self):
             #https://raw.githubusercontent.com/henryjfry/repository.thenewdiamond/main/trakt_list.json
@@ -578,6 +606,89 @@ def get_tmdb_window(window_type):
             self.update()
             Utils.hide_busy()
 
+        @ch.click(5016)
+        def get_custom_routes(self):
+            items = [
+                ('libraryallmovies', 'My Movies (Library)'),
+                ('libraryalltvshows', 'My TV Shows (Library)'),
+                ('popularmovies', 'Popular Movies'),
+                ('topratedmovies', 'Top Rated Movies'),
+                ('incinemamovies', 'In Theaters Movies'),
+                ('upcomingmovies', 'Upcoming Movies'),
+                ('populartvshows', 'Popular TV Shows'),
+                ('topratedtvshows', 'Top Rated TV Shows'),
+                ('onairtvshows', 'Currently Airing TV Shows'),
+                ('airingtodaytvshows', 'Airing Today TV Shows')
+                ]
+            listitems = []
+            listitems_key = []
+            for key, value in items:
+                listitems.append(value)
+                listitems_key.append(key)
+            selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+            Utils.show_busy()
+            if selection == -1:
+                Utils.hide_busy()
+                return
+            self.mode='list_items'
+            info = listitems_key[selection]
+            self.filter_label = listitems[selection]
+            if info == 'libraryallmovies':
+                from resources.lib import local_db
+                self.media_type = 'movie'
+                self.search_str = local_db.get_db_movies('"sort": {"order": "descending", "method": "dateadded", "limit": %s}' % 0)
+
+            elif info == 'libraryalltvshows':
+                from resources.lib import local_db
+                self.media_type = 'tv'
+                self.search_str = local_db.get_db_tvshows('"sort": {"order": "descending", "method": "dateadded", "limit": %s}' % 0)
+
+            elif info == 'popularmovies':
+                tmdb_var = 'popular'
+                self.media_type = 'movie'
+                self.search_str = TheMovieDB.get_tmdb_movies(tmdb_var)
+
+            elif info == 'topratedmovies':
+                tmdb_var = 'top_rated'
+                self.media_type = 'movie'
+                self.search_str = TheMovieDB.get_tmdb_movies(tmdb_var)
+
+            elif info == 'incinemamovies':
+                tmdb_var = 'now_playing'
+                self.media_type = 'movie'
+                self.search_str = TheMovieDB.get_tmdb_movies(tmdb_var)
+
+            elif info == 'upcomingmovies':
+                tmdb_var = 'upcoming'
+                self.media_type = 'movie'
+                self.search_str = TheMovieDB.get_tmdb_movies(tmdb_var)
+
+            elif info == 'populartvshows':
+                tmdb_var = 'popular'
+                self.media_type = 'tv'
+                self.search_str = TheMovieDB.get_tmdb_shows(tmdb_var)
+
+            elif info == 'topratedtvshows':
+                tmdb_var = 'top_rated'
+                self.media_type = 'tv'
+                self.search_str = TheMovieDB.get_tmdb_shows(tmdb_var)
+
+            elif info == 'onairtvshows':
+                tmdb_var = 'on_the_air'
+                self.media_type = 'tv'
+                self.search_str = TheMovieDB.get_tmdb_shows(tmdb_var)
+
+            elif info == 'airingtodaytvshows':
+                tmdb_var = 'airing_today'
+                self.media_type = 'tv'
+                self.search_str = TheMovieDB.get_tmdb_shows(tmdb_var)
+
+            Utils.show_busy()
+            self.fetch_data()
+            Utils.show_busy()
+            self.update()
+            Utils.hide_busy()
+
         def fetch_data(self, force=False):
             Utils.show_busy()
             sort_by = self.sort + '.' + self.order
@@ -605,6 +716,15 @@ def get_tmdb_window(window_type):
                     'listitems': listitems,
                     'results_per_page': 1,
                     'total_results': len(self.search_str['cast_crew'])
+                    }
+                return info
+            elif self.mode == 'list_items':
+                self.filter_label = 'Results for:  ' + self.filter_label
+                listitems = self.search_str
+                info = {
+                    'listitems': listitems,
+                    'results_per_page': 1,
+                    'total_results': len(self.search_str)
                     }
                 return info
             elif self.mode == 'list':

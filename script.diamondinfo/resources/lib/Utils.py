@@ -14,6 +14,8 @@ DIAMONDPLAYER_TV_FOLDER = library.basedir_tv_path()
 DIAMONDPLAYER_MOVIE_FOLDER = library.basedir_movies_path()
 
 def show_busy():
+	if xbmc.Player().isPlaying():
+		return
 	if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
 		xbmc.executebuiltin('ActivateWindow(busydialognocancel)')
 	else:

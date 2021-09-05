@@ -17,34 +17,120 @@ def start_info_actions(infos, params):
 	for info in infos:
 		data = [], ''
 		if info == 'libraryallmovies':
-			return local_db.get_db_movies('"sort": {"order": "descending", "method": "dateadded", "limit": %s}' % params.get("limit", "0"))
+			try:
+				script = str(params['script'])
+			except:
+				script = 'True'
+			if script == 'False':
+				return local_db.get_db_movies('"sort": {"order": "descending", "method": "dateadded", "limit": %s}' % params.get("limit", "0"))
+			return wm.open_video_list(media_type='movies', mode='list_items', filter_label='My TV Shows (Movies)' ,search_str=local_db.get_db_tvshows('"sort": {"order": "descending", "method": "dateadded", "limit": %s}' % params.get("limit", "0")), listitems=[])
 
 		elif info == 'libraryalltvshows':
-			return local_db.get_db_tvshows('"sort": {"order": "descending", "method": "dateadded", "limit": %s}' % params.get("limit", "0"))
+			try:
+				script = str(params['script'])
+			except:
+				script = 'True'
+			if script == 'False':
+				return local_db.get_db_tvshows('"sort": {"order": "descending", "method": "dateadded", "limit": %s}' % params.get("limit", "0"))
+			return wm.open_video_list(media_type='tv', mode='list_items', filter_label='My TV Shows (Library)' ,search_str=local_db.get_db_tvshows('"sort": {"order": "descending", "method": "dateadded", "limit": %s}' % params.get("limit", "0")), listitems=[])
 
 		elif info == 'popularmovies':
-			return TheMovieDB.get_tmdb_movies('popular')
+			tmdb_var = 'popular'
+			filter_label = 'Popular Movies'
+			media_type = 'movie'
+			try:
+				script = str(params['script'])
+			except:
+				script = 'True'
+			if script == 'False':
+				return TheMovieDB.get_tmdb_movies(tmdb_var)
+			return wm.open_video_list(media_type=media_type, mode='list_items', filter_label=filter_label, search_str=TheMovieDB.get_tmdb_movies(tmdb_var), listitems=[])
 
 		elif info == 'topratedmovies':
-			return TheMovieDB.get_tmdb_movies('top_rated')
+			tmdb_var = 'top_rated'
+			filter_label = 'Top Rated Movies'
+			media_type = 'movie'
+			try:
+				script = str(params['script'])
+			except:
+				script = 'True'
+			if script == 'False':
+				return TheMovieDB.get_tmdb_movies(tmdb_var)
+			return wm.open_video_list(media_type=media_type, mode='list_items', filter_label=filter_label, search_str=TheMovieDB.get_tmdb_movies(tmdb_var), listitems=[])
 
 		elif info == 'incinemamovies':
-			return TheMovieDB.get_tmdb_movies('now_playing')
+			tmdb_var = 'now_playing'
+			filter_label = 'In Theaters Movies'
+			media_type = 'movie'
+			try:
+				script = str(params['script'])
+			except:
+				script = 'True'
+			if script == 'False':
+				return TheMovieDB.get_tmdb_movies(tmdb_var)
+			return wm.open_video_list(media_type=media_type, mode='list_items', filter_label=filter_label, search_str=TheMovieDB.get_tmdb_movies(tmdb_var), listitems=[])
 
 		elif info == 'upcomingmovies':
-			return TheMovieDB.get_tmdb_movies('upcoming')
+			tmdb_var = 'upcoming'
+			filter_label = 'Upcoming Movies'
+			media_type = 'movie'
+			try:
+				script = str(params['script'])
+			except:
+				script = 'True'
+			if script == 'False':
+				return TheMovieDB.get_tmdb_movies(tmdb_var)
+			return wm.open_video_list(media_type=media_type, mode='list_items', filter_label=filter_label, search_str=TheMovieDB.get_tmdb_movies(tmdb_var), listitems=[])
 
 		elif info == 'populartvshows':
-			return TheMovieDB.get_tmdb_shows('popular')
+			tmdb_var = 'popular'
+			filter_label = 'Popular TV Shows'
+			media_type = 'tv'
+			try:
+				script = str(params['script'])
+			except:
+				script = 'True'
+			if script == 'False':
+				return TheMovieDB.get_tmdb_shows(tmdb_var)
+			return wm.open_video_list(media_type=media_type, mode='list_items', filter_label=filter_label, search_str=TheMovieDB.get_tmdb_shows(tmdb_var), listitems=[])
+
 
 		elif info == 'topratedtvshows':
-			return TheMovieDB.get_tmdb_shows('top_rated')
+			tmdb_var = 'top_rated'
+			filter_label = 'Top Rated TV Shows'
+			media_type = 'tv'
+			try:
+				script = str(params['script'])
+			except:
+				script = 'True'
+			if script == 'False':
+				return TheMovieDB.get_tmdb_shows(tmdb_var)
+			return wm.open_video_list(media_type=media_type, mode='list_items', filter_label=filter_label, search_str=TheMovieDB.get_tmdb_shows(tmdb_var), listitems=[])
 
 		elif info == 'onairtvshows':
-			return TheMovieDB.get_tmdb_shows('on_the_air')
+			tmdb_var = 'on_the_air'
+			filter_label = 'Currently Airing TV Shows'
+			media_type = 'tv'
+			try:
+				script = str(params['script'])
+			except:
+				script = 'True'
+			if script == 'False':
+				return TheMovieDB.get_tmdb_shows(tmdb_var)
+			return wm.open_video_list(media_type=media_type, mode='list_items', filter_label=filter_label, search_str=TheMovieDB.get_tmdb_shows(tmdb_var), listitems=[])
 
 		elif info == 'airingtodaytvshows':
-			return TheMovieDB.get_tmdb_shows('airing_today')
+			tmdb_var = 'airing_today'
+			filter_label = 'Airing Today TV Shows'
+			media_type = 'tv'
+			try:
+				script = str(params['script'])
+			except:
+				script = 'True'
+			if script == 'False':
+				return TheMovieDB.get_tmdb_shows(tmdb_var)
+			return wm.open_video_list(media_type=media_type, mode='list_items', filter_label=filter_label, search_str=TheMovieDB.get_tmdb_shows(tmdb_var), listitems=[])
+
 
 		elif info == 'allmovies':
 			wm.open_video_list(media_type='movie',mode='filter')
@@ -57,6 +143,8 @@ def start_info_actions(infos, params):
 			return wm.open_video_list(search_str=search_str, mode='search')
 
 		elif info == 'test_route':
+			return wm.pop_stack()
+			"""
 			xbmc.log(str(library.basedir_movies_path())+'===>PHIL', level=xbmc.LOGINFO)
 			xbmc.log(str(library.addon_ID())+'===>PHIL', level=xbmc.LOGINFO)
 			xbmc.log(str(library.addon_ID_short())+'===>PHIL', level=xbmc.LOGINFO)
@@ -96,7 +184,7 @@ def start_info_actions(infos, params):
 			xbmc.log(str(library.icon_path())+'===>PHIL', level=xbmc.LOGINFO)
 			realizer_test = xbmc.getCondVisibility('System.HasAddon(plugin.video.realizer)')
 			xbmc.log(str(realizer_test)+'===>PHIL', level=xbmc.LOGINFO)
-
+			"""
 
 		elif info == 'setup_sources':
 			library_tv_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_tv_sync'))

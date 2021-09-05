@@ -145,7 +145,10 @@ def tmdb_api_key():
 
 def fanart_api_key():
 	#return xbmcaddon.Addon('plugin.video.themoviedb.helper').getSetting('fanarttv_clientkey')
-	return xbmcaddon.Addon(addon_ID()).getSetting('fanart_api')
+	fanart_api_key = xbmcaddon.Addon(addon_ID()).getSetting('fanart_api')
+	if str(fanart_api_key) == '':
+		fanart_api_key = xbmcaddon.Addon('plugin.video.themoviedb.helper').getSetting('fanarttv_clientkey')
+	return fanart_api_key
 
 def show_settings_menu():
 	if xbmcaddon.Addon(addon_ID()).getSetting('settings_user_config') == 'Settings Selection Menu':

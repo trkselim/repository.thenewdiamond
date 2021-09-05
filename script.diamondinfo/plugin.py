@@ -92,7 +92,7 @@ class Main:
 			for key, value in items:
 				thumb_path  = 'special://home/addons/script.diamondinfo/resources/skins/Default/media/tmdb/thumb.png'
 				fanart_path = 'special://home/addons/script.diamondinfo/resources/skins/Default/media/tmdb/fanart.jpg'
-				url = 'plugin://script.diamondinfo?info=%s&limit=0' % key
+				url = 'plugin://script.diamondinfo?info=%s&limit=0&script=False' % key
 				li = xbmcgui.ListItem(label=value)
 				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
 				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=True)
