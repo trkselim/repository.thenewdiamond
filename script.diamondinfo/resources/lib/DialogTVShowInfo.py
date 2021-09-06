@@ -207,16 +207,23 @@ def get_tvshow_window(window_type):
 		@ch.click(9)
 		@ch.action('contextmenu', 9)
 		def context_menu(self):
-			if self.info['dbid'] and self.info['dbid'] != 0:
-				dbid = self.info['dbid']
-			else:
+			try:
+				if self.info['dbid'] and self.info['dbid'] != 0:
+					dbid = self.info['dbid']
+				else:
+					dbid = 0
+			except:
+				self.info['dbid'] = 0
 				dbid = 0
 			item_id = self.info['id']
-			if self.type == 'tv':
-				imdb_id = Utils.fetch(TheMovieDB.get_tvshow_ids(item_id), 'imdb_id')
-				tvdb_id = Utils.fetch(TheMovieDB.get_tvshow_ids(item_id), 'tvdb_id')
-			else:
-				imdb_id = TheMovieDB.get_imdb_id_from_movie_id(item_id)
+			try:
+				if self.type == 'tv':
+					imdb_id = Utils.fetch(TheMovieDB.get_tvshow_ids(item_id), 'imdb_id')
+					tvdb_id = Utils.fetch(TheMovieDB.get_tvshow_ids(item_id), 'tvdb_id')
+				else:
+					imdb_id = TheMovieDB.get_imdb_id_from_movie_id(item_id)
+			except:
+				imdb_id = None
 			if self.info['TVShowTitle']:
 				listitems = ['Play first episode'] #0
 			else:
