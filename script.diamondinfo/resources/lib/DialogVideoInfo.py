@@ -231,7 +231,7 @@ def get_movie_window(window_type):
 				##url = 'plugin://plugin.video.diamondplayer/movies/play/tmdb/%s' % self.info.get('id', '')
 				url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=movie&amp;tmdb_id=%s' % self.info.get('id', '')
 				#PLAYER.play_from_button(url, listitem=None, window=self)
-				xbmc.executebuiltin('Dialog.Close(busydialog)')
+				Utils.hide_busy()
 				PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=0)
 				#self.close()
 				#xbmc.executebuiltin('Dialog.Close(movieinformation)')

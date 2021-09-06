@@ -3,28 +3,13 @@ import xbmcgui
 import xbmcaddon
 import xbmcvfs
 import os
-import subprocess
-import sys
-from os.path import expanduser
-import glob
+#import subprocess
+#import sys
+#from os.path import expanduser
 
 import datetime
 from datetime import date, datetime, timedelta
 import time
-
-import requests
-import json
-
-import sqlite3
-import xml.etree.ElementTree as ET
-
-import urllib
-import urllib.request
-import fnmatch
-from pathlib import Path
-
-import re
-from resources.lib import Utils
 
 
 def addon_ID():
@@ -124,6 +109,7 @@ def library_source_exists_movies():
 
 
 def db_path():
+	import glob
 	#home = expanduser("~")
 	#return home + '/.kodi/userdata/Database/MyVideos119.db'
 	db_name = 'MyVideos*.db'
@@ -230,6 +216,11 @@ def setup_library_movies():
 	return xbmc.translatePath(library_folder)
 
 def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api):
+	import urllib
+	import urllib.request
+	import requests
+	import json
+
 	#xbmc.log(str(tmdb_id)+'get_art_fanart_movie===>OPEN_INFO', level=xbmc.LOGFATAL)
 	#print(str(tmdb_id)+'get_art_fanart_movie===>OPEN_INFO')
 	try: 
@@ -381,7 +372,10 @@ def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api)
 	xbmc.log(str(d1)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 
 def get_art_fanart_tv(tvdb_id, fanart_api, show_file_path, art_path,tmdb_id,tmdb_api):
-	#home = expanduser("~")
+	import urllib
+	import urllib.request
+	import requests
+	import json
 	d1 = {}
 	try: 
 		response = requests.get('http://webservice.fanart.tv/v3/tv/'+str(tvdb_id)+'?api_key='+str(fanart_api)).json()
@@ -619,6 +613,9 @@ def delete_folder_contents(path, delete_subfolders=False):
         xbmcvfs.rmdir(os.path.join(path, directory)) 
 
 def next_episode_show(tmdb_id_num=None,dbid_num=None):
+	import sqlite3
+	import re
+
 	temp_dbid = dbid_num
 	tmdb_id=tmdb_id_num
 	regex = re.compile('[^0-9a-zA-Z]')
@@ -655,6 +652,9 @@ def next_episode_show(tmdb_id_num=None,dbid_num=None):
 
 
 def trakt_next_episode_normal(tmdb_id_num=None):
+	import requests
+	import json
+
 	tmdb_id=tmdb_id_num
 	headers = trak_auth()
 
@@ -713,6 +713,9 @@ def trakt_next_episode_normal(tmdb_id_num=None):
 		xbmcgui.Dialog().notification(heading='Trakt Next Episode Normal', message='Next Episode Not aired yet', icon=icon_path(),time=1000,sound=False)
 
 def trakt_next_episode_rewatch(tmdb_id_num=None):
+	import requests
+	import json
+
 	tmdb_id=tmdb_id_num
 	headers = trak_auth()
 
@@ -794,6 +797,9 @@ def trakt_next_episode_rewatch(tmdb_id_num=None):
 		xbmcgui.Dialog().notification(heading='Trakt Next Episode Rewatch', message='Next Episode Not aired yet', icon=icon_path(),time=1000,sound=False)
 
 def trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_order=None):
+	import requests
+	import json
+
 	headers = trak_auth()
 	url = 'https://api.trakt.tv/users/'+str(user_id)+'/lists/'+str(list_slug)+'/items'
 	response = requests.get(url, headers=headers).json()
@@ -816,6 +822,9 @@ def trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_ord
 	
 
 def trakt_watched_movies():
+	import requests
+	import json
+
 	headers = trak_auth()
 	url = 'https://api.trakt.tv/sync/watched/movies'
 	response = requests.get(url, headers=headers).json()
@@ -828,6 +837,9 @@ def trakt_watched_movies():
 	return response
 
 def trakt_watched_tv_shows():
+	import requests
+	import json
+
 	headers = trak_auth()
 	url = 'https://api.trakt.tv/sync/watched/shows?extended=noseasons'
 	response = requests.get(url, headers=headers).json()
@@ -840,6 +852,9 @@ def trakt_watched_tv_shows():
 	return response
 	
 def trakt_collection_movies():
+	import requests
+	import json
+
 	headers = trak_auth()
 	url = 'https://api.trakt.tv/sync/collection/movies'
 	response = requests.get(url, headers=headers).json()
@@ -856,6 +871,9 @@ def trakt_collection_movies():
 	return response
 
 def trakt_collection_shows():
+	import requests
+	import json
+
 	headers = trak_auth()
 	url = 'https://api.trakt.tv/sync/collection/shows'
 	response = requests.get(url, headers=headers).json()
@@ -873,6 +891,10 @@ def trakt_collection_shows():
 
 
 def trakt_add_movie(tmdb_id_num=None,mode=None):
+	import requests
+	import json
+
+	from resources.lib import Utils
 	Utils.show_busy()
 	headers = trak_auth()
 	#tmdb_id = 188927
@@ -922,6 +944,9 @@ def trakt_add_movie(tmdb_id_num=None,mode=None):
 	Utils.hide_busy()
 
 def trakt_add_tv(tmdb_id_num=None,mode=None):
+	import requests
+	import json
+	from resources.lib import Utils
 	Utils.show_busy()
 	headers = trak_auth()
 	#tmdb_id = 91363
@@ -968,6 +993,9 @@ def trakt_add_tv(tmdb_id_num=None,mode=None):
 	Utils.hide_busy()
 
 def trakt_add_tv_season(tmdb_id_num=None,season_num=None,mode=None):
+	import requests
+	import json
+	from resources.lib import Utils
 	Utils.show_busy()
 #/search/tmdb/:id?type=show
 	headers = trak_auth()
@@ -1033,6 +1061,9 @@ def trakt_add_tv_season(tmdb_id_num=None,season_num=None,mode=None):
 	Utils.hide_busy()
 
 def trakt_add_tv_episode(tmdb_id_num=None,season_num=None,episode_num=None,mode=None):
+	import requests
+	import json
+	from resources.lib import Utils
 	Utils.show_busy()
 #/search/tmdb/:id?type=episode
 	headers = trak_auth()
@@ -1096,6 +1127,9 @@ def trakt_add_tv_episode(tmdb_id_num=None,season_num=None,episode_num=None,mode=
 	Utils.hide_busy()
 
 def trak_auth():
+	import xml.etree.ElementTree as ET
+	import json
+
 	file_path = main_file_path()
 	tmdb_settings = tmdb_settings_path()
 	tmdb_traktapi = tmdb_traktapi_path()
@@ -1131,6 +1165,8 @@ def trak_auth():
 	return headers
 
 def trakt_calendar_list():
+	import requests
+	import json
 	headers = trak_auth()
 
 	try:
@@ -1296,6 +1332,12 @@ def trakt_calendar_list():
 	return
 
 def refresh_recently_added():
+	import sqlite3
+	import urllib
+	import urllib.request
+	import requests
+	import json
+
 	con = sqlite3.connect(db_path())
 	cur = con.cursor()
 
@@ -1708,6 +1750,13 @@ def refresh_recently_added():
 	return
 
 def library_auto_tv():
+	import fnmatch
+	from pathlib import Path
+	import urllib
+	import urllib.request
+	import requests
+	import json
+
 	xbmc.log(str('TRAKT_SYNC_TV_library_auto_tv')+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 	headers = trak_auth()
 	basedir_tv = basedir_tv_path()
@@ -1963,6 +2012,11 @@ def library_auto_tv():
 
 
 def library_auto_movie():
+	import fnmatch
+	import requests
+	import json
+	from pathlib import Path
+
 	xbmc.log(str('TRAKT_SYNC_MOVIE_library_auto_movie')+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 	headers = trak_auth()
 	basedir_tv = basedir_movies_path()

@@ -3,7 +3,6 @@ import xbmc, xbmcgui, xbmcaddon
 from resources.lib import Utils
 from resources.lib import local_db
 from resources.lib.WindowManager import wm
-from resources.lib import library
 
 ext_key = xbmcaddon.Addon().getSetting('tmdb_api')
 
@@ -821,6 +820,7 @@ def get_imdb_list(list_str=None):
 	return listitems
 
 def get_trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_order=None):
+	from resources.lib import library
 	movies = library.trakt_lists(list_name,user_id,list_slug,sort_by,sort_order)
 	listitems = None
 	for i in movies:
@@ -845,6 +845,7 @@ def get_trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort
 	return listitems
 
 def get_trakt(trakt_type=None,info=None):
+	from resources.lib import library
 	if trakt_type == 'movie':
 		if info == 'trakt_watched':
 			movies = library.trakt_watched_movies()

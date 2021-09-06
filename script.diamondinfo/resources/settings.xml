@@ -2,13 +2,13 @@
 <settings>
 	<category label="General">
 		<setting label="Fancy User Interface Options" type="lsep"/>
-		<setting label="Alternative browser layout (does not affect all skins)" type="bool" id="alt_browser_layout"/>
+		<setting label="Alternative browser layout (does not affect all skins)" type="bool" id="alt_browser_layout" default="false"/>
 		<setting label="Experimental User Interface Options" type="lsep"/>
-		<setting label="Netflix view" type="bool" id="netflix_view"/>
+		<setting label="Netflix view" type="bool" id="netflix_view" default="false"/>
 		<setting label="Automatically play trailers (affects only Netflix view)" type="bool" enable="eq(-1,true)" id="autoplay_trailer"/>
 		<setting label="TMDB Options" type="lsep"/>
 		<setting label="Language" type="select" values="bg|cs|da|de|el|en|es|fi|fr|he|hr|hu|it|ja|ko|nl|no|pl|pt|ru|sl|sv|tr|zh" id="LanguageID" default="en"/>
-		<setting label="Include adult?" type="bool" id="include_adults"/>
+		<setting label="Include adult?" type="bool" id="include_adults" default="false"/>
         <setting label="TMDB API key" id="tmdb_api" type="text" default=""/>
 		<setting label="Fanart API key" id="fanart_api" type="text" default=""/>
 		<setting label="Settings button => TMDBHelper Context Menu/Addon Settings Menu?" type="lsep"/>
@@ -18,15 +18,15 @@
 		<setting label="Use Context Menus or Dialog Select Boxes?" type="bool" id="context_menu" default="false"/>
 		<setting label="Maintenance" type="lsep"/>
 		<setting label="Clear cache..." type="action" action="RunScript(script.diamondinfo,info=deletecache)"/>
-		<setting label="TEST ROUTE type=" type="action" action="RunScript(script.diamondinfo,info=test_route)"/>
+		<setting label="TEST ROUTE" type="action" action="RunScript(script.diamondinfo,info=test_route)"/>
 	</category>
     <category label="Trakt Collection Library Options">
         <setting label="Auto Sync Trakt Collection to library" type="bool" id="library_auto_sync" default="false"/>
 		<setting label="Library Sync Period (hours - default = 8)" type="number" id="library_sync_hours" default="8"/>
 		<setting label="Root folder for ./Movies + ./TVShows STRM files with tmdb.nfo" type="lsep"/>
-		<setting label="Collection Library Root Folder" type="folder" id="library_folder" source="files" option="writeable"/>
-		<setting label="Auto Sync TV Collection" type="bool" id="library_tv_sync" default="true"/>
-		<setting label="Auto Sync Movies Collection" type="bool" id="library_movies_sync" default="true"/>
+		<setting label="Collection Library Root Folder" type="folder" id="library_folder" source="files" option="writeable" default=""/>
+		<setting label="Auto Sync TV Collection" type="bool" id="library_tv_sync" default="false"/>
+		<setting label="Auto Sync Movies Collection" type="bool" id="library_movies_sync" default="false"/>
 		<setting label="SETUP SOURCES.XML" type="action" action="RunScript(script.diamondinfo,info=setup_sources)"/>
 		<setting label="Library Auto Sync" type="action" action="RunScript(script.diamondinfo,info=auto_library)"/>
 	</category>

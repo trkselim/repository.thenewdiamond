@@ -142,6 +142,8 @@ def get_tmdb_window(window_type):
                     listitems += ['Play Trakt Next Episode (Rewatch)'] #3 (TV + 0 DBID)
             listitems += ['Search item'] #2 (movie) #4 (TV+ DBID) #4 (TV + 0 DBID)
             listitems += ['Trailer'] #3 (movie) #5 (TV+ DBID) #5 (TV + 0 DBID)
+            listitems += ['TMDBHelper Context']
+
             if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
                 selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
             else:
@@ -159,15 +161,16 @@ def get_tmdb_window(window_type):
                     PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
                     #self.reload_trakt()
                 else:
+                    xbmc.executebuiltin('Dialog.Close(busydialog)')
                     if self.listitem.getProperty('dbid'):
                         dbid = self.listitem.getProperty('dbid')
                         url = ''
+                        PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=dbid)
                     else:
                         dbid = 0
                         #url = 'plugin://plugin.video.diamondplayer/movies/play/tmdb/%s' % item_id
                         url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=movie&amp;tmdb_id=%s' % item_id
-                    xbmc.executebuiltin('Dialog.Close(busydialog)')
-                    PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=dbid)
+                        PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
                     #self.reload_trakt()
             #if selection == 1:
             if selection_text == 'Remove from library' or selection_text == 'Add to library':
@@ -251,6 +254,11 @@ def get_tmdb_window(window_type):
                 else:
                     url = 'plugin://script.diamondinfo?info=playtrailer&&id=' + item_id
                 PLAYER.play(url, listitem=None, window=self)
+            if selection_text == 'TMDBHelper Context':
+                if self.type == 'tv':
+                    xbmc.executebuiltin('RunScript(plugin.video.themoviedb.helper,sync_trakt,tmdb_type=tv,tmdb_id='+str(item_id))
+                else:
+                    xbmc.executebuiltin('RunScript(plugin.video.themoviedb.helper,sync_trakt,tmdb_type=movie,tmdb_id='+str(item_id))
 
         @ch.click(5001)
         def get_sort_type(self):

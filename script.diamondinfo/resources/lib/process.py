@@ -1,12 +1,9 @@
 import os, shutil
-import xbmc, xbmcgui, xbmcplugin, xbmcaddon, xbmcvfs
+import xbmc, xbmcgui
 from resources.lib import Utils
-from resources.lib import local_db
-from resources.lib import TheMovieDB
 from resources.lib.WindowManager import wm
-from resources.lib.VideoPlayer import PLAYER
 from resources.lib import library
-import time
+
 
 def start_info_actions(infos, params):
 	addonID = library.addon_ID()
@@ -17,6 +14,7 @@ def start_info_actions(infos, params):
 	for info in infos:
 		data = [], ''
 		if info == 'libraryallmovies':
+			from resources.lib import local_db
 			try:
 				script = str(params['script'])
 			except:
@@ -26,6 +24,7 @@ def start_info_actions(infos, params):
 			return wm.open_video_list(media_type='movie', mode='list_items', filter_label='My TV Shows (Movies)' ,search_str=local_db.get_db_tvshows('"sort": {"order": "descending", "method": "dateadded", "limit": %s}' % params.get("limit", "0")), listitems=[])
 
 		elif info == 'libraryalltvshows':
+			from resources.lib import local_db
 			try:
 				script = str(params['script'])
 			except:
@@ -35,6 +34,7 @@ def start_info_actions(infos, params):
 			return wm.open_video_list(media_type='tv', mode='list_items', filter_label='My TV Shows (Library)' ,search_str=local_db.get_db_tvshows('"sort": {"order": "descending", "method": "dateadded", "limit": %s}' % params.get("limit", "0")), listitems=[])
 
 		elif info == 'popularmovies':
+			from resources.lib import TheMovieDB
 			tmdb_var = 'popular'
 			filter_label = 'Popular Movies'
 			media_type = 'movie'
@@ -47,6 +47,7 @@ def start_info_actions(infos, params):
 			return wm.open_video_list(media_type=media_type, mode='list_items', filter_label=filter_label, search_str=TheMovieDB.get_tmdb_movies(tmdb_var), listitems=[])
 
 		elif info == 'topratedmovies':
+			from resources.lib import TheMovieDB
 			tmdb_var = 'top_rated'
 			filter_label = 'Top Rated Movies'
 			media_type = 'movie'
@@ -59,6 +60,7 @@ def start_info_actions(infos, params):
 			return wm.open_video_list(media_type=media_type, mode='list_items', filter_label=filter_label, search_str=TheMovieDB.get_tmdb_movies(tmdb_var), listitems=[])
 
 		elif info == 'incinemamovies':
+			from resources.lib import TheMovieDB
 			tmdb_var = 'now_playing'
 			filter_label = 'In Theaters Movies'
 			media_type = 'movie'
@@ -71,6 +73,7 @@ def start_info_actions(infos, params):
 			return wm.open_video_list(media_type=media_type, mode='list_items', filter_label=filter_label, search_str=TheMovieDB.get_tmdb_movies(tmdb_var), listitems=[])
 
 		elif info == 'upcomingmovies':
+			from resources.lib import TheMovieDB
 			tmdb_var = 'upcoming'
 			filter_label = 'Upcoming Movies'
 			media_type = 'movie'
@@ -83,6 +86,7 @@ def start_info_actions(infos, params):
 			return wm.open_video_list(media_type=media_type, mode='list_items', filter_label=filter_label, search_str=TheMovieDB.get_tmdb_movies(tmdb_var), listitems=[])
 
 		elif info == 'populartvshows':
+			from resources.lib import TheMovieDB
 			tmdb_var = 'popular'
 			filter_label = 'Popular TV Shows'
 			media_type = 'tv'
@@ -96,6 +100,7 @@ def start_info_actions(infos, params):
 
 
 		elif info == 'topratedtvshows':
+			from resources.lib import TheMovieDB
 			tmdb_var = 'top_rated'
 			filter_label = 'Top Rated TV Shows'
 			media_type = 'tv'
@@ -108,6 +113,7 @@ def start_info_actions(infos, params):
 			return wm.open_video_list(media_type=media_type, mode='list_items', filter_label=filter_label, search_str=TheMovieDB.get_tmdb_shows(tmdb_var), listitems=[])
 
 		elif info == 'onairtvshows':
+			from resources.lib import TheMovieDB
 			tmdb_var = 'on_the_air'
 			filter_label = 'Currently Airing TV Shows'
 			media_type = 'tv'
@@ -120,6 +126,7 @@ def start_info_actions(infos, params):
 			return wm.open_video_list(media_type=media_type, mode='list_items', filter_label=filter_label, search_str=TheMovieDB.get_tmdb_shows(tmdb_var), listitems=[])
 
 		elif info == 'airingtodaytvshows':
+			from resources.lib import TheMovieDB
 			tmdb_var = 'airing_today'
 			filter_label = 'Airing Today TV Shows'
 			media_type = 'tv'
@@ -143,8 +150,7 @@ def start_info_actions(infos, params):
 			return wm.open_video_list(search_str=search_str, mode='search')
 
 		elif info == 'test_route':
-			return wm.pop_stack()
-			"""
+			import xbmcvfs, xbmcaddon
 			xbmc.log(str(library.basedir_movies_path())+'===>PHIL', level=xbmc.LOGINFO)
 			xbmc.log(str(library.addon_ID())+'===>PHIL', level=xbmc.LOGINFO)
 			xbmc.log(str(library.addon_ID_short())+'===>PHIL', level=xbmc.LOGINFO)
@@ -184,9 +190,10 @@ def start_info_actions(infos, params):
 			xbmc.log(str(library.icon_path())+'===>PHIL', level=xbmc.LOGINFO)
 			realizer_test = xbmc.getCondVisibility('System.HasAddon(plugin.video.realizer)')
 			xbmc.log(str(realizer_test)+'===>PHIL', level=xbmc.LOGINFO)
-			"""
+
 
 		elif info == 'setup_sources':
+			import xbmcvfs, xbmcaddon
 			library_tv_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_tv_sync'))
 			library_movies_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_movies_sync'))
 			library_folder = library.basedir_tv_path()
@@ -206,74 +213,10 @@ def start_info_actions(infos, params):
 			Utils.hide_busy()
 
 		elif info == 'auto_library':
-			Utils.hide_busy()
-			#xbmc.log(str(library.tmdb_settings_path())+'tmdb_settings===>PHIL', level=xbmc.LOGINFO)
-			#xbmc.log(str(library.main_file_path())+'file_path===>PHIL', level=xbmc.LOGINFO)
-			#xbmc.log(str(library.tmdb_traktapi_path())+'tmdb_traktapi===>PHIL', level=xbmc.LOGINFO)
-			#xbmc.log(str(library.tmdb_traktapi_new_path())+'tmdb_traktapi_new===>PHIL', level=xbmc.LOGINFO)
-			#xbmc.log(str(library.basedir_tv_path())+'basedir_tv===>PHIL', level=xbmc.LOGINFO)
-			#xbmc.log(str(library.basedir_movies_path())+'basedir_movies===>PHIL', level=xbmc.LOGINFO)
-			#xbmc.log(str(library.db_path())+'db_path===>PHIL', level=xbmc.LOGINFO)
-			#xbmc.log(str(library.icon_path())+'icon_path===>PHIL', level=xbmc.LOGINFO)
-			#xbmc.log(str(library.tmdb_api_key())+'tmdb_api===>PHIL', level=xbmc.LOGINFO)
-			#xbmc.log(str(library.fanart_api_key())+'fanart_api===>PHIL', level=xbmc.LOGINFO)
-			#return
-			library_tv_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_tv_sync'))
-			if library_tv_sync == 'true':
-				library_tv_sync = True
-			if library_tv_sync == 'false':
-				library_tv_sync = False
-			library_movies_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_movies_sync'))
-			if library_movies_sync == 'true':
-				library_movies_sync = True
-			if library_movies_sync == 'false':
-				library_movies_sync = False
-
-			icon_path = library.icon_path()
-			if not xbmc.Player().isPlaying() and (library_tv_sync or library_movies_sync):
-				xbmcgui.Dialog().notification(heading='Startup Tasks', message='TRAKT_SYNC', icon=icon_path,time=1000,sound=False)
-			if library_movies_sync:
-				library.library_auto_movie()
-			if library_tv_sync:
-				library.library_auto_tv()
-				xbmc.log(str('refresh_recently_added')+'===>PHIL', level=xbmc.LOGFATAL)
-				library.refresh_recently_added()
-				xbmc.log(str('trakt_calendar_list')+'===>PHIL', level=xbmc.LOGFATAL)
-				if not xbmc.Player().isPlaying():
-					xbmcgui.Dialog().notification(heading='Startup Tasks', message='trakt_calendar_list', icon=icon_path,time=1000,sound=False)
-				library.trakt_calendar_list()
-			if not xbmc.Player().isPlaying() and (library_tv_sync or library_movies_sync):
-				xbmcgui.Dialog().notification(heading='Startup Tasks', message='Startup Complete!', icon=icon_path, time=1000,sound=False)
-			#xbmc.log(str('UPDATE_WIDGETS')+'===>PHIL', level=xbmc.LOGFATAL)
-			#if not xbmc.Player().isPlaying():
-			#	xbmc.executebuiltin('UpdateLibrary(video,widget_refresh,true)')
-			if library_movies_sync:
-				xbmc.log(str('UpdateLibrary_MOVIES')+'===>PHIL', level=xbmc.LOGFATAL)
-				xbmc.executebuiltin('UpdateLibrary(video, {})'.format(library.basedir_movies_path()))
-			if library_tv_sync:
-				xbmc.log(str('UpdateLibrary_TV')+'===>PHIL', level=xbmc.LOGFATAL)
-				xbmc.executebuiltin('UpdateLibrary(video, {})'.format(library.basedir_tv_path()))
-			if library_tv_sync or library_movies_sync:
-				time_since_up = time.monotonic()
-				realizer_test = xbmc.getCondVisibility('System.HasAddon(plugin.video.realizer)')
-				if not xbmc.Player().isPlaying() and realizer_test:
-					try:
-						if time_since_up > 600:
-							#print('NOW')
-							hours_since_up = int((time_since_up)/60/60)
-							xbmc.log(str(hours_since_up)+str('=multiple of 8 hours=')+ str(hours_since_up % 8 == 0)+'=hours_since_up===>PHIL', level=xbmc.LOGINFO)
-							if hours_since_up >=1:
-								xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
-					except:
-						if time_since_up > 600:
-							#print('NOW')
-							hours_since_up = int((time_since_up)/60/60)
-							xbmc.log(str(hours_since_up)+str('=multiple of 8 hours=')+ str(hours_since_up % 8 == 0)+'=hours_since_up===>PHIL', level=xbmc.LOGINFO)
-							if hours_since_up >=1:
-								xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
-				#xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
+			auto_library()
 
 		elif info == 'trakt_watched' or info == 'trakt_coll' or info == 'trakt_list':
+			from resources.lib import TheMovieDB
 			#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_watched&trakt_type=movie&script=True)'
 			#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_watched&trakt_type=tv&script=True)'
 			#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_coll&trakt_type=movie&script=True)'
@@ -316,6 +259,7 @@ def start_info_actions(infos, params):
 				return wm.open_video_list(mode='trakt', listitems=[], search_str=movies, media_type=trakt_type, filter_label=trakt_label)
 
 		elif info == 'imdb_list':
+			from resources.lib import TheMovieDB
 			try:
 				list_script = str(params['script'])
 			except:
@@ -337,6 +281,7 @@ def start_info_actions(infos, params):
 			return wm.open_video_list(search_str=search_str, mode='search')
 
 		elif info == 'search_person':
+			from resources.lib import TheMovieDB
 			search_str = params['person']
 			if params.get('person'):
 				person = TheMovieDB.get_person_info(person_label=params['person'])
@@ -357,6 +302,7 @@ def start_info_actions(infos, params):
 					return wm.open_video_list(mode='person', search_str=movies, listitems=movies['cast_crew'])
 
 		elif info == 'studio':
+			from resources.lib import TheMovieDB
 			if 'id' in params and params['id']:
 				return wm.open_video_list(media_type='tv', mode='filter', listitems=TheMovieDB.get_company_data(params['id']))
 			elif 'studio' in params and params['studio']:
@@ -365,6 +311,8 @@ def start_info_actions(infos, params):
 					return TheMovieDB.get_company_data(company_data[0]['id'])
 
 		elif info == 'set':
+			from resources.lib import TheMovieDB
+			from resources.lib import local_db
 			if params.get('dbid') and 'show' not in str(params.get('type', '')):
 				name = local_db.get_set_name_from_db(params['dbid'])
 				if name:
@@ -374,6 +322,7 @@ def start_info_actions(infos, params):
 				return set_data
 
 		elif info == 'keywords':
+			from resources.lib import TheMovieDB
 			movie_id = params.get('id', False)
 			if not movie_id:
 				movie_id = TheMovieDB.get_movie_tmdb_id(imdb_id=params.get('imdb_id'), dbid=params.get('dbid'))
@@ -381,6 +330,7 @@ def start_info_actions(infos, params):
 				return TheMovieDB.get_keywords(movie_id)
 
 		elif info == 'directormovies':
+			from resources.lib import TheMovieDB
 			if params.get('director'):
 				director_info = TheMovieDB.get_person_info(person_label=params['director'])
 				if director_info and director_info.get('id'):
@@ -390,6 +340,7 @@ def start_info_actions(infos, params):
 					return Utils.merge_dict_lists(movies, key='department')
 
 		elif info == 'writermovies':
+			from resources.lib import TheMovieDB
 			if params.get('writer') and not params['writer'].split(' / ')[0] == params.get('director', '').split(' / ')[0]:
 				writer_info = TheMovieDB.get_person_info(person_label=params['writer'])
 				if writer_info and writer_info.get('id'):
@@ -519,11 +470,14 @@ def start_info_actions(infos, params):
 				xbmc.executebuiltin(builtin)
 
 		elif info == 'youtubevideo':
+			from resources.lib.VideoPlayer import PLAYER
 			resolve_url(params.get('handle'))
 			xbmc.executebuiltin('Dialog.Close(all,true)')
 			PLAYER.playtube(params.get('id', ''))
 
 		elif info == 'playtrailer':
+			from resources.lib import TheMovieDB
+			from resources.lib import local_db
 			resolve_url(params.get('handle'))
 			if params.get('id'):
 				movie_id = params['id']
@@ -537,6 +491,8 @@ def start_info_actions(infos, params):
 				TheMovieDB.play_movie_trailer_fullscreen(movie_id)
 
 		elif info == 'playtvtrailer':
+			from resources.lib import local_db
+			from resources.lib import TheMovieDB
 			resolve_url(params.get('handle'))
 			if params.get('id'):
 				tvshow_id = params['id']
@@ -581,5 +537,76 @@ def start_info_actions(infos, params):
 			Utils.notify('Cache deleted')
 
 def resolve_url(handle):
+	import xbmcplugin
 	if handle:
 		xbmcplugin.setResolvedUrl(handle=int(handle), succeeded=False, listitem=xbmcgui.ListItem())
+
+def auto_library():
+	import xbmcaddon
+	Utils.hide_busy()
+	#xbmc.log(str(library.tmdb_settings_path())+'tmdb_settings===>PHIL', level=xbmc.LOGINFO)
+	#xbmc.log(str(library.main_file_path())+'file_path===>PHIL', level=xbmc.LOGINFO)
+	#xbmc.log(str(library.tmdb_traktapi_path())+'tmdb_traktapi===>PHIL', level=xbmc.LOGINFO)
+	#xbmc.log(str(library.tmdb_traktapi_new_path())+'tmdb_traktapi_new===>PHIL', level=xbmc.LOGINFO)
+	#xbmc.log(str(library.basedir_tv_path())+'basedir_tv===>PHIL', level=xbmc.LOGINFO)
+	#xbmc.log(str(library.basedir_movies_path())+'basedir_movies===>PHIL', level=xbmc.LOGINFO)
+	#xbmc.log(str(library.db_path())+'db_path===>PHIL', level=xbmc.LOGINFO)
+	#xbmc.log(str(library.icon_path())+'icon_path===>PHIL', level=xbmc.LOGINFO)
+	#xbmc.log(str(library.tmdb_api_key())+'tmdb_api===>PHIL', level=xbmc.LOGINFO)
+	#xbmc.log(str(library.fanart_api_key())+'fanart_api===>PHIL', level=xbmc.LOGINFO)
+	#return
+	library_tv_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_tv_sync'))
+	if library_tv_sync == 'true':
+		library_tv_sync = True
+	if library_tv_sync == 'false':
+		library_tv_sync = False
+	library_movies_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_movies_sync'))
+	if library_movies_sync == 'true':
+		library_movies_sync = True
+	if library_movies_sync == 'false':
+		library_movies_sync = False
+
+	icon_path = library.icon_path()
+	if not xbmc.Player().isPlaying() and (library_tv_sync or library_movies_sync):
+		xbmcgui.Dialog().notification(heading='Startup Tasks', message='TRAKT_SYNC', icon=icon_path,time=1000,sound=False)
+	if library_movies_sync:
+		library.library_auto_movie()
+	if library_tv_sync:
+		library.library_auto_tv()
+		xbmc.log(str('refresh_recently_added')+'===>PHIL', level=xbmc.LOGFATAL)
+		library.refresh_recently_added()
+		xbmc.log(str('trakt_calendar_list')+'===>PHIL', level=xbmc.LOGFATAL)
+		if not xbmc.Player().isPlaying():
+			xbmcgui.Dialog().notification(heading='Startup Tasks', message='trakt_calendar_list', icon=icon_path,time=1000,sound=False)
+		library.trakt_calendar_list()
+	if not xbmc.Player().isPlaying() and (library_tv_sync or library_movies_sync):
+		xbmcgui.Dialog().notification(heading='Startup Tasks', message='Startup Complete!', icon=icon_path, time=1000,sound=False)
+	#xbmc.log(str('UPDATE_WIDGETS')+'===>PHIL', level=xbmc.LOGFATAL)
+	#if not xbmc.Player().isPlaying():
+	#	xbmc.executebuiltin('UpdateLibrary(video,widget_refresh,true)')
+	if library_movies_sync:
+		xbmc.log(str('UpdateLibrary_MOVIES')+'===>PHIL', level=xbmc.LOGFATAL)
+		xbmc.executebuiltin('UpdateLibrary(video, {})'.format(library.basedir_movies_path()))
+	if library_tv_sync:
+		xbmc.log(str('UpdateLibrary_TV')+'===>PHIL', level=xbmc.LOGFATAL)
+		xbmc.executebuiltin('UpdateLibrary(video, {})'.format(library.basedir_tv_path()))
+	if library_tv_sync or library_movies_sync:
+		import time
+		time_since_up = time.monotonic()
+		realizer_test = xbmc.getCondVisibility('System.HasAddon(plugin.video.realizer)')
+		if not xbmc.Player().isPlaying() and realizer_test:
+			try:
+				if time_since_up > 600:
+					#print('NOW')
+					hours_since_up = int((time_since_up)/60/60)
+					xbmc.log(str(hours_since_up)+str('=multiple of 8 hours=')+ str(hours_since_up % 8 == 0)+'=hours_since_up===>PHIL', level=xbmc.LOGINFO)
+					if hours_since_up >=1:
+						xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
+			except:
+				if time_since_up > 600:
+					#print('NOW')
+					hours_since_up = int((time_since_up)/60/60)
+					xbmc.log(str(hours_since_up)+str('=multiple of 8 hours=')+ str(hours_since_up % 8 == 0)+'=hours_since_up===>PHIL', level=xbmc.LOGINFO)
+					if hours_since_up >=1:
+						xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
+		#xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')

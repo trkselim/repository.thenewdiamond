@@ -3,11 +3,8 @@ from threading import Thread
 import datetime
 import time
 import json
-import functools
 import re
 import requests
-from resources import PTN
-from resources.lib import TheMovieDB
 from resources.lib import library
 from resources.lib import Utils
 
@@ -268,9 +265,7 @@ class PlayerMonitor(xbmc.Player):
                 json_object  = json.loads(json_result)
                 xbmc.log(str(json_object)+'=episode resume set, '+str(dbID)+'=dbID', level=xbmc.LOGFATAL)
         except:
-            xbmc.log(str('Line ')+str(getframeinfo(currentframe()).lineno)+'___'+str(getframeinfo(currentframe()).filename)+'===>___OPEN_INFO', level=xbmc.LOGFATAL)
-            #return wm.pop_stack()
-        #return wm.pop_stack()
+            return
 
         #self.set_watched()
         #self.reset_properties()
@@ -295,6 +290,10 @@ class PlayerMonitor(xbmc.Player):
 
 
     def onPlayBackStarted(self):
+        from resources import PTN
+        import functools
+        from resources.lib import TheMovieDB
+
         global diamond_info_started
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         playlist_size = playlist.size()
@@ -703,9 +702,11 @@ class CronJobMonitor(Thread):
                 library_update_period = int(xbmcaddon.Addon(library.addon_ID()).getSetting('library_sync_hours'))
                 self.next_time = self.curr_time + library_update_period*60*60
                 #xbmc.executebuiltin('RunScript(script.diamondinfo,info=auto_library)')
-                xbmc.log(str(datetime.datetime.now())+'datetime.datetime.now()===>___OPEN_INFO', level=xbmc.LOGFATAL)
-                xbmc.log(str(self.next_time)+'self.next_time===>___OPEN_INFO', level=xbmc.LOGFATAL)
-                xbmc.log(str(self.curr_time)+'self.curr_time===>___OPEN_INFO', level=xbmc.LOGFATAL)
+                from resources.lib import process
+                process.auto_library()
+                #xbmc.log(str(datetime.datetime.now())+'datetime.datetime.now()===>___OPEN_INFO', level=xbmc.LOGFATAL)
+                #xbmc.log(str(self.next_time)+'self.next_time===>___OPEN_INFO', level=xbmc.LOGFATAL)
+                #xbmc.log(str(self.curr_time)+'self.curr_time===>___OPEN_INFO', level=xbmc.LOGFATAL)
                 #self.next_time = datetime.datetime.combine(datetime.datetime.today(),datetime.time(datetime.datetime.today().hour))+ datetime.timedelta(hours=8)
                 #self.next_time = self.next_time.timestamp()
                 #xbmc.log(str(self.next_time)+'self.next_time2===>___OPEN_INFO', level=xbmc.LOGFATAL)
