@@ -201,6 +201,12 @@ def start_info_actions(infos, params):
 			xbmcgui.Dialog().notification(heading='Setup Sources', message='Sources Setup, Please Reboot to finish setup.', icon=icon_path,time=2000,sound=False)
 			Utils.hide_busy()
 
+		elif info == 'setup_xml_filenames':
+			library.setup_xml_filenames()
+			icon_path = library.icon_path()
+			xbmcgui.Dialog().notification(heading='Setup XML Names', message='XML files renamed to match = '+ library.addon_ID(), icon=icon_path,time=2000,sound=False)
+			return
+
 		elif info == 'auto_library':
 			auto_library()
 

@@ -26,6 +26,7 @@ class Main:
 			try:
 				Utils.pass_list_to_skin(name=info, data=listitems, prefix=self.params.get('prefix', ''), handle=self.handle, limit=len(listitems))
 			except:
+				Utils.hide_busy()
 				return
 		else:
 			items = [

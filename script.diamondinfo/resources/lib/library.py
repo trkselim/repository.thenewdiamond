@@ -194,6 +194,27 @@ def setup_library_movies():
 	AddSource.add_source(source_name, library_folder, source_content, source_thumbnail)
 	return xbmc.translatePath(library_folder)
 
+def setup_xml_filenames():
+	dir_path = Path(str(main_file_path()) + '/resources/skins/Default/1080i/')
+	for dirpath, dnames, fnames in os.walk(dir_path):
+		for f in fnames:
+			if '.xml' in f:
+				old_name = f
+				name1 = str(f).split('script.')[0]
+				name = ''
+				for i in str(f).split('-')[1:]:
+					if name == '':
+						name =  i
+					else:
+						name = name + '-' + i
+				new_name = name1 + str(addon_ID()) + '-' + name
+				new_path = Path(str(dir_path) +'/'+ new_name)
+				old_path = Path(str(dir_path) +'/'+ old_name)
+				#xbmc.log(str(new_path)+'===>PHIL', level=xbmc.LOGINFO)
+				#xbmc.log(str(old_path)+'===>PHIL2', level=xbmc.LOGINFO)
+				if old_name != new_name:
+					os.rename(old_path, new_path)
+
 def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api):
 	import requests
 	import json
