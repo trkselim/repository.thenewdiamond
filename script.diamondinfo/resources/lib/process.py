@@ -150,13 +150,16 @@ def start_info_actions(infos, params):
 			return wm.open_video_list(search_str=search_str, mode='search')
 
 		elif info == 'test_route':
-			#tvdb_id = 9999
-			#tmdb_id = 9999
+			#from pathlib import Path
+			#tvdb_id = 295685
+			#tmdb_id = 63174
 			#tmdb_api = library.tmdb_api_key()
 			#fanart_api = library.fanart_api_key()
-			#show_file_path = library.basedir_tv_path() + '\\' + str(tvdb_id) + '\\'
-			#art_path = file_path + '\\' + str(tvdb_id) + '\\' + 'tvshow.fanart'
+			#file_path = library.main_file_path()
+			#show_file_path = str(Path(str(library.basedir_tv_path()) + '/' + str(tvdb_id) + '/'))
+			#art_path = str(Path(str(file_path) + '/' + str(tvdb_id) + '/' + 'tvshow.fanart'))
 			#library.get_art_fanart_tv(tvdb_id, fanart_api, show_file_path, art_path, tmdb_id,tmdb_api)
+			#return
 			#
 			#tmdb_id = 9999
 			#show_file_path = library.basedir_movies_path() + '\\' + str(tmdb_id) + '\\'
