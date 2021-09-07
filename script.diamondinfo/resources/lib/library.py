@@ -238,7 +238,7 @@ def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api)
 	import urllib.request
 	import requests
 	import json
-
+	show_file_path = str(show_file_path)
 	#xbmc.log(str(tmdb_id)+'get_art_fanart_movie===>OPEN_INFO', level=xbmc.LOGFATAL)
 	#print(str(tmdb_id)+'get_art_fanart_movie===>OPEN_INFO')
 	try: 
@@ -320,73 +320,80 @@ def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api)
 
 	if d1.__contains__('moviebanner'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'banner.jpg'):
-			try:
-				#xbmc.log(str('banner.jpg = ' + d1['moviebanner'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
-				urllib.urlretrieve(d1['moviebanner'].replace(' ', '%20'), show_file_path + 'banner.jpg')
-			except:
-				urllib.request.urlretrieve(d1['moviebanner'].replace(' ', '%20'), show_file_path + 'banner.jpg')
-				pass
+			#try:
+			#	#xbmc.log(str('banner.jpg = ' + d1['moviebanner'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+			#	urllib.urlretrieve(d1['moviebanner'].replace(' ', '%20'), show_file_path + 'banner.jpg')
+			#except:
+			#	urllib.request.urlretrieve(d1['moviebanner'].replace(' ', '%20'), show_file_path + 'banner.jpg')
+			#	pass
+			urllib.request.urlretrieve(d1['moviebanner'].replace(' ', '%20'), show_file_path + 'banner.jpg')
 
 	if d1.__contains__('hdmovielogo'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'clearlogo.png'):
-			try:
-				#xbmc.log(str('clearlogo.png = ' + d1['hdmovielogo'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
-				urllib.urlretrieve(d1['hdmovielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
-			except:
-				urllib.request.urlretrieve(d1['hdmovielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
-				pass
+			#try:
+			#	#xbmc.log(str('clearlogo.png = ' + d1['hdmovielogo'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+			#	urllib.urlretrieve(d1['hdmovielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
+			#except:
+			#	urllib.request.urlretrieve(d1['hdmovielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
+			#	pass
+			urllib.request.urlretrieve(d1['hdmovielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
 	elif d1.__contains__('movielogo'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'clearlogo.png'):
-			try:
-				#xbmc.log(str('clearlogo.png = ' + d1['movielogo'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
-				urllib.urlretrieve(d1['movielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
-			except:
-				urllib.request.urlretrieve(d1['movielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
-				pass
+			#try:
+			#	#xbmc.log(str('clearlogo.png = ' + d1['movielogo'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+			#	urllib.urlretrieve(d1['movielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
+			#except:
+			#	urllib.request.urlretrieve(d1['movielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
+			#	pass
+			urllib.request.urlretrieve(d1['movielogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
 
 	if d1.__contains__('moviethumb'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'landscape.jpg'):
-			try:
-				#xbmc.log(str('landscape.jpg = ' + d1['moviethumb'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
-				urllib.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
-			except:
-				urllib.request.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
-				pass
+			#try:
+			#	#xbmc.log(str('landscape.jpg = ' + d1['moviethumb'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+			#	urllib.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
+			#except:
+			#	urllib.request.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
+			#	pass
+			urllib.request.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
 	elif d1.__contains__('moviebackground'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'landscape.jpg'):
-			try:
-				#xbmc.log(str('landscape.jpg = ' + d1['moviebackground'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
-				urllib.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
-			except:
-				urllib.request.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
-				pass
+			#try:
+			#	#xbmc.log(str('landscape.jpg = ' + d1['moviebackground'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+			#	urllib.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
+			#except:
+			#	urllib.request.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
+			#	pass
+			urllib.request.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
 
 	if d1.__contains__('moviebackground'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'fanart.jpg'):
-			try:
-				#xbmc.log(str('fanart.jpg = ' + d1['moviebackground'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
-				urllib.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
-			except:
-				urllib.request.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
-				pass
+			#try:
+			#	#xbmc.log(str('fanart.jpg = ' + d1['moviebackground'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+			#	urllib.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
+			#except:
+			#	urllib.request.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
+			#	pass
+			urllib.request.urlretrieve(d1['moviebackground'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
 	elif d1.__contains__('moviethumb'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'fanart.jpg'):
-			try:
-				#xbmc.log(str('fanart.jpg = ' + d1['moviethumb'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
-				urllib.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
-			except:
-				urllib.request.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
-				pass
-
+			#try:
+			#	#xbmc.log(str('fanart.jpg = ' + d1['moviethumb'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+			#	urllib.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
+			#except:
+			#	urllib.request.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
+			#	pass
+			urllib.request.urlretrieve(d1['moviethumb'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
 
 	if d1.__contains__('movieposter'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'poster.jpg'):
-			try:
-				#xbmc.log(str('poster.jpg = ' + d1['movieposter'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
-				urllib.urlretrieve(d1['movieposter'].replace(' ', '%20'), show_file_path + 'poster.jpg')
-			except:
-				urllib.request.urlretrieve(d1['movieposter'].replace(' ', '%20'), show_file_path + 'poster.jpg')
-				pass
+			#try:
+			#	#xbmc.log(str('poster.jpg = ' + d1['movieposter'].replace(' ', '%20'))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+			#	urllib.urlretrieve(d1['movieposter'].replace(' ', '%20'), show_file_path + 'poster.jpg')
+			#except:
+			#	urllib.request.urlretrieve(d1['movieposter'].replace(' ', '%20'), show_file_path + 'poster.jpg')
+			#	pass
+			urllib.request.urlretrieve(d1['movieposter'].replace(' ', '%20'), show_file_path + 'poster.jpg')
 	xbmc.log(str(d1)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 
 def get_art_fanart_tv(tvdb_id, fanart_api, show_file_path, art_path,tmdb_id,tmdb_api):
@@ -395,6 +402,7 @@ def get_art_fanart_tv(tvdb_id, fanart_api, show_file_path, art_path,tmdb_id,tmdb
 	import requests
 	import json
 	d1 = {}
+	show_file_path = str(show_file_path)
 	try: 
 		response = requests.get('http://webservice.fanart.tv/v3/tv/'+str(tvdb_id)+'?api_key='+str(fanart_api)).json()
 	except: 
@@ -511,106 +519,117 @@ def get_art_fanart_tv(tvdb_id, fanart_api, show_file_path, art_path,tmdb_id,tmdb
 
 	if d1.__contains__('tvbanner'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'banner.jpg'):
-			try:
-				#print('banner.jpg = ' + d1['tvbanner'].replace(' ', '%20'))
-				urllib.urlretrieve(d1['tvbanner'].replace(' ', '%20'), show_file_path + 'banner.jpg')
-			except:
-				urllib.request.urlretrieve(d1['tvbanner'].replace(' ', '%20'), show_file_path + 'banner.jpg')
-				pass
+			#try:
+			#	#print('banner.jpg = ' + d1['tvbanner'].replace(' ', '%20'))
+			#	urllib.urlretrieve(d1['tvbanner'].replace(' ', '%20'), show_file_path + 'banner.jpg')
+			#except:
+			#	urllib.request.urlretrieve(d1['tvbanner'].replace(' ', '%20'), show_file_path + 'banner.jpg')
+			#	pass
+			urllib.request.urlretrieve(d1['tvbanner'].replace(' ', '%20'), show_file_path + 'banner.jpg')
 
 	if d1.__contains__('hdtvlogo'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'clearlogo.png'):
-			try:
-				#print('clearlogo.png = ' + d1['hdtvlogo'].replace(' ', '%20'))
-				urllib.urlretrieve(d1['hdtvlogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
-			except:
-				urllib.request.urlretrieve(d1['hdtvlogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
-				pass
+			#try:
+			#	#print('clearlogo.png = ' + d1['hdtvlogo'].replace(' ', '%20'))
+			#	urllib.urlretrieve(d1['hdtvlogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
+			#except:
+			#	urllib.request.urlretrieve(d1['hdtvlogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
+			#	pass
+			urllib.request.urlretrieve(d1['hdtvlogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
 	elif d1.__contains__('clearlogo'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'clearlogo.png'):
-			try:
-				#print('clearlogo.png = ' + d1['clearlogo'].replace(' ', '%20'))
-				urllib.urlretrieve(d1['clearlogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
-			except:
-				urllib.request.urlretrieve(d1['clearlogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
-				pass
+			#try:
+			#	#print('clearlogo.png = ' + d1['clearlogo'].replace(' ', '%20'))
+			#	urllib.urlretrieve(d1['clearlogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
+			#except:
+			#	urllib.request.urlretrieve(d1['clearlogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
+			#	pass
+			urllib.request.urlretrieve(d1['clearlogo'].replace(' ', '%20'), show_file_path + 'clearlogo.png')
 
 	if d1.__contains__('tvthumb'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'landscape.jpg'):
-			try:
-				#print('landscape.jpg = ' + d1['tvthumb'].replace(' ', '%20'))
-				urllib.urlretrieve(d1['tvthumb'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
-			except:
-				urllib.request.urlretrieve(d1['tvthumb'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
-				pass
+			#try:
+			#	#print('landscape.jpg = ' + d1['tvthumb'].replace(' ', '%20'))
+			#	urllib.urlretrieve(d1['tvthumb'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
+			#except:
+			#	urllib.request.urlretrieve(d1['tvthumb'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
+			#	pass
+			urllib.request.urlretrieve(d1['tvthumb'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
 	elif d1.__contains__('showbackground'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'landscape.jpg'):
-			try:
-				#print('landscape.jpg = ' + d1['showbackground'].replace(' ', '%20'))
-				urllib.urlretrieve(d1['showbackground'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
-			except:
-				urllib.request.urlretrieve(d1['showbackground'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
-				pass
+			#try:
+			#	#print('landscape.jpg = ' + d1['showbackground'].replace(' ', '%20'))
+			#	urllib.urlretrieve(d1['showbackground'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
+			#except:
+			#	urllib.request.urlretrieve(d1['showbackground'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
+			#	pass
+			urllib.request.urlretrieve(d1['showbackground'].replace(' ', '%20'), show_file_path + 'landscape.jpg')
 
 	if d1.__contains__('showbackground'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'fanart.jpg'):
-			try:
-				#print('fanart.jpg = ' + d1['showbackground'].replace(' ', '%20'))
-				urllib.urlretrieve(d1['showbackground'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
-			except:
-				urllib.request.urlretrieve(d1['showbackground'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
-				pass
+			#try:
+			#	#print('fanart.jpg = ' + d1['showbackground'].replace(' ', '%20'))
+			#	urllib.urlretrieve(d1['showbackground'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
+			#except:
+			#	urllib.request.urlretrieve(d1['showbackground'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
+			#	pass
+			urllib.request.urlretrieve(d1['showbackground'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
 	elif d1.__contains__('tvthumb'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'fanart.jpg'):
-			try:
-				#print('fanart.jpg = ' + d1['tvthumb'].replace(' ', '%20'))
-				urllib.urlretrieve(d1['tvthumb'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
-			except:
-				urllib.request.urlretrieve(d1['tvthumb'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
-				pass
+			#try:
+			#	#print('fanart.jpg = ' + d1['tvthumb'].replace(' ', '%20'))
+			#	urllib.urlretrieve(d1['tvthumb'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
+			#except:
+			#	urllib.request.urlretrieve(d1['tvthumb'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
+			#	pass
+			urllib.request.urlretrieve(d1['tvthumb'].replace(' ', '%20'), show_file_path + 'fanart.jpg')
 
 
 	if d1.__contains__('tvposter'):
 		if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'poster.jpg'):
-			try:
-				#print('poster.jpg = ' + d1['tvposter'].replace(' ', '%20'))
-				urllib.urlretrieve(d1['tvposter'].replace(' ', '%20'), show_file_path + 'poster.jpg')
-			except:
-				urllib.request.urlretrieve(d1['tvposter'].replace(' ', '%20'), show_file_path + 'poster.jpg')
-				pass
+			#try:
+			#	#print('poster.jpg = ' + d1['tvposter'].replace(' ', '%20'))
+			#	urllib.urlretrieve(d1['tvposter'].replace(' ', '%20'), show_file_path + 'poster.jpg')
+			#except:
+			#	urllib.request.urlretrieve(d1['tvposter'].replace(' ', '%20'), show_file_path + 'poster.jpg')
+			#	pass
+			urllib.request.urlretrieve(d1['tvposter'].replace(' ', '%20'), show_file_path + 'poster.jpg')
 
 	if d1.__contains__('seasonbanner'):
 		for i in d1['seasonbanner']:
 			if i != 0:
 				if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'season' + format(i, '02d') + '-banner.jpg'):
-					try:
-						#print 'season' + format(i, '02d') + '-banner.jpg = ' + d1['seasonbanner'][i].replace(' ', '%20')
-						urllib.urlretrieve(d1['seasonbanner'][i].replace(' ', '%20'), show_file_path + 'season' + format(i, '02d') + '-banner.jpg')
-					except:
-						urllib.request.urlretrieve(d1['seasonbanner'][i].replace(' ', '%20'), show_file_path + 'season' + format(i, '02d') + '-banner.jpg')
-						pass
+					#try:
+					#	#print 'season' + format(i, '02d') + '-banner.jpg = ' + d1['seasonbanner'][i].replace(' ', '%20')
+					#	urllib.urlretrieve(d1['seasonbanner'][i].replace(' ', '%20'), show_file_path + 'season' + format(i, '02d') + '-banner.jpg')
+					#except:
+					#	urllib.request.urlretrieve(d1['seasonbanner'][i].replace(' ', '%20'), show_file_path + 'season' + format(i, '02d') + '-banner.jpg')
+					#	pass
+					urllib.request.urlretrieve(d1['seasonbanner'][i].replace(' ', '%20'), show_file_path + 'season' + format(i, '02d') + '-banner.jpg')
 
 	if d1.__contains__('seasonthumb'):
 		for i in d1['seasonthumb']:
 			if i != 0:
 				if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'season' + format(i, '02d') + '-landscape.jpg'):
-					try:
-						#print 'season' + format(i, '02d') + '-landscape.jpg = ' + d1['seasonthumb'][i].replace(' ', '%20')
-						urllib.urlretrieve(d1['seasonthumb'][i].replace(' ', '%20'), show_file_path + 'season' + format(i, '02d') + '-landscape.jpg')
-					except:
-						urllib.request.urlretrieve(d1['seasonthumb'][i].replace(' ', '%20'), show_file_path + 'season' + format(i, '02d') + '-landscape.jpg')
-						pass
+					#try:
+					#	#print 'season' + format(i, '02d') + '-landscape.jpg = ' + d1['seasonthumb'][i].replace(' ', '%20')
+					#	urllib.urlretrieve(d1['seasonthumb'][i].replace(' ', '%20'), show_file_path + 'season' + format(i, '02d') + '-landscape.jpg')
+					#except:
+					#	urllib.request.urlretrieve(d1['seasonthumb'][i].replace(' ', '%20'), show_file_path + 'season' + format(i, '02d') + '-landscape.jpg')
+					#	pass
+					urllib.request.urlretrieve(d1['seasonthumb'][i].replace(' ', '%20'), show_file_path + 'season' + format(i, '02d') + '-landscape.jpg')
 
 	if d1.__contains__('seasonposters'):
 		for i in d1['seasonposters']:
 			if i != 0:
 				if not os.path.exists(art_path) or not os.path.exists(show_file_path + 'season' + format(i, '02d') + '-poster.jpg'):
-					try:
-						#print 'season' + format(i, '02d') + '-poster.jpg = ' + d1['seasonposters'][i].replace(' ', '%20')
-						urllib.urlretrieve(d1['seasonposters'][i].replace(' ', '%20'), show_file_path + 'season' + format(i, '02d') + '-poster.jpg')
-					except:
-						urllib.request.urlretrieve(d1['seasonposters'][i].replace(' ', '%20'), show_file_path + 'season' + format(i, '02d') + '-poster.jpg')
-						pass
+					#try:
+					#	#print 'season' + format(i, '02d') + '-poster.jpg = ' + d1['seasonposters'][i].replace(' ', '%20')
+					#	urllib.urlretrieve(d1['seasonposters'][i].replace(' ', '%20'), show_file_path + 'season' + format(i, '02d') + '-poster.jpg')
+					#except:
+					#	urllib.request.urlretrieve(d1['seasonposters'][i].replace(' ', '%20'), show_file_path + 'season' + format(i, '02d') + '-poster.jpg')
+					#	pass
+					urllib.request.urlretrieve(d1['seasonposters'][i].replace(' ', '%20'), show_file_path + 'season' + format(i, '02d') + '-poster.jpg')
 	return
 
 def delete_folder_contents(path, delete_subfolders=False):
