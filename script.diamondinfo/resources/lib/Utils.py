@@ -414,7 +414,7 @@ def create_listitems(data=None, preload_images=0):
 				continue
 			value = str(value)
 			if count < preload_images:
-				if value.startswith('http://') and (value.endswith('.jpg') or value.endswith('.png')):
+				if value.startswith('http://') and (value.endswith('.jpg') or value.endswith('.png')) or value.startswith('image://') and (value.endswith('.jpg/') or value.endswith('.png/')):
 					if value not in image_requests:
 						thread = GetFileThread(value)
 						threads += [thread]
@@ -433,6 +433,8 @@ def create_listitems(data=None, preload_images=0):
 			elif key.lower() in ['icon']:
 				listitem.setIconImage(value)
 				listitem.setArt({key.lower(): value})
+			elif key.lower() in ['clearlogo','logo']:
+				listitem.setArt({'clearlogo': value})
 			elif key.lower() in ['path']:
 				listitem.setPath(path=value)
 			elif key.lower() in ['poster', 'banner', 'fanart', 'clearart', 'clearlogo', 'landscape', 'discart', 'characterart', 'tvshow.fanart', 'tvshow.poster', 'tvshow.banner', 'tvshow.clearart', 'tvshow.characterart']:

@@ -10,7 +10,7 @@ import os
 import datetime
 from datetime import date, datetime, timedelta
 import time
-
+from pathlib import Path
 
 def addon_ID():
 	addonID = xbmcaddon.Addon().getAddonInfo('id')
@@ -29,24 +29,28 @@ def tmdb_settings_path():
 	addon_path = addon.getAddonInfo('path')
 	addonID = addon.getAddonInfo('id')
 	addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
-	if '\\' in str(addonUserDataFolder):
-		tmdb_settings_path = addonUserDataFolder.replace(addonID,'plugin.video.themoviedb.helper') + '\settings.xml'
-	else:
-		tmdb_settings_path = addonUserDataFolder.replace(addonID,'plugin.video.themoviedb.helper') + '/settings.xml'
+	#if '\\' in str(addonUserDataFolder):
+	#	tmdb_settings_path = addonUserDataFolder.replace(addonID,'plugin.video.themoviedb.helper') + '\settings.xml'
+	#else:
+	#	tmdb_settings_path = addonUserDataFolder.replace(addonID,'plugin.video.themoviedb.helper') + '/settings.xml'
+	tmdb_settings_path = addonUserDataFolder.replace(addonID,'plugin.video.themoviedb.helper') + '/settings.xml'
+	tmdb_settings_path = Path(tmdb_settings_path)
 	return tmdb_settings_path
 
 def tmdb_traktapi_path():
-	if '\\' in str(main_file_path()):
-		tmdb_traktapi_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources\lib\\traktapi.py'
-	else:
-		tmdb_traktapi_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/lib/traktapi.py'
+	#if '\\' in str(main_file_path()):
+	#	tmdb_traktapi_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources\lib\\traktapi.py'
+	#else:
+	#	tmdb_traktapi_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/lib/traktapi.py'
+	tmdb_traktapi_path = Path(main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/lib/traktapi.py')
 	return tmdb_traktapi_path
 
 def tmdb_traktapi_new_path():
-	if '\\' in str(main_file_path()):
-		tmdb_traktapi_new_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources\lib\\trakt\\api.py'
-	else:
-		tmdb_traktapi_new_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/lib/trakt/api.py'
+	#if '\\' in str(main_file_path()):
+	#	tmdb_traktapi_new_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources\lib\\trakt\\api.py'
+	#else:
+	#	tmdb_traktapi_new_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/lib/trakt/api.py'
+	tmdb_traktapi_new_path = Path(main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/lib/trakt/api.py')
 	return tmdb_traktapi_new_path
 	
 def basedir_tv_path():
@@ -57,16 +61,17 @@ def basedir_tv_path():
 		addonID = addon.getAddonInfo('id')
 		addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
 		#addonUserDataFolder.replace(addon_ID(),'plugin.video.openmeta') + '/TVShows'
-		if '\\' in str(addonUserDataFolder):
-			return addonUserDataFolder + '\TVShows'
-		else:
-			return addonUserDataFolder + '/TVShows'
+		#if '\\' in str(addonUserDataFolder):
+		#	return addonUserDataFolder + '\TVShows'
+		#else:
+		#	return addonUserDataFolder + '/TVShows'
+		return Path(addonUserDataFolder + '/TVShows')
 	else:
-		if root_dir[-1] != '\\' and '\\' in str(root_dir):
-			root_dir += '\\'
+		#if root_dir[-1] != '\\' and '\\' in str(root_dir):
+		#	root_dir += '\\'
 		if root_dir[-1] != '/' and '/' in str(root_dir):
 			root_dir += '/'
-		return root_dir + 'TVShows'
+		return Path(root_dir + 'TVShows')
 
 def basedir_movies_path():
 	root_dir = xbmcaddon.Addon(addon_ID()).getSetting('library_folder')
@@ -76,16 +81,17 @@ def basedir_movies_path():
 		addonID = addon.getAddonInfo('id')
 		addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
 		#addonUserDataFolder.replace(addon_ID(),'plugin.video.openmeta') + '/Movies'
-		if '\\' in str(addonUserDataFolder):
-			return addonUserDataFolder + '\Movies'
-		else:
-			return addonUserDataFolder + '/Movies'
+		#if '\\' in str(addonUserDataFolder):
+		#	return addonUserDataFolder + '\Movies'
+		#else:
+		#	return addonUserDataFolder + '/Movies'
+		return Path(addonUserDataFolder + '/Movies')
 	else:
-		if root_dir[-1] != '\\' and '\\' in str(root_dir):
-			root_dir += '\\'
+		#if root_dir[-1] != '\\' and '\\' in str(root_dir):
+		#	root_dir += '\\'
 		if root_dir[-1] != '/' and '/' in str(root_dir):
 			root_dir += '/'
-		return root_dir + 'Movies'
+		return Path(root_dir + 'Movies')
 
 def library_source_exists_tv():
 	xml_file = xbmcvfs.translatePath('special://profile/sources.xml')
@@ -119,10 +125,11 @@ def db_path():
 		return filelist[-1]
 
 def icon_path():
-	if '\\' in str(main_file_path()):
-		icon_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources\icons\\tmdb\\tv.png'
-	else:
-		icon_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/icons/tmdb/tv.png'
+	#if '\\' in str(main_file_path()):
+	#	icon_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources\icons\\tmdb\\tv.png'
+	#else:
+	#	icon_path = main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/icons/tmdb/tv.png'
+	icon_path = Path(main_file_path().replace(addon_ID(),'plugin.video.themoviedb.helper') + 'resources/icons/tmdb/tv.png')
 	return icon_path
 
 def tmdb_api_key():
@@ -156,16 +163,22 @@ def setup_library_tv():
 		addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
 		library_root_folder = addonUserDataFolder
 	
-	if '\\' in str(library_root_folder) and str(library_root_folder)[-1] != '\\':
-		library_root_folder += '\\'
-	elif '/' in library_root_folder and str(library_root_folder)[-1] != '/':
+	#if '\\' in str(library_root_folder) and str(library_root_folder)[-1] != '\\':
+	#	library_root_folder += '\\'
+	#elif '/' in library_root_folder and str(library_root_folder)[-1] != '/':
+	#	library_root_folder += '/'
+	if str(library_root_folder)[-1] != '/':
 		library_root_folder += '/'
+		library_root_folder = Path(library_root_folder)
 	
 	library_folder = basedir_tv_path()
-	if '\\' in str(library_folder) and str(library_folder)[-1] != '\\':
-		library_folder += '\\'
-	elif '/' in library_folder and str(library_folder)[-1] != '/':
+	#if '\\' in str(library_folder) and str(library_folder)[-1] != '\\':
+	#	library_folder += '\\'
+	#elif '/' in library_folder and str(library_folder)[-1] != '/':
+	#	library_folder += '/'
+	if str(library_folder)[-1] != '/':
 		library_folder += '/'
+		library_folder = Path(library_folder)
 
 	if not xbmcvfs.exists(library_root_folder):
 		xbmcvfs.mkdir(library_root_folder)
@@ -193,17 +206,22 @@ def setup_library_movies():
 		addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
 		library_root_folder = addonUserDataFolder
 
-	if '\\' in str(library_root_folder) and str(library_root_folder)[-1] != '\\':
-		library_root_folder += '\\'
-	elif '/' in library_root_folder and str(library_root_folder)[-1] != '/':
+	#if '\\' in str(library_root_folder) and str(library_root_folder)[-1] != '\\':
+	#	library_root_folder += '\\'
+	#elif '/' in library_root_folder and str(library_root_folder)[-1] != '/':
+	#	library_root_folder += '/'
+	if str(library_root_folder)[-1] != '/':
 		library_root_folder += '/'
+		library_root_folder = Path(library_root_folder)
 	
 	library_folder = basedir_movies_path()
-	if '\\' in str(library_folder) and str(library_folder)[-1] != '\\':
-		library_folder += '\\'
-	elif '/' in library_folder and str(library_folder)[-1] != '/':
+	#if '\\' in str(library_folder) and str(library_folder)[-1] != '\\':
+	#	library_folder += '\\'
+	#elif '/' in library_folder and str(library_folder)[-1] != '/':
+	#	library_folder += '/'
+	if str(library_folder)[-1] != '/':
 		library_folder += '/'
-
+		library_folder = Path(library_folder)
 
 	if not xbmcvfs.exists(library_root_folder):
 		xbmcvfs.mkdir(library_root_folder)
@@ -907,7 +925,8 @@ def trakt_add_movie(tmdb_id_num=None,mode=None):
 	movie_year = response[0]['movie']['year']
 	movie_tmdb = response[0]['movie']['ids']['tmdb']
 	movie_imdb = response[0]['movie']['ids']['imdb']
-	movie_path = basedir_movies_path() + '/' + str(movie_tmdb)
+	
+	movie_path = Path(basedir_movies_path() + '/' + str(movie_tmdb))
 	
 	values = """
 	  {
@@ -960,7 +979,8 @@ def trakt_add_tv(tmdb_id_num=None,mode=None):
 	show_tvdb = response[0]['show']['ids']['tvdb']
 	show_tmdb = response[0]['show']['ids']['tmdb']
 	show_imdb = response[0]['show']['ids']['imdb']
-	show_path = basedir_tv_path() + '/' + str(show_tvdb)
+	
+	show_path = Path(basedir_tv_path() + '/' + str(show_tvdb))
 
 	values = """
 	  {
@@ -1011,7 +1031,8 @@ def trakt_add_tv_season(tmdb_id_num=None,season_num=None,mode=None):
 	show_tvdb = response[0]['show']['ids']['tvdb']
 	show_tmdb = response[0]['show']['ids']['tmdb']
 	show_imdb = response[0]['show']['ids']['imdb']
-	show_path = basedir_tv_path() + '/' + str(show_tvdb)
+	
+	show_path = Path(basedir_tv_path() + '/' + str(show_tvdb))
 
 	url = 'https://api.trakt.tv/shows/'+str(show_trakt)+'/seasons'
 	response = requests.get(url, headers=headers).json()
@@ -1079,7 +1100,8 @@ def trakt_add_tv_episode(tmdb_id_num=None,season_num=None,episode_num=None,mode=
 	show_tvdb = response[0]['show']['ids']['tvdb']
 	show_tmdb = response[0]['show']['ids']['tmdb']
 	show_imdb = response[0]['show']['ids']['imdb']
-	show_path = basedir_tv_path() + '/' + str(show_tvdb)
+	
+	show_path = Path(basedir_tv_path() + '/' + str(show_tvdb))
 	
 	
 	values2 = """
@@ -1235,7 +1257,7 @@ def trakt_calendar_list():
 				nfo = 'https://thetvdb.com/?tab=series&id=' + str(n['show']['ids']['tvdb'])
 			else:
 				nfo = 'https://www.themoviedb.org/tv/' + str(n['show']['ids']['tmdb'])
-			nfo_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/' + 'tvshow.nfo'
+			nfo_path = Path(file_path + '/' + str(n['show']['ids']['tvdb']) + '/' + 'tvshow.nfo')
 
 			url = "plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=" + str(n['show']['ids']['tmdb']) + "&amp;season=" + str(n['episode']['season']) + "&amp;episode=" + str(n['episode']['number'])
 			if str(n['show']['ids']['tmdb']) == 'None':
@@ -1314,12 +1336,14 @@ def trakt_calendar_list():
 				file_name = file_name.replace(c,'')
 				thumb_file_name = thumb_file_name.replace(c,'')
 
-			if '\\' in str(file_path):
-				strm_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\Season ' + str(n['episode']['season']) + '\\' + file_name
-				thumb_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\Season ' + str(n['episode']['season']) + '\\' + thumb_file_name
-			else:
-				strm_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '/' + file_name
-				thumb_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '/' + thumb_file_name
+			#if '\\' in str(file_path):
+			#	strm_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\Season ' + str(n['episode']['season']) + '\\' + file_name
+			#	thumb_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\Season ' + str(n['episode']['season']) + '\\' + thumb_file_name
+			#else:
+			#	strm_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '/' + file_name
+			#	thumb_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '/' + thumb_file_name
+			strm_path = Path(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '/' + file_name)
+			thumb_path = Path(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '/' + thumb_file_name)
 			"""
 			if not os.path.exists(thumb_path):
 				tvdb_url = str('https://api.thetvdb.com/series/' + str(n['show']['ids']['tvdb']) + '/episodes/query?airedSeason=' + str(n['episode']['season']) + '&airedEpisode=' + str(n['episode']['number']))
@@ -1373,7 +1397,7 @@ def refresh_recently_added():
 			thumbnail_image = 'https://thetvdb.com/banners/'
 		if thumbnail_image != 'https://thetvdb.com/banners/':
 			xbmc.log(str(i)+'===>OPEN_INFO', level=xbmc.LOGINFO)
-			thumb_path = i[2].replace('.strm','-thumb.jpg')
+			thumb_path = Path(i[2].replace('.strm','-thumb.jpg'))
 			xbmc.log(str(thumb_path)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			if not os.path.exists(thumb_path):
 				try:
@@ -1390,7 +1414,7 @@ def refresh_recently_added():
 				xbmc.log(str((str(kodi_response) + ' === '+ str(thumb_path)))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			image_test = False
 		else:
-			thumb_path = i[2].replace('.strm','-thumb.jpg')
+			thumb_path = Path(i[2].replace('.strm','-thumb.jpg'))
 			response = requests.get('http://api.tvmaze.com/lookup/shows?thetvdb='+str(tvdb_id)).json()
 			show_id = response['id']
 			response = requests.get('http://api.tvmaze.com/shows/'+str(show_id)+'/episodes').json()
@@ -1420,7 +1444,7 @@ def refresh_recently_added():
 					xbmc.log(str((str(kodi_response) + ' === '+ str(thumb_path)))+'===>OPEN_INFO', level=xbmc.LOGINFO)
 		
 		if image_test == True:
-			thumb_path = i[2].replace('.strm','-thumb.jpg')
+			thumb_path = Path(i[2].replace('.strm','-thumb.jpg'))
 			response = requests.get('https://api.trakt.tv/search/tvdb/'+str(tvdb_id), headers=headers).json()
 			imdb_id = response[0]['show']['ids']['imdb']
 
@@ -1755,7 +1779,6 @@ def refresh_recently_added():
 
 def library_auto_tv():
 	import fnmatch
-	from pathlib import Path
 	import urllib
 	import urllib.request
 	import requests
@@ -1784,20 +1807,24 @@ def library_auto_tv():
 			nfo = 'https://thetvdb.com/?tab=series&id=' + str(i['show']['ids']['tvdb'])
 		else:
 			nfo = 'https://www.themoviedb.org/tv/' + str(i['show']['ids']['tmdb'])
-		if '\\' in str(file_path):
-			nfo_path = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\' + 'tvshow.nfo'
-			clear_logo = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\' + 'clearlogo.png'
-			tvthumb_path = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\' + 'landscape.jpg'
-		else:
-			nfo_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/' + 'tvshow.nfo'
-			clear_logo = file_path + '/' + str(i['show']['ids']['tvdb']) + '/' + 'clearlogo.png'
-			tvthumb_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/' + 'landscape.jpg'
+		#if '\\' in str(file_path):
+		#	nfo_path = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\' + 'tvshow.nfo'
+		#	clear_logo = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\' + 'clearlogo.png'
+		#	tvthumb_path = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\' + 'landscape.jpg'
+		#else:
+		#	nfo_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/' + 'tvshow.nfo'
+		#	clear_logo = file_path + '/' + str(i['show']['ids']['tvdb']) + '/' + 'clearlogo.png'
+		#	tvthumb_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/' + 'landscape.jpg'
+		nfo_path = Path(file_path + '/' + str(i['show']['ids']['tvdb']) + '/' + 'tvshow.nfo')
+		clear_logo = Path(file_path + '/' + str(i['show']['ids']['tvdb']) + '/' + 'clearlogo.png')
+		tvthumb_path = Path(file_path + '/' + str(i['show']['ids']['tvdb']) + '/' + 'landscape.jpg')
 		try:
 			tvdb_id = i['show']['ids']['tvdb']
-			if '\\' in str(file_path):
-				tvdb_path = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\' +str(tvdb_id)+ '.tvdb'
-			else:
-				tvdb_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/' +str(tvdb_id)+ '.tvdb'
+			#if '\\' in str(file_path):
+			#	tvdb_path = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\' +str(tvdb_id)+ '.tvdb'
+			#else:
+			#	tvdb_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/' +str(tvdb_id)+ '.tvdb'
+			tvdb_path = Path(file_path + '/' + str(i['show']['ids']['tvdb']) + '/' +str(tvdb_id)+ '.tvdb')
 			if not os.path.exists(tvdb_path) and str(tvdb_id).isnumeric():
 				Path(tvdb_path).touch()
 		except:
@@ -1805,10 +1832,11 @@ def library_auto_tv():
 
 		try:
 			tmdb_id = i['show']['ids']['tmdb']
-			if '\\' in str(file_path):
-				tmdb_path = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\' +str(tmdb_id)+ '.tmdb'
-			else:
-				tmdb_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/' +str(tmdb_id)+ '.tmdb'
+			#if '\\' in str(file_path):
+			#	tmdb_path = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\' +str(tmdb_id)+ '.tmdb'
+			#else:
+			#	tmdb_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/' +str(tmdb_id)+ '.tmdb'
+			tmdb_path = Path(file_path + '/' + str(i['show']['ids']['tvdb']) + '/' +str(tmdb_id)+ '.tmdb')
 			if not os.path.exists(tmdb_path) and str(tmdb_id).isnumeric():
 				Path(tmdb_path).touch()
 		except:
@@ -1816,10 +1844,11 @@ def library_auto_tv():
 
 		try:
 			imdb_id = i['show']['ids']['imdb']
-			if '\\' in str(file_path):
-				imdb_path = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\' +str(imdb_id)+ '.imdb'
-			else:
-				imdb_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/' +str(imdb_id)+ '.imdb'
+			#if '\\' in str(file_path):
+			#	imdb_path = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\' +str(imdb_id)+ '.imdb'
+			#else:
+			#	imdb_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/' +str(imdb_id)+ '.imdb'
+			imdb_path = Path(file_path + '/' + str(i['show']['ids']['tvdb']) + '/' +str(imdb_id)+ '.imdb')
 			if not os.path.exists(imdb_path) and str(imdb_id[2:]).isnumeric():
 				Path(imdb_path).touch()
 		except:
@@ -1827,38 +1856,43 @@ def library_auto_tv():
 
 		try:
 			trakt_id = i['show']['ids']['trakt']
-			if '\\' in str(file_path):
-				trakt_path = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\' +str(trakt_id)+ '.trakt'
-			else:
-				trakt_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/' +str(trakt_id)+ '.trakt'
+			#if '\\' in str(file_path):
+			#	trakt_path = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\' +str(trakt_id)+ '.trakt'
+			#else:
+			#	trakt_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/' +str(trakt_id)+ '.trakt'
+			trakt_path = Path(file_path + '/' + str(i['show']['ids']['tvdb']) + '/' +str(trakt_id)+ '.trakt')
 			if not os.path.exists(trakt_path) and str(trakt_id).isnumeric():
 				Path(trakt_path).touch()
 		except:
 			pass
 
-		if '\\' in str(file_path):
-			if not os.path.exists(file_path + '\\' + str(i['show']['ids']['tvdb'])):
-				os.mkdir(file_path + '\\' + str(i['show']['ids']['tvdb']))
-		else:
-			if not os.path.exists(file_path + '/' + str(i['show']['ids']['tvdb'])):
-				os.mkdir(file_path + '/' + str(i['show']['ids']['tvdb']))
+		#if '\\' in str(file_path):
+		#	if not os.path.exists(file_path + '\\' + str(i['show']['ids']['tvdb'])):
+		#		os.mkdir(file_path + '\\' + str(i['show']['ids']['tvdb']))
+		#else:
+		#	if not os.path.exists(file_path + '/' + str(i['show']['ids']['tvdb'])):
+		#		os.mkdir(file_path + '/' + str(i['show']['ids']['tvdb']))
+		if not os.path.exists(Path(file_path + '/' + str(i['show']['ids']['tvdb']))):
+			os.mkdir(Path(file_path + '/' + str(i['show']['ids']['tvdb'])))
 
 		if not os.path.exists(nfo_path):
 			file = open(nfo_path, 'w')
 			file.write(nfo)
 			file.close()
 
-		if '\\' in str(file_path):
-			art_path = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\' + 'tvshow.fanart'
-		else:
-			art_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/' + 'tvshow.fanart'
+		#if '\\' in str(file_path):
+		#	art_path = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\' + 'tvshow.fanart'
+		#else:
+		#	art_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/' + 'tvshow.fanart'
+		art_path = Path(file_path + '/' + str(i['show']['ids']['tvdb']) + '/' + 'tvshow.fanart')
 		if not os.path.exists(art_path):
 			tmdb_api = tmdb_api_key()
 			fanart_api = fanart_api_key()
-			if '\\' in str(file_path):
-				show_file_path = basedir_tv + '\\' + str(i['show']['ids']['tvdb']) + '\\'
-			else:
-				show_file_path = basedir_tv + '/' + str(i['show']['ids']['tvdb']) + '/'
+			#if '\\' in str(file_path):
+			#	show_file_path = basedir_tv + '\\' + str(i['show']['ids']['tvdb']) + '\\'
+			#else:
+			#	show_file_path = basedir_tv + '/' + str(i['show']['ids']['tvdb']) + '/'
+			show_file_path = Path(basedir_tv + '/' + str(i['show']['ids']['tvdb']) + '/')
 			get_art_fanart_tv(str(i['show']['ids']['tvdb']), fanart_api, show_file_path, art_path, str(i['show']['ids']['tmdb']),tmdb_api)
 			file = open(art_path, 'w')
 			file.write(str(i['show']['ids']['tvdb']) + ' - '+str(i['show']['title']))
@@ -1874,12 +1908,15 @@ def library_auto_tv():
 
 		#xbmc.log(str(nfo)+'||'+str(i['show']['ids']['tvdb'])+'||'+str(i['show']['title'])+'||===>OPEN_INFO', level=xbmc.LOGINFO)
 		for s in i['seasons']:
-			if '\\' in str(main_file_path()):
-				if not os.path.exists(file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\Season ' + str(s['number'])):
-					os.mkdir(file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\Season ' + str(s['number']))
-			else:
-				if not os.path.exists(file_path + '/' + str(i['show']['ids']['tvdb']) + '/Season ' + str(s['number'])):
-					os.mkdir(file_path + '/' + str(i['show']['ids']['tvdb']) + '/Season ' + str(s['number']))
+			#if '\\' in str(main_file_path()):
+			#	if not os.path.exists(file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\Season ' + str(s['number'])):
+			#		os.mkdir(file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\Season ' + str(s['number']))
+			#else:
+			#	if not os.path.exists(file_path + '/' + str(i['show']['ids']['tvdb']) + '/Season ' + str(s['number'])):
+			#		os.mkdir(file_path + '/' + str(i['show']['ids']['tvdb']) + '/Season ' + str(s['number']))
+			if not os.path.exists(Path(file_path + '/' + str(i['show']['ids']['tvdb']) + '/Season ' + str(s['number']))):
+				os.mkdir(Path(file_path + '/' + str(i['show']['ids']['tvdb']) + '/Season ' + str(s['number'])))
+
 
 			for e in s['episodes']:
 				url = "plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=" + str(i['show']['ids']['tmdb']) + "&amp;season=" + str(s['number']) + "&amp;episode=" + str(e['number'])
@@ -1890,10 +1927,11 @@ def library_auto_tv():
 				for c in r'[]/\;,><&*:%=+@!#^()|?^':
 					file_name = file_name.replace(c,'')
 
-				if '\\' in str(file_path):
-					strm_path = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\Season ' + str(s['number']) + '\\' + file_name
-				else:
-					strm_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/Season ' + str(s['number']) + '/' + file_name
+				#if '\\' in str(file_path):
+				#	strm_path = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\Season ' + str(s['number']) + '\\' + file_name
+				#else:
+				#	strm_path = file_path + '/' + str(i['show']['ids']['tvdb']) + '/Season ' + str(s['number']) + '/' + file_name
+				strm_path = Path(file_path + '/' + str(i['show']['ids']['tvdb']) + '/Season ' + str(s['number']) + '/' + file_name)
 
 				"""
 				###Overwrite existing strm files.
@@ -1901,10 +1939,11 @@ def library_auto_tv():
 				file.write(url)
 				file.close()
 				"""
-				if '\\' in str(main_file_path()):
-					dir = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\Season ' + str(s['number']) + '\\'
-				else:
-					dir = file_path + '/' + str(i['show']['ids']['tvdb']) + '/Season ' + str(s['number']) + '/'
+				#if '\\' in str(main_file_path()):
+				#	dir = file_path + '\\' + str(i['show']['ids']['tvdb']) + '\\Season ' + str(s['number']) + '\\'
+				#else:
+				#	dir = file_path + '/' + str(i['show']['ids']['tvdb']) + '/Season ' + str(s['number']) + '/'
+				dir = Path(file_path + '/' + str(i['show']['ids']['tvdb']) + '/Season ' + str(s['number']) + '/')
 				match = "*S"+format(s['number'],'02d')+"E"+format(e['number'], '02d')+'.strm'
 				n_match = ''
 				if not os.path.exists(strm_path):
@@ -1932,18 +1971,22 @@ def library_auto_tv():
 				nfo = 'https://thetvdb.com/?tab=series&id=' + str(n['show']['ids']['tvdb'])
 			else:
 				nfo = 'https://www.themoviedb.org/tv/' + str(n['show']['ids']['tmdb'])
-			if '\\' in str(file_path):
-				nfo_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\' + 'tvshow.nfo'
-			else:
-				nfo_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/' + 'tvshow.nfo'
+			#if '\\' in str(file_path):
+			#	nfo_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\' + 'tvshow.nfo'
+			#else:
+			#	nfo_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/' + 'tvshow.nfo'
+			nfo_path = Path(file_path + '/' + str(n['show']['ids']['tvdb']) + '/' + 'tvshow.nfo')
 			
-			if '\\' in str(main_file_path()):
-				if not os.path.exists(file_path + '\\' + str(n['show']['ids']['tvdb'])):
-					os.mkdir(file_path + '\\' + str(n['show']['ids']['tvdb']))
-			else:
-				if not os.path.exists(file_path + '/' + str(n['show']['ids']['tvdb'])):
-					#xbmc.log(str(file_path + '/' + str(n['show']['ids']['tvdb'])) + '===>OPEN_INFO', level=xbmc.LOGINFO)
-					os.mkdir(file_path + '/' + str(n['show']['ids']['tvdb']))
+			#if '\\' in str(main_file_path()):
+			#	if not os.path.exists(file_path + '\\' + str(n['show']['ids']['tvdb'])):
+			#		os.mkdir(file_path + '\\' + str(n['show']['ids']['tvdb']))
+			#else:
+			#	if not os.path.exists(file_path + '/' + str(n['show']['ids']['tvdb'])):
+			#		#xbmc.log(str(file_path + '/' + str(n['show']['ids']['tvdb'])) + '===>OPEN_INFO', level=xbmc.LOGINFO)
+			#		os.mkdir(file_path + '/' + str(n['show']['ids']['tvdb']))
+			if not os.path.exists(Path(file_path + '/' + str(n['show']['ids']['tvdb']))):
+				#xbmc.log(str(file_path + '/' + str(n['show']['ids']['tvdb'])) + '===>OPEN_INFO', level=xbmc.LOGINFO)
+				os.mkdir(Path(file_path + '/' + str(n['show']['ids']['tvdb'])))
 
 
 			if not os.path.exists(nfo_path):
@@ -1955,10 +1998,11 @@ def library_auto_tv():
 
 			try:
 				tvdb_id = n['show']['ids']['tvdb']
-				if '\\' in str(file_path):
-					tvdb_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\' +str(tvdb_id)+ '.tvdb'
-				else:
-					tvdb_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/' +str(tvdb_id)+ '.tvdb'
+				#if '\\' in str(file_path):
+				#	tvdb_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\' +str(tvdb_id)+ '.tvdb'
+				#else:
+				#	tvdb_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/' +str(tvdb_id)+ '.tvdb'
+				tvdb_path = Path(file_path + '/' + str(n['show']['ids']['tvdb']) + '/' +str(tvdb_id)+ '.tvdb')
 				if not os.path.exists(tvdb_path) and str(tvdb_id).isnumeric():
 					Path(tvdb_path).touch()
 			except:
@@ -1966,10 +2010,11 @@ def library_auto_tv():
 
 			try:
 				tmdb_id = n['show']['ids']['tmdb']
-				if '\\' in str(file_path):
-					tmdb_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\' +str(tmdb_id)+ '.tmdb'
-				else:
-					tmdb_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/' +str(tmdb_id)+ '.tmdb'
+				#if '\\' in str(file_path):
+				#	tmdb_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\' +str(tmdb_id)+ '.tmdb'
+				#else:
+				#	tmdb_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/' +str(tmdb_id)+ '.tmdb'
+				tmdb_path = Path(file_path + '/' + str(n['show']['ids']['tvdb']) + '/' +str(tmdb_id)+ '.tmdb')
 				if not os.path.exists(tmdb_path) and str(tmdb_id).isnumeric():
 					Path(tmdb_path).touch()
 			except:
@@ -1977,10 +2022,11 @@ def library_auto_tv():
 
 			try:
 				imdb_id = n['show']['ids']['imdb']
-				if '\\' in str(main_file_path()):
-					imdb_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\' +str(imdb_id)+ '.imdb'
-				else:
-					imdb_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/' +str(imdb_id)+ '.imdb'
+				#if '\\' in str(main_file_path()):
+				#	imdb_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\' +str(imdb_id)+ '.imdb'
+				#else:
+				#	imdb_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/' +str(imdb_id)+ '.imdb'
+				imdb_path = Path(file_path + '/' + str(n['show']['ids']['tvdb']) + '/' +str(imdb_id)+ '.imdb')
 				if not os.path.exists(imdb_path) and str(imdb_id[2:]).isnumeric():
 					Path(imdb_path).touch()
 			except:
@@ -1988,22 +2034,26 @@ def library_auto_tv():
 
 			try:
 				trakt_id = n['show']['ids']['trakt']
-				if '\\' in str(file_path):
-					trakt_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\' +str(trakt_id)+ '.trakt'
-				else:
-					trakt_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/' +str(trakt_id)+ '.trakt'
+				#if '\\' in str(file_path):
+				#	trakt_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\' +str(trakt_id)+ '.trakt'
+				#else:
+				#	trakt_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/' +str(trakt_id)+ '.trakt'
+				trakt_path = Path(file_path + '/' + str(n['show']['ids']['tvdb']) + '/' +str(trakt_id)+ '.trakt')
 				if not os.path.exists(trakt_path) and str(trakt_id).isnumeric():
 					Path(trakt_path).touch()
 			except:
 				pass
 
-			if '\\' in str(file_path):
-				if not os.path.exists(file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\Season ' + str(n['episode']['season'])):
-					os.mkdir(file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\Season ' + str(n['episode']['season']))
-			else:
-				if not os.path.exists(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season'])):
-					#xbmc.log(str(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season'])) + '===>OPEN_INFO', level=xbmc.LOGINFO)
-					os.mkdir(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']))
+			#if '\\' in str(file_path):
+			#	if not os.path.exists(file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\Season ' + str(n['episode']['season'])):
+			#		os.mkdir(file_path + '\\' + str(n['show']['ids']['tvdb']) + '\\Season ' + str(n['episode']['season']))
+			#else:
+			#	if not os.path.exists(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season'])):
+			#		#xbmc.log(str(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season'])) + '===>OPEN_INFO', level=xbmc.LOGINFO)
+			#		os.mkdir(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']))
+			if not os.path.exists(Path(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']))):
+				#xbmc.log(str(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season'])) + '===>OPEN_INFO', level=xbmc.LOGINFO)
+				os.mkdir(Path(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season'])))
 
 			url = "plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=" + str(n['show']['ids']['tmdb']) + "&amp;season=" + str(n['episode']['season']) + "&amp;episode=" + str(n['episode']['number'])
 			if str(n['show']['ids']['tmdb']) == 'None':
@@ -2014,14 +2064,17 @@ def library_auto_tv():
 				file_name = file_name.replace(c,'')
 				thumb_file_name = thumb_file_name.replace(c,'')
 
-			if '\\' in str(file_path):
-				strm_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '\\' + file_name
-				thumb_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '\\' + thumb_file_name
-				dir = file_path + '\\' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '\\'
-			else:
-				strm_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '/' + file_name
-				thumb_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '/' + thumb_file_name
-				dir = file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '/'
+			#if '\\' in str(file_path):
+			#	strm_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '\\' + file_name
+			#	thumb_path = file_path + '\\' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '\\' + thumb_file_name
+			#	dir = file_path + '\\' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '\\'
+			#else:
+			#	strm_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '/' + file_name
+			#	thumb_path = file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '/' + thumb_file_name
+			#	dir = file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '/'
+			strm_path = Path(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '/' + file_name)
+			thumb_path = Path(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '/' + thumb_file_name)
+			dir = Path(file_path + '/' + str(n['show']['ids']['tvdb']) + '/Season ' + str(n['episode']['season']) + '/')
 			match = "*S"+format(n['episode']['season'],'02d')+"E"+format(n['episode']['number'], '02d')+'.strm'
 			n_match = ''
 			if not os.path.exists(strm_path):
@@ -2082,7 +2135,6 @@ def library_auto_movie():
 	import fnmatch
 	import requests
 	import json
-	from pathlib import Path
 
 	xbmc.log(str('TRAKT_SYNC_MOVIE_library_auto_movie')+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 	headers = trak_auth()
@@ -2105,70 +2157,91 @@ def library_auto_movie():
 
 	for i in collection:
 		nfo = 'https://www.themoviedb.org/tv/' + str(i['movie']['ids']['tmdb'])
-		if '\\' in str(file_path):
-			nfo_path = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\' + 'movie.nfo'
-			clear_logo = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\' + 'clearlogo.png'
-			tvthumb_path = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\' + 'landscape.jpg'
-		else:
-			nfo_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + 'movie.nfo'
-			clear_logo = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + 'clearlogo.png'
-			tvthumb_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + 'landscape.jpg'
+		#if '\\' in str(file_path):
+		#	nfo_path = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\' + 'movie.nfo'
+		#	clear_logo = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\' + 'clearlogo.png'
+		#	tvthumb_path = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\' + 'landscape.jpg'
+		#else:
+		#	nfo_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + 'movie.nfo'
+		#	clear_logo = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + 'clearlogo.png'
+		#	tvthumb_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + 'landscape.jpg'
+		nfo_path = Path(file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + 'movie.nfo')
+		clear_logo = Path(file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + 'clearlogo.png')
+		tvthumb_path = Path(file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + 'landscape.jpg')
 
 		try:
-			if '\\' in str(file_path):
-				tmdb_id = i['movie']['ids']['tmdb']
-				tmdb_path = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\' +str(tmdb_id)+ '.tmdb'
-				if not os.path.exists(tmdb_path) and str(tmdb_id).isnumeric():
-					Path(tmdb_path).touch()
-					#xbmc.log(str(tmdb_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
-			else:
-				tmdb_id = i['movie']['ids']['tmdb']
-				tmdb_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' +str(tmdb_id)+ '.tmdb'
-				if not os.path.exists(tmdb_path) and str(tmdb_id).isnumeric():
-					Path(tmdb_path).touch()
-					#xbmc.log(str(tmdb_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+			#if '\\' in str(file_path):
+			#	tmdb_id = i['movie']['ids']['tmdb']
+			#	tmdb_path = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\' +str(tmdb_id)+ '.tmdb'
+			#	if not os.path.exists(tmdb_path) and str(tmdb_id).isnumeric():
+			#		Path(tmdb_path).touch()
+			#		#xbmc.log(str(tmdb_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+			#else:
+			#	tmdb_id = i['movie']['ids']['tmdb']
+			#	tmdb_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' +str(tmdb_id)+ '.tmdb'
+			#	if not os.path.exists(tmdb_path) and str(tmdb_id).isnumeric():
+			#		Path(tmdb_path).touch()
+			#		#xbmc.log(str(tmdb_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)#
+			tmdb_id = i['movie']['ids']['tmdb']
+			tmdb_path = Path(file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' +str(tmdb_id)+ '.tmdb')
+			if not os.path.exists(tmdb_path) and str(tmdb_id).isnumeric():
+				Path(tmdb_path).touch()
+				#xbmc.log(str(tmdb_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 		except:
 			pass
 
 		try:
-			if '\\' in str(file_path):
-				imdb_id = i['movie']['ids']['imdb']
-				imdb_path = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\' +str(imdb_id)+ '.imdb'
-				if not os.path.exists(imdb_path) and str(imdb_id[2:]).isnumeric():
-					Path(imdb_path).touch()
-					#xbmc.log(str(imdb_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
-			else:
-				imdb_id = i['movie']['ids']['imdb']
-				imdb_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' +str(imdb_id)+ '.imdb'
-				if not os.path.exists(imdb_path) and str(imdb_id[2:]).isnumeric():
-					Path(imdb_path).touch()
-					#xbmc.log(str(imdb_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+			#if '\\' in str(file_path):
+			#	imdb_id = i['movie']['ids']['imdb']
+			#	imdb_path = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\' +str(imdb_id)+ '.imdb'
+			#	if not os.path.exists(imdb_path) and str(imdb_id[2:]).isnumeric():
+			#		Path(imdb_path).touch()
+			#		#xbmc.log(str(imdb_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+			#else:
+			#	imdb_id = i['movie']['ids']['imdb']
+			#	imdb_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' +str(imdb_id)+ '.imdb'
+			#	if not os.path.exists(imdb_path) and str(imdb_id[2:]).isnumeric():
+			#		Path(imdb_path).touch()
+			#		#xbmc.log(str(imdb_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+			imdb_id = i['movie']['ids']['imdb']
+			imdb_path = Path(file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' +str(imdb_id)+ '.imdb')
+			if not os.path.exists(imdb_path) and str(imdb_id[2:]).isnumeric():
+				Path(imdb_path).touch()
+				#xbmc.log(str(imdb_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 		except:
 			pass
 
 		try:
-			if '\\' in str(file_path):
-				trakt_id = i['movie']['ids']['trakt']
-				trakt_path = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\' +str(trakt_id)+ '.trakt'
-				if not os.path.exists(trakt_path) and str(trakt_id).isnumeric():
-					Path(trakt_path).touch()
-			else:
-				trakt_id = i['movie']['ids']['trakt']
-				trakt_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' +str(trakt_id)+ '.trakt'
-				if not os.path.exists(trakt_path) and str(trakt_id).isnumeric():
-					Path(trakt_path).touch()
+			#if '\\' in str(file_path):
+			#	trakt_id = i['movie']['ids']['trakt']
+			#	trakt_path = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\' +str(trakt_id)+ '.trakt'
+			#	if not os.path.exists(trakt_path) and str(trakt_id).isnumeric():
+			#		Path(trakt_path).touch()
+			#else:
+			#	trakt_id = i['movie']['ids']['trakt']
+			#	trakt_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' +str(trakt_id)+ '.trakt'
+			#	if not os.path.exists(trakt_path) and str(trakt_id).isnumeric():
+			#		Path(trakt_path).touch()
+			#	#xbmc.log(str(trakt_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+			trakt_id = i['movie']['ids']['trakt']
+			trakt_path = Path(file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' +str(trakt_id)+ '.trakt')
+			if not os.path.exists(trakt_path) and str(trakt_id).isnumeric():
+				Path(trakt_path).touch()
 				#xbmc.log(str(trakt_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 		except:
 			pass
 
-		if '\\' in str(file_path):
-			if not os.path.exists(file_path + '\\' + str(i['movie']['ids']['tmdb'])):
-				os.mkdir(file_path + '\\' + str(i['movie']['ids']['tmdb']))
-		else:
-			if not os.path.exists(file_path + '/' + str(i['movie']['ids']['tmdb'])):
-				os.mkdir(file_path + '/' + str(i['movie']['ids']['tmdb']))
-
+		#if '\\' in str(file_path):
+		#	if not os.path.exists(file_path + '\\' + str(i['movie']['ids']['tmdb'])):
+		#		os.mkdir(file_path + '\\' + str(i['movie']['ids']['tmdb']))
+		#else:
+		#	if not os.path.exists(file_path + '/' + str(i['movie']['ids']['tmdb'])):
+		#		os.mkdir(file_path + '/' + str(i['movie']['ids']['tmdb']))
+		#		#xbmc.log(str(str(file_path + '/' + str(i['movie']['ids']['tmdb'])))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+		if not os.path.exists(Path(file_path + '/' + str(i['movie']['ids']['tmdb']))):
+			os.mkdir(Path(file_path + '/' + str(i['movie']['ids']['tmdb'])))
 			#xbmc.log(str(str(file_path + '/' + str(i['movie']['ids']['tmdb'])))+'===>OPEN_INFO', level=xbmc.LOGFATAL)
+
 
 		if not os.path.exists(nfo_path):
 			file = open(nfo_path, 'w')
@@ -2176,17 +2249,19 @@ def library_auto_movie():
 			file.close()
 			#xbmc.log(str(nfo_path)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 
-		if '\\' in str(file_path):
-			art_path = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\' + 'movie.fanart'
-		else:
-			art_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + 'movie.fanart'
+		#if '\\' in str(file_path):
+		#	art_path = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\' + 'movie.fanart'
+		#else:
+		#	art_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + 'movie.fanart'
+		art_path = Path(file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + 'movie.fanart')
 		if not os.path.exists(art_path):
 			tmdb_api = tmdb_api_key()
 			fanart_api = fanart_api_key()
-			if '\\' in str(basedir_tv):
-				show_file_path = basedir_tv + '\\' + str(i['movie']['ids']['tmdb']) + '\\'
-			else:
-				show_file_path = basedir_tv + '/' + str(i['movie']['ids']['tmdb']) + '/'
+			#if '\\' in str(basedir_tv):
+			#	show_file_path = basedir_tv + '\\' + str(i['movie']['ids']['tmdb']) + '\\'
+			#else:
+			#	show_file_path = basedir_tv + '/' + str(i['movie']['ids']['tmdb']) + '/'
+			show_file_path = Path(basedir_tv + '/' + str(i['movie']['ids']['tmdb']) + '/')
 			
 			#xbmc.log(str('get_art_fanart_movie')+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 			get_art_fanart_movie(str(i['movie']['ids']['tmdb']), fanart_api, show_file_path, art_path, tmdb_api)
@@ -2202,10 +2277,11 @@ def library_auto_movie():
 			file_name = file_name.replace(c,'')
 		url = "plugin://plugin.video.themoviedb.helper?info=play&amp;type=movie&amp;tmdb_id=" + str(i['movie']['ids']['tmdb'])
 		xbmc.log(str(url)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
-		if '\\' in str(file_path):
-			strm_path = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\' + file_name
-		else:
-			strm_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + file_name
+		#if '\\' in str(file_path):
+		#	strm_path = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\' + file_name
+		#else:
+		#	strm_path = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + file_name
+		strm_path = Path(file_path + '/' + str(i['movie']['ids']['tmdb']) + '/' + file_name)
 		"""
 		###OVERWRITE NFO
 		if os.path.exists(nfo_path):
@@ -2215,10 +2291,11 @@ def library_auto_movie():
 		"""
 
 		n_match = ''
-		if '\\' in str(file_path):
-			dir = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\'
-		else:
-			dir = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/'
+		#if '\\' in str(file_path):
+		#	dir = file_path + '\\' + str(i['movie']['ids']['tmdb']) + '\\'
+		#else:
+		#	dir = file_path + '/' + str(i['movie']['ids']['tmdb']) + '/'
+		dir = Path(file_path + '/' + str(i['movie']['ids']['tmdb']) + '/')
 		
 		if not os.path.exists(strm_path):
 			try:

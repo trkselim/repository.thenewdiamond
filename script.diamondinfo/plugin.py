@@ -14,15 +14,16 @@ class Main:
 			xbmcplugin.addSortMethod(self.handle, xbmcplugin.SORT_METHOD_TITLE)
 			xbmcplugin.addSortMethod(self.handle, xbmcplugin.SORT_METHOD_VIDEO_YEAR)
 			xbmcplugin.addSortMethod(self.handle, xbmcplugin.SORT_METHOD_DURATION)
-			if info.endswith('shows'):
+
+			if info.endswith('shows') or '=tv' in str(sys.argv):
 				xbmcplugin.setContent(self.handle, 'tvshows')
 			elif info.endswith('movies'):
 				xbmcplugin.setContent(self.handle, 'movies')
-			elif 'imdb_list' in str(info):
+			elif 'imdb_list' in str(info) or '=movie' in str(sys.argv):
 				xbmcplugin.setContent(self.handle, 'movies')
 			else:
 				xbmcplugin.setContent(self.handle, 'addons')
-			Utils.pass_list_to_skin(name=info, data=listitems, prefix=self.params.get('prefix', ''), handle=self.handle, limit=self.params.get('limit', 20))
+			Utils.pass_list_to_skin(name=info, data=listitems, prefix=self.params.get('prefix', ''), handle=self.handle, limit=len(listitems))
 		else:
 			items = [
 				('popularmovies', 'Popular Movies'),

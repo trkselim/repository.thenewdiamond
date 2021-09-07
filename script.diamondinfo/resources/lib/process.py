@@ -150,6 +150,19 @@ def start_info_actions(infos, params):
 			return wm.open_video_list(search_str=search_str, mode='search')
 
 		elif info == 'test_route':
+			#tvdb_id = 9999
+			#tmdb_id = 9999
+			#tmdb_api = library.tmdb_api_key()
+			#fanart_api = library.fanart_api_key()
+			#show_file_path = library.basedir_tv_path() + '\\' + str(tvdb_id) + '\\'
+			#art_path = file_path + '\\' + str(tvdb_id) + '\\' + 'tvshow.fanart'
+			#library.get_art_fanart_tv(tvdb_id, fanart_api, show_file_path, art_path, tmdb_id,tmdb_api)
+			#
+			#tmdb_id = 9999
+			#show_file_path = library.basedir_movies_path() + '\\' + str(tmdb_id) + '\\'
+			#art_path = library.basedir_movies_path() + '\\' + str(tmdb_id) + '\\' + 'movie.fanart'
+			#library.get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api)
+		
 			import xbmcvfs, xbmcaddon
 			xbmc.log(str(library.basedir_movies_path())+'===>PHIL', level=xbmc.LOGINFO)
 			xbmc.log(str(library.addon_ID())+'===>PHIL', level=xbmc.LOGINFO)
