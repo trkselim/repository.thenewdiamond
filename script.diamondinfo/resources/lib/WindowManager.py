@@ -42,7 +42,7 @@ class WindowManager(object):
 		else:
 			if Utils.SKIN_DIR == 'skin.estuary':
 				dialog = movieclass('script.diamondinfo-DialogVideoInfo-Estuary.xml', Utils.ADDON_PATH, id=movie_id, dbid=dbid)
-			elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod':
+			elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod' or 'skin.xonfluence' or 'skin.xenon18':
 				dialog = movieclass('script.diamondinfo-DialogVideoInfo-Aura.xml', Utils.ADDON_PATH, id=movie_id, dbid=dbid)
 			else:
 				dialog = movieclass('script.diamondinfo-DialogVideoInfo.xml', Utils.ADDON_PATH, id=movie_id, dbid=dbid)
@@ -84,7 +84,7 @@ class WindowManager(object):
 		else:
 			if Utils.SKIN_DIR == 'skin.estuary':
 				dialog = tvshow_class('script.diamondinfo-DialogVideoInfo-Estuary.xml', Utils.ADDON_PATH, tmdb_id=tmdb_id, dbid=dbid)
-			elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod':
+			elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod' or 'skin.xonfluence' or 'skin.xenon18':
 				dialog = tvshow_class('script.diamondinfo-DialogVideoInfo-Aura.xml', Utils.ADDON_PATH, tmdb_id=tmdb_id, dbid=dbid)
 			else:
 				dialog = tvshow_class('script.diamondinfo-DialogVideoInfo.xml', Utils.ADDON_PATH, tmdb_id=tmdb_id, dbid=dbid)
@@ -110,7 +110,7 @@ class WindowManager(object):
 		else:
 			if Utils.SKIN_DIR == 'skin.estuary':
 				dialog = season_class('script.diamondinfo-DialogVideoInfo-Estuary.xml', Utils.ADDON_PATH, tvshow_id=tvshow_id, season=season, dbid=dbid)
-			elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod':
+			elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod' or 'skin.xonfluence' or 'skin.xenon18':
 				dialog = season_class('script.diamondinfo-DialogVideoInfo-Aura.xml', Utils.ADDON_PATH, tvshow_id=tvshow_id, season=season, dbid=dbid)
 			else:
 				dialog = season_class('script.diamondinfo-DialogVideoInfo.xml', Utils.ADDON_PATH, tvshow_id=tvshow_id, season=season, dbid=dbid)
@@ -139,7 +139,7 @@ class WindowManager(object):
 		else:
 			if Utils.SKIN_DIR == 'skin.estuary':
 				dialog = ep_class('script.diamondinfo-DialogVideoInfo-Estuary.xml', Utils.ADDON_PATH, tvshow_id=tvshow_id, season=season, episode=episode, dbid=dbid)
-			elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod':
+			elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod' or 'skin.xonfluence' or 'skin.xenon18':
 				dialog = ep_class('script.diamondinfo-DialogVideoInfo-Aura.xml', Utils.ADDON_PATH, tvshow_id=tvshow_id, season=season, episode=episode, dbid=dbid)
 			else:
 				dialog = ep_class('script.diamondinfo-DialogVideoInfo.xml', Utils.ADDON_PATH, tvshow_id=tvshow_id, season=season, episode=episode, dbid=dbid)
@@ -170,7 +170,7 @@ class WindowManager(object):
 		actor_class = get_actor_window(DialogXML)
 		if Utils.SKIN_DIR == 'skin.estuary':
 			dialog = actor_class('script.diamondinfo-DialogInfo-Estuary.xml', Utils.ADDON_PATH, id=actor_id)
-		elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod':
+		elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod' or 'skin.xonfluence' or 'skin.xenon18':
 			dialog = actor_class('script.diamondinfo-DialogInfo-Aura.xml', Utils.ADDON_PATH, id=actor_id)
 		else:
 			dialog = actor_class('script.diamondinfo-DialogInfo.xml', Utils.ADDON_PATH, id=actor_id)
@@ -186,7 +186,7 @@ class WindowManager(object):
 		else:
 			if Utils.SKIN_DIR == 'skin.estuary':
 				dialog = browser_class('script.diamondinfo-VideoList-Estuary.xml', Utils.ADDON_PATH, listitems=listitems, filters=filters, mode=mode, list_id=list_id, filter_label=filter_label, type=media_type, search_str=search_str)
-			elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod':
+			elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod' or 'skin.xonfluence' or 'skin.xenon18':
 				dialog = browser_class('script.diamondinfo-VideoList-Aura.xml', Utils.ADDON_PATH, listitems=listitems, filters=filters, mode=mode, list_id=list_id, filter_label=filter_label, type=media_type, search_str=search_str)
 			else:
 				dialog = browser_class('script.diamondinfo-VideoList.xml', Utils.ADDON_PATH, listitems=listitems, filters=filters, mode=mode, list_id=list_id, filter_label=filter_label, type=media_type, search_str=search_str)
@@ -199,7 +199,7 @@ class WindowManager(object):
 	def open_slideshow(self, listitems, index):
 		if Utils.SKIN_DIR == 'skin.estuary':
 			slideshow = SlideShow('script.diamondinfo-SlideShow-Estuary.xml', Utils.ADDON_PATH, listitems=listitems, index=index)
-		elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod':
+		elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod' or 'skin.xonfluence' or 'skin.xenon18':
 			slideshow = SlideShow('script.diamondinfo-SlideShow-Aura.xml', Utils.ADDON_PATH, listitems=listitems, index=index)
 		else:
 			slideshow = SlideShow('script.diamondinfo-SlideShow.xml', Utils.ADDON_PATH, listitems=listitems, index=index)

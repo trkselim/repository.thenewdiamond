@@ -23,7 +23,10 @@ class Main:
 				xbmcplugin.setContent(self.handle, 'movies')
 			else:
 				xbmcplugin.setContent(self.handle, 'addons')
-			Utils.pass_list_to_skin(name=info, data=listitems, prefix=self.params.get('prefix', ''), handle=self.handle, limit=len(listitems))
+			try:
+				Utils.pass_list_to_skin(name=info, data=listitems, prefix=self.params.get('prefix', ''), handle=self.handle, limit=len(listitems))
+			except:
+				return
 		else:
 			items = [
 				('popularmovies', 'Popular Movies'),

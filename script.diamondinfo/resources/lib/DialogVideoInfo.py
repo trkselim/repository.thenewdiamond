@@ -73,7 +73,6 @@ def get_movie_window(window_type):
 					(1250, self.data['images']),
 					(1350, self.data['backdrops'])
 					]
-				
 
 		def onInit(self):
 			super(DialogVideoInfo, self).onInit()

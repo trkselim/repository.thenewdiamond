@@ -176,33 +176,6 @@ def start_info_actions(infos, params):
 			xbmc.log(str(library.tmdb_traktapi_new_path())+'===>PHIL', level=xbmc.LOGINFO)
 			xbmc.log(str(library.basedir_tv_path())+'===>PHIL', level=xbmc.LOGINFO)
 			xbmc.log(str(library.basedir_movies_path())+'===>PHIL', level=xbmc.LOGINFO)
-
-			library_root_folder = xbmcaddon.Addon(library.addon_ID()).getSetting('library_folder')
-			if library_root_folder == '':
-				addon = xbmcaddon.Addon()
-				addon_path = addon.getAddonInfo('path')
-				addonID = addon.getAddonInfo('id')
-				addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
-				library_root_folder = addonUserDataFolder
-			if '\\' in str(library_root_folder) and str(library_root_folder)[-1] != '\\':
-				library_root_folder += '\\'
-			elif '/' in library_root_folder and str(library_root_folder)[-1] != '/':
-				library_root_folder += '/'
-			xbmc.log(str(library_root_folder)+'===>PHIL', level=xbmc.LOGINFO)
-			
-			library_folder = library.basedir_tv_path()
-			if '\\' in str(library_folder) and str(library_folder)[-1] != '\\':
-				library_folder += '\\'
-			elif '/' in library_folder and str(library_folder)[-1] != '/':
-				library_folder += '/'
-			xbmc.log(str(library_folder)+'===>PHIL', level=xbmc.LOGINFO)
-			
-			library_folder = library.basedir_movies_path()
-			if '\\' in str(library_folder) and str(library_folder)[-1] != '\\':
-				library_folder += '\\'
-			elif '/' in library_folder and str(library_folder)[-1] != '/':
-				library_folder += '/'
-			xbmc.log(str(library_folder)+'===>PHIL', level=xbmc.LOGINFO)
 			xbmc.log(str(library.icon_path())+'===>PHIL', level=xbmc.LOGINFO)
 			realizer_test = xbmc.getCondVisibility('System.HasAddon(plugin.video.realizer)')
 			xbmc.log(str(realizer_test)+'===>PHIL', level=xbmc.LOGINFO)
