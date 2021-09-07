@@ -6,6 +6,7 @@ from resources.lib.WindowManager import wm
 from resources.lib.VideoPlayer import PLAYER
 from resources.lib.OnClickHandler import OnClickHandler
 from resources.lib.DialogBaseInfo import DialogBaseInfo
+from resources.lib import library
 
 ch = OnClickHandler()
 
@@ -104,7 +105,7 @@ def get_actor_window(window_type):
 #				xbmc.executebuiltin('RunPlugin(plugin://script.extendedinfo/?info=search_string&str=%s' % item_title)
 #				xbmc.log(str('RunPlugin(plugin://script.extendedinfo/?info=search_string&str=%s)' % item_title)+'===>TMDB_HELPER_3', level=xbmc.LOGNOTICE)
 				self.close()
-				xbmc.executebuiltin('RunScript(script.diamondinfo,info=search_string,str=%s)' % item_title)
+				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=search_string,str=%s)' % item_title)
 
 		@ch.click(450)
 		@ch.click(750)

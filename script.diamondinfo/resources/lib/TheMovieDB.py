@@ -3,6 +3,7 @@ import xbmc, xbmcgui, xbmcaddon
 from resources.lib import Utils
 from resources.lib import local_db
 from resources.lib.WindowManager import wm
+from resources.lib import library
 
 ext_key = xbmcaddon.Addon().getSetting('tmdb_api')
 
@@ -53,8 +54,8 @@ def handle_tmdb_movies(results=[], local_first=True, sortkey='year'):
 			genres = ''
 		tmdb_id = str(Utils.fetch(movie, 'id'))
 		artwork = get_image_urls(poster=movie.get('poster_path'), fanart=movie.get('backdrop_path'))
-		trailer = 'plugin://script.diamondinfo?info=playtrailer&&id=%s' % tmdb_id
-		path = 'plugin://script.diamondinfo?info=diamondinfo&&id=%s' % tmdb_id
+		trailer = 'plugin://'+str(library.addon_ID())+'?info=playtrailer&&id=%s' % tmdb_id
+		path = 'plugin://'+str(library.addon_ID())+'?info='+str(library.addon_ID_short())+'&&id=%s' % tmdb_id
 		listitem = {
 			'title': Utils.fetch(movie, 'title'),
 			'Label': Utils.fetch(movie, 'title'),
@@ -115,12 +116,12 @@ def handle_tmdb_tvshows(results, local_first=True, sortkey='year'):
 			'Popularity': Utils.fetch(tv, 'popularity'),
 			'credit_id': Utils.fetch(tv, 'credit_id'),
 			'Plot': Utils.fetch(tv, 'overview'),
-			'Trailer': 'plugin://script.diamondinfo?info=tvtrailer&&id=%s' % tmdb_id,
+			'Trailer': 'plugin://'+str(library.addon_ID())+'?info=tvtrailer&&id=%s' % tmdb_id,
 			'year': Utils.get_year(Utils.fetch(tv, 'first_air_date')),
 			'media_type': 'tv',
 			'mediatype': 'tvshow',
 			'character': Utils.fetch(tv, 'character'),
-			'path': 'plugin://script.diamondinfo?info=extendedtvinfo&&id=%s' % tmdb_id,
+			'path': 'plugin://'+str(library.addon_ID())+'?info=extendedtvinfo&&id=%s' % tmdb_id,
 			'Rating': Utils.fetch(tv, 'vote_average'),
 			'User_Rating': str(Utils.fetch(tv, 'rating')),
 			'Votes': Utils.fetch(tv, 'vote_count'),
@@ -192,7 +193,7 @@ def handle_tmdb_misc(results):
 			'certification': Utils.fetch(item, 'certification') + Utils.fetch(item, 'rating'),
 			'item_count': Utils.fetch(item, 'item_count'),
 			'release_date': Utils.fetch(item, 'release_date'),
-			'path': 'plugin://script.diamondinfo?info=listmovies&---id=%s' % Utils.fetch(item, 'id'),
+			'path': 'plugin://'+str(library.addon_ID())+'?info=listmovies&---id=%s' % Utils.fetch(item, 'id'),
 			'year': Utils.get_year(Utils.fetch(item, 'release_date')),
 			'iso_3166_1': Utils.fetch(item, 'iso_3166_1').lower(),
 			'author': Utils.fetch(item, 'author'),
@@ -244,7 +245,7 @@ def handle_tmdb_people(results):
 			'id': str(person['id']),
 			'cast_id': str(Utils.fetch(person, 'cast_id')),
 			'credit_id': str(Utils.fetch(person, 'credit_id')),
-			'path': 'plugin://script.diamondinfo?info=extendedactorinfo&&id=%s' % str(person['id']),
+			'path': 'plugin://'+str(library.addon_ID())+'?info=extendedactorinfo&&id=%s' % str(person['id']),
 			'deathday': Utils.fetch(person, 'deathday'),
 			'place_of_birth': Utils.fetch(person, 'place_of_birth'),
 			'placeofbirth': Utils.fetch(person, 'place_of_birth'),
@@ -497,8 +498,8 @@ def extended_movie_info(movie_id=None, dbid=None, cache_time=14):
 		'Premiered': Utils.fetch(response, 'release_date'),
 		'Studio': ' / '.join(Studio),
 		'year': Utils.get_year(Utils.fetch(response, 'release_date')),
-		'path': 'plugin://script.diamondinfo?info=diamondinfo&&id=%s' % movie_id,
-		'trailer': 'plugin://script.diamondinfo?info=playtrailer&&id=%s' % movie_id
+		'path': 'plugin://'+str(library.addon_ID())+'?info='+str(library.addon_ID_short())+'&&id=%s' % movie_id,
+		'trailer': 'plugin://'+str(library.addon_ID())+'?info=playtrailer&&id=%s' % movie_id
 		}
 	movie.update(artwork)
 	videos = handle_tmdb_videos(response['videos']['results']) if 'videos' in response else []
@@ -579,8 +580,8 @@ def extended_tvshow_info(tvshow_id=None, cache_time=7, dbid=None):
 		'User_Rating': str(Utils.fetch(response, 'rating')),
 		'Votes': Utils.fetch(response, 'vote_count'),
 		'Status': translate_status(Utils.fetch(response, 'status')),
-		'path': 'plugin://script.diamondinfo?info=extendedtvinfo&&id=%s' % tvshow_id,
-		'trailer': 'plugin://script.diamondinfo?info=playtvtrailer&&id=%s' % tvshow_id,
+		'path': 'plugin://'+str(library.addon_ID())+'?info=extendedtvinfo&&id=%s' % tvshow_id,
+		'trailer': 'plugin://'+str(library.addon_ID())+'?info=playtvtrailer&&id=%s' % tvshow_id,
 		'ShowType': Utils.fetch(response, 'type'),
 		'homepage': Utils.fetch(response, 'homepage'),
 		'last_air_date': Utils.fetch(response, 'last_air_date'),
@@ -648,7 +649,7 @@ def extended_season_info(tvshow_id, season_number):
 		'tvrage_id': tvrage_id,
 		'year': year,
 		'season': season_number,
-		'path': 'plugin://script.diamondinfo?info=seasoninfo&tvshow=%s&season=%s' % (Utils.fetch(tvshow, 'name'), season_number),
+		'path': 'plugin://'+str(library.addon_ID())+'?info=seasoninfo&tvshow=%s&season=%s' % (Utils.fetch(tvshow, 'name'), season_number),
 		'release_date': response['air_date'],
 		'AirDate': response['air_date']
 		}
@@ -705,7 +706,7 @@ def extended_episode_info(tvshow_id, season, episode, cache_time=7):
 		'tvshow_id': tmdb_id,
 		'tvdb_id': tvdb_id,
 		'actors': actors,
-		'path': 'plugin://script.diamondinfo?info=extendedepisodeinfo&tvshow_id=%s&season=%s&episode=%s' % (tvshow_id, season, episode),
+		'path': 'plugin://'+str(library.addon_ID())+'?info=extendedepisodeinfo&tvshow_id=%s&season=%s&episode=%s' % (tvshow_id, season, episode),
 		'crew': crew,
 		'guest_stars': guest_stars,
 		'videos': videos,

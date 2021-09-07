@@ -4,9 +4,9 @@ from functools import wraps
 from resources.lib import library
 
 
-ADDON_PATH = xbmcvfs.translatePath('special://home/addons/script.diamondinfo')
-ADDON_DATA_PATH = xbmcvfs.translatePath('special://profile/addon_data/script.diamondinfo')
-IMAGES_DATA_PATH = xbmcvfs.translatePath('special://profile/addon_data/script.diamondinfo/images')
+ADDON_PATH = xbmcvfs.translatePath('special://home/addons/'+str(library.addon_ID()))
+ADDON_DATA_PATH = xbmcvfs.translatePath('special://profile/addon_data/'+str(library.addon_ID()))
+IMAGES_DATA_PATH = xbmcvfs.translatePath('special://profile/addon_data/'+str(library.addon_ID())+'/images')
 SKIN_DIR = xbmc.getSkinDir()
 AUTOPLAY_TRAILER = xbmcaddon.Addon().getSetting('autoplay_trailer')
 NETFLIX_VIEW = xbmcaddon.Addon().getSetting('netflix_view')
@@ -287,7 +287,7 @@ def get_file(url):
 
 def log(txt):
 	if isinstance(txt, str):
-		message = 'script.diamondinfo:  %s' % txt
+		message = ''+str(library.addon_ID())+':  %s' % txt
 
 def get_browse_dialog(default='', heading='Browse', dlg_type=3, shares='files', mask='', use_thumbs=False, treat_as_folder=False):
 	value = xbmcgui.Dialog().browse(dlg_type, heading, shares, mask, use_thumbs, treat_as_folder, default)

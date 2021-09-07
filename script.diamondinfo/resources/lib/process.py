@@ -212,10 +212,10 @@ def start_info_actions(infos, params):
 
 		elif info == 'trakt_watched' or info == 'trakt_coll' or info == 'trakt_list':
 			from resources.lib import TheMovieDB
-			#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_watched&trakt_type=movie&script=True)'
-			#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_watched&trakt_type=tv&script=True)'
-			#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_coll&trakt_type=movie&script=True)'
-			#kodi-send --action='RunPlugin(plugin://script.diamondinfo/?info=trakt_coll&trakt_type=tv&script=True)'
+			#kodi-send --action='RunPlugin(plugin://'+str(library.addon_ID())+'/?info=trakt_watched&trakt_type=movie&script=True)'
+			#kodi-send --action='RunPlugin(plugin://'+str(library.addon_ID())+'/?info=trakt_watched&trakt_type=tv&script=True)'
+			#kodi-send --action='RunPlugin(plugin://'+str(library.addon_ID())+'/?info=trakt_coll&trakt_type=movie&script=True)'
+			#kodi-send --action='RunPlugin(plugin://'+str(library.addon_ID())+'/?info=trakt_coll&trakt_type=tv&script=True)'
 			trakt_type = str(params['trakt_type'])
 			Utils.show_busy()
 			try:
@@ -382,7 +382,7 @@ def start_info_actions(infos, params):
 			resolve_url(params.get('handle'))
 			Utils.get_kodi_json(method='Player.Open', params='{"item": {"songid": %s}}' % params.get('dbid'))
 
-		elif info == 'diamondinfodialog':
+		elif info == 'diamondinfodialog' or info == 'extendedinfodialog' or info == str(library.addon_ID_short()) + 'dialog':
 			resolve_url(params.get('handle'))
 			if xbmc.getCondVisibility('System.HasActiveModalDialog | System.HasModalDialog'):
 				container_id = ''
@@ -393,19 +393,19 @@ def start_info_actions(infos, params):
 				dbid = xbmc.getInfoLabel('%sListItem.Property(dbid)' % container_id)
 			db_type = xbmc.getInfoLabel('%sListItem.DBType' % container_id)
 			if db_type == 'movie':
-				xbmc.executebuiltin('RunScript(script.diamondinfo,info=diamondinfo,dbid=%s,id=%s,imdb_id=%s,name=%s)' % (dbid, xbmc.getInfoLabel('ListItem.Property(id)'), xbmc.getInfoLabel('ListItem.IMDBNumber'), xbmc.getInfoLabel('ListItem.Title')))
+				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info='+str(library.addon_ID_short())+',dbid=%s,id=%s,imdb_id=%s,name=%s)' % (dbid, xbmc.getInfoLabel('ListItem.Property(id)'), xbmc.getInfoLabel('ListItem.IMDBNumber'), xbmc.getInfoLabel('ListItem.Title')))
 			elif db_type == 'tvshow':
-				xbmc.executebuiltin('RunScript(script.diamondinfo,info=extendedtvinfo,dbid=%s,id=%s,tvdb_id=%s,name=%s)' % (dbid, xbmc.getInfoLabel('ListItem.Property(id)'), xbmc.getInfoLabel('ListItem.Property(tvdb_id)'), xbmc.getInfoLabel('ListItem.Title')))
+				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=extendedtvinfo,dbid=%s,id=%s,tvdb_id=%s,name=%s)' % (dbid, xbmc.getInfoLabel('ListItem.Property(id)'), xbmc.getInfoLabel('ListItem.Property(tvdb_id)'), xbmc.getInfoLabel('ListItem.Title')))
 			elif db_type == 'season':
-				xbmc.executebuiltin('RunScript(script.diamondinfo,info=seasoninfo,tvshow=%s,season=%s)' % (xbmc.getInfoLabel('ListItem.TVShowTitle'), xbmc.getInfoLabel('ListItem.Season')))
+				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=seasoninfo,tvshow=%s,season=%s)' % (xbmc.getInfoLabel('ListItem.TVShowTitle'), xbmc.getInfoLabel('ListItem.Season')))
 			elif db_type == 'episode':
-				xbmc.executebuiltin('RunScript(script.diamondinfo,info=extendedepisodeinfo,tvshow=%s,season=%s,episode=%s)' % (xbmc.getInfoLabel('ListItem.TVShowTitle'), xbmc.getInfoLabel('ListItem.Season'), xbmc.getInfoLabel('ListItem.Episode')))
+				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=extendedepisodeinfo,tvshow=%s,season=%s,episode=%s)' % (xbmc.getInfoLabel('ListItem.TVShowTitle'), xbmc.getInfoLabel('ListItem.Season'), xbmc.getInfoLabel('ListItem.Episode')))
 			elif db_type in ['actor', 'director']:
-				xbmc.executebuiltin('RunScript(script.diamondinfo,info=extendedactorinfo,name=%s)' % xbmc.getInfoLabel('ListItem.Label'))
+				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=extendedactorinfo,name=%s)' % xbmc.getInfoLabel('ListItem.Label'))
 			else:
 				Utils.notify('Error', 'Could not find valid content type')
 
-		elif info == 'diamondinfo':
+		elif info == 'diamondinfo' or info == 'extendedinfo' or info == str(library.addon_ID_short()):
 			resolve_url(params.get('handle'))
 			xbmcgui.Window(10000).setProperty('infodialogs.active', 'true')
 			wm.open_movie_info(movie_id=params.get('id'), dbid=params.get('dbid'), imdb_id=params.get('imdb_id'), name=params.get('name'))
@@ -521,7 +521,7 @@ def start_info_actions(infos, params):
 		elif info == 'deletecache':
 			resolve_url(params.get('handle'))
 			xbmcgui.Window(10000).clearProperty('infodialogs.active')
-			xbmcgui.Window(10000).clearProperty('diamondinfo_running')
+			xbmcgui.Window(10000).clearProperty(str(library.addon_ID_short())+'_running')
 			for rel_path in os.listdir(Utils.ADDON_DATA_PATH):
 				path = os.path.join(Utils.ADDON_DATA_PATH, rel_path)
 				try:

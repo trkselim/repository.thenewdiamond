@@ -4,6 +4,7 @@ from resources.lib import YouTube
 from resources.lib import TheMovieDB
 from resources.lib.WindowManager import wm
 from resources.lib.OnClickHandler import OnClickHandler
+from resources.lib import library
 
 ch = OnClickHandler()
 
@@ -26,6 +27,7 @@ class DialogBaseInfo(object):
 		self.window = xbmcgui.Window(self.window_id)
 		self.window.setProperty('type', self.type)
 		xbmcgui.Window(10000).setProperty('diamondinfo_fanart', self.info.get('fanart', ''))
+		xbmcgui.Window(10000).setProperty(str(library.addon_ID_short())+'_fanart', self.info.get('fanart', ''))
 
 	def onAction(self, action):
 		ch.serve_action(action, self.getFocusId(), self)

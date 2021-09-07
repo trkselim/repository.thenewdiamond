@@ -2,10 +2,11 @@ import sys
 import xbmcgui
 from resources.lib import process
 from resources.lib.WindowManager import wm
+from resources.lib import library
 
 class Main:
 	def __init__(self):
-		xbmcgui.Window(10000).setProperty('diamondinfo_running', 'True')
+		xbmcgui.Window(10000).setProperty(str(library.addon_ID_short())+'_running', 'True')
 		self._parse_argv()
 		if self.infos:
 			process.start_info_actions(self.infos, self.params)
@@ -13,7 +14,7 @@ class Main:
 			xbmcgui.Window(10000).setProperty('infodialogs.active', 'true')
 			wm.open_video_list()
 			xbmcgui.Window(10000).clearProperty('infodialogs.active')
-		xbmcgui.Window(10000).clearProperty('diamondinfo_running')
+		xbmcgui.Window(10000).clearProperty(str(library.addon_ID_short())+'_running')
 
 	def _parse_argv(self):
 		self.infos = []

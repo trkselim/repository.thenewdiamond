@@ -1,10 +1,11 @@
 import sys
 import xbmcgui, xbmcplugin
 from resources.lib import process
+from resources.lib import library
 
 class Main:
 	def __init__(self):
-		xbmcgui.Window(10000).setProperty('diamondinfo_running', 'True')
+		xbmcgui.Window(10000).setProperty(str(library.addon_ID_short())+'_running', 'True')
 		self._parse_argv()
 		if self.infos:
 			process.start_info_actions(self.infos, self.params)
@@ -27,29 +28,29 @@ class Main:
 				'moviedbbrowser': 'Search...'
 				}
 			xbmcplugin.setContent(self.handle, 'addons')
-			media_path = 'special://home/addons/script.diamondinfo/resources/skins/Default/media/'
+			media_path = 'special://home/addons/'+str(library.addon_ID())+'/resources/skins/Default/media/'
 			for key, value in sorted(movies.items()):
 				li = xbmcgui.ListItem(value)
 				li.setArt({'thumb': media_path + 'tm.png', 'fanart': media_path + 'tm-fanart.jpg'})
-				url = 'plugin://script.diamondinfo?info=%s' % key
+				url = 'plugin://'+str(library.addon_ID())+'?info=%s' % key
 				xbmcplugin.addDirectoryItem(self.handle, url, li, False)
 			for key, value in sorted(tvshows.items()):
 				li = xbmcgui.ListItem(value)
 				li.setArt({'thumb': media_path + 'tm.png', 'fanart': media_path + 'tm-fanart.jpg'})
-				url = 'plugin://script.diamondinfo?info=%s' % key
+				url = 'plugin://'+str(library.addon_ID())+'?info=%s' % key
 				xbmcplugin.addDirectoryItem(self.handle, url, li, False)
 			for key, value in sorted(library.items()):
 				li = xbmcgui.ListItem(value)
 				li.setArt({'thumb': media_path + 'tm.png', 'fanart': media_path + 'tm-fanart.jpg'})
-				url = 'plugin://script.diamondinfo?info=%s' % key
+				url = 'plugin://'+str(library.addon_ID())+'?info=%s' % key
 				xbmcplugin.addDirectoryItem(self.handle, url, li, False)
 			for key, value in search.items():
 				li = xbmcgui.ListItem(value)
 				li.setArt({'thumb': media_path + 'tm.png', 'fanart': media_path + 'tm-fanart.jpg'})
-				url = 'plugin://script.diamondinfo?info=%s' % key
+				url = 'plugin://'+str(library.addon_ID())+'?info=%s' % key
 				xbmcplugin.addDirectoryItem(self.handle, url, li, False)
 			xbmcplugin.endOfDirectory(self.handle)
-		xbmcgui.Window(10000).clearProperty('diamondinfo_running')
+		xbmcgui.Window(10000).clearProperty(str(library.addon_ID_short())+'_running')
 
 	def _parse_argv(self):
 		args = sys.argv[2][1:]

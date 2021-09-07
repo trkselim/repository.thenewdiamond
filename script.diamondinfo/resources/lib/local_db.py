@@ -1,6 +1,7 @@
 import json
 import xbmc, xbmcgui
 from resources.lib import Utils
+from resources.lib import library
 
 id_list = []
 title_list = []
@@ -36,8 +37,8 @@ def get_db_tvshows(filter_str=''):
 		return []
 
 def handle_db_movies(movie):
-	trailer = 'plugin://script.diamondinfo?info=playtrailer&&dbid=%s' % movie['movieid']
-	path = 'plugin://script.diamondinfo?info=diamondinfo&&dbid=%s' % movie['movieid']
+	trailer = 'plugin://'+str(library.addon_ID())+'?info=playtrailer&&dbid=%s' % movie['movieid']
+	path = 'plugin://'+str(library.addon_ID())+'?info='+str(library.addon_ID_short())+'&&dbid=%s' % movie['movieid']
 	if (movie['resume']['position'] and movie['resume']['total']) > 0:
 		resume = 'true'
 		played = '%s' % int((float(movie['resume']['position']) / float(movie['resume']['total'])) *100)
@@ -90,7 +91,7 @@ def handle_db_movies(movie):
 	return dict((k, v) for k, v in db_movie.items() if v)
 
 def handle_db_tvshows(tvshow):
-	path = 'plugin://script.diamondinfo?info=extendedtvinfo&&dbid=%s' % tvshow['tvshowid']
+	path = 'plugin://'+str(library.addon_ID())+'?info=extendedtvinfo&&dbid=%s' % tvshow['tvshowid']
 	db_tvshow = {
 		'mediatype': 'tvshow',
 		'fanart': tvshow['art'].get('fanart', ''),

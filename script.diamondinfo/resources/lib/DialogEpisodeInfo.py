@@ -75,9 +75,9 @@ def get_episode_window(window_type):
 			if selection == 1:
 				wm.open_season_info(prev_window=self, tvshow_id=self.tvshow_id, season=self.info['season'], tvshow='')
 			if selection == 2:
-				#xbmc.executebuiltin('RunScript(script.diamondinfo,info=search_string,str=%s)' % self.listitem.getLabel())
+				#xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=search_string,str=%s)' % self.listitem.getLabel())
 				self.close()
-				xbmc.executebuiltin('RunScript(script.diamondinfo,info=search_person,person=%s)' % self.listitem.getLabel())
+				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=search_person,person=%s)' % self.listitem.getLabel())
 
 		@ch.click(132)
 		def open_text(self):
@@ -113,7 +113,7 @@ def get_episode_window(window_type):
 		@ch.click(445)
 		def show_manage_dialog(self):
 			manage_list = []
-			manage_list.append(["Diamond Info's settings", 'Addon.OpenSettings("script.diamondinfo")'])
+			manage_list.append(["Diamond Info's settings", 'Addon.OpenSettings("'+str(library.addon_ID())+'")'])
 			manage_list.append(["TMDBHelper Context", 'RunScript(plugin.video.themoviedb.helper,sync_trakt,tmdb_type=tv,tmdb_id='+str(self.info['season'])+',season='+str(self.tvshow_id)+',episode='+str(self.info['episode'])+')'])
 			manage_list.append(["TmdbHelper settings", 'Addon.OpenSettings("plugin.video.themoviedb.helper")'])
 			manage_list.append(["YouTube's settings", 'Addon.OpenSettings("plugin.video.youtube")'])

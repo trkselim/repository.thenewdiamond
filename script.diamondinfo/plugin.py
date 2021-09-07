@@ -7,7 +7,7 @@ from resources.lib import library
 
 class Main:
 	def __init__(self):
-		xbmcgui.Window(10000).setProperty('diamondinfo_running', 'True')
+		xbmcgui.Window(10000).setProperty(str(library.addon_ID_short())+'_running', 'True')
 		self._parse_argv()
 		for info in self.infos:
 			listitems = process.start_info_actions(self.infos, self.params)
@@ -95,18 +95,18 @@ class Main:
 
 			xbmcplugin.setContent(self.handle, 'addons')
 			for key, value in items:
-				thumb_path  = 'special://home/addons/script.diamondinfo/resources/skins/Default/media/tmdb/thumb.png'
-				fanart_path = 'special://home/addons/script.diamondinfo/resources/skins/Default/media/tmdb/fanart.jpg'
-				url = 'plugin://script.diamondinfo?info=%s&limit=0&script=False' % key
+				thumb_path  = 'special://home/addons/'+str(library.addon_ID())+'/resources/skins/Default/media/tmdb/thumb.png'
+				fanart_path = 'special://home/addons/'+str(library.addon_ID())+'/resources/skins/Default/media/tmdb/fanart.jpg'
+				url = 'plugin://'+str(library.addon_ID())+'?info=%s&limit=0&script=False' % key
 				li = xbmcgui.ListItem(label=value)
 				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
 				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=True)
 			for key, value in NoFolder_items:
-				thumb_path  = 'special://home/addons/script.diamondinfo/resources/skins/Default/media/tmdb/thumb.png'
-				fanart_path = 'special://home/addons/script.diamondinfo/resources/skins/Default/media/tmdb/fanart.jpg'
-				url = 'plugin://script.diamondinfo?info=%s' % key
+				thumb_path  = 'special://home/addons/'+str(library.addon_ID())+'/resources/skins/Default/media/tmdb/thumb.png'
+				fanart_path = 'special://home/addons/'+str(library.addon_ID())+'/resources/skins/Default/media/tmdb/fanart.jpg'
+				url = 'plugin://'+str(library.addon_ID())+'?info=%s' % key
 				if key == 'imdb_list':
-					url = 'plugin://script.diamondinfo?info=imdb_list&script=False&list=%s' % value[1]
+					url = 'plugin://'+str(library.addon_ID())+'?info=imdb_list&script=False&list=%s' % value[1]
 					#xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
 					li = xbmcgui.ListItem(label=value[0])
 					isFolder = True
@@ -116,8 +116,8 @@ class Main:
 				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
 				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=isFolder)
 			for key, value in trakt_items:
-				thumb_path  = 'special://home/addons/script.diamondinfo/resources/skins/Default/media/tmdb/thumb.png'
-				fanart_path = 'special://home/addons/script.diamondinfo/resources/skins/Default/media/tmdb/fanart.jpg'
+				thumb_path  = 'special://home/addons/'+str(library.addon_ID())+'/resources/skins/Default/media/tmdb/thumb.png'
+				fanart_path = 'special://home/addons/'+str(library.addon_ID())+'/resources/skins/Default/media/tmdb/fanart.jpg'
 				script = 'False'
 				if value == 'Trakt Watched Movies' or value == 'Trakt Collection Movies':
 					trakt_type = 'movie'
@@ -131,16 +131,16 @@ class Main:
 							list_slug = i['list_slug']
 							trakt_sort_by = i['sort_by']
 							trakt_sort_order = i['sort_order']
-					url = 'plugin://script.diamondinfo?info='+str(key)+'&script=False&trakt_type=' +str(trakt_type)+'&list_slug='+str(list_slug)+'&user_id=' +str(user_id)+'&trakt_sort_by='+str(trakt_sort_by)+'&trakt_sort_order='+str(trakt_sort_order)+'&trakt_list_name='+str(value)
-				#url = 'plugin://script.diamondinfo?info=%s&script=False&trakt_type=%s' % key, trakt_type
+					url = 'plugin://'+str(library.addon_ID())+'?info='+str(key)+'&script=False&trakt_type=' +str(trakt_type)+'&list_slug='+str(list_slug)+'&user_id=' +str(user_id)+'&trakt_sort_by='+str(trakt_sort_by)+'&trakt_sort_order='+str(trakt_sort_order)+'&trakt_list_name='+str(value)
+				#url = 'plugin://'+str(library.addon_ID())+'?info=%s&script=False&trakt_type=%s' % key, trakt_type
 				if key != 'trakt_list':
-					url = 'plugin://script.diamondinfo?info='+str(key)+'&script=False&trakt_type=' +str(trakt_type)
+					url = 'plugin://'+str(library.addon_ID())+'?info='+str(key)+'&script=False&trakt_type=' +str(trakt_type)
 				li = xbmcgui.ListItem(label=value)
 				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
 				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=True)
 			Utils.hide_busy()
 			xbmcplugin.endOfDirectory(self.handle)
-		xbmcgui.Window(10000).clearProperty('diamondinfo_running')
+		xbmcgui.Window(10000).clearProperty(str(library.addon_ID_short())+'_running')
 
 	def _parse_argv(self):
 		args = sys.argv[2][1:]

@@ -98,14 +98,13 @@ def get_movie_window(window_type):
 		@ch.action('contextmenu', 1000)
 		def actor_context_menu(self):
 			listitems = ['Search Person']
-			#selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
 			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
 				selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
 			else:
 				selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
 			if selection == 0:
 				self.close()
-				xbmc.executebuiltin('RunScript(script.diamondinfo,info=search_person,person=%s)' % self.listitem.getLabel())
+				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=search_person,person=%s)' % self.listitem.getLabel())
 			
 		@ch.action('contextmenu', 150)
 		@ch.action('contextmenu', 250)
@@ -128,7 +127,7 @@ def get_movie_window(window_type):
 				listitems = ['Play - TMDB Helper']
 
 			listitems += ['Search item']
-			#selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+
 			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
 				selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
 			else:
@@ -144,11 +143,8 @@ def get_movie_window(window_type):
 			if selection == 1:
 				import urllib
 				item_title = self.listitem.getProperty('TVShowTitle') or self.listitem.getProperty('Title')
-				#item_title = urllib.parse.quote_plus(item_title)
-#				xbmc.executebuiltin('RunPlugin(plugin://script.extendedinfo/?info=search_string&str=%s' % item_title)
-#				xbmc.log(str('RunPlugin(plugin://script.extendedinfo/?info=search_string&str=%s)' % item_title)+'===>TMDB_HELPER_3', level=xbmc.LOGNOTICE)
 				self.close()
-				xbmc.executebuiltin('RunScript(script.diamondinfo,info=search_string,str=%s)' % item_title)
+				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=search_string,str=%s)' % item_title)
 
 
 		@ch.click(150)
@@ -209,7 +205,6 @@ def get_movie_window(window_type):
 
 		@ch.click(120)
 		def search_in_meta_by_title(self):
-			#url = 'plugin://plugin.video.diamondplayer/movies/tmdb/search_term/%s/1/' % self.info.get('title', '')
 			url =  'plugin://plugin.video.themoviedb.helper/?info=details&amp;type=movie&amp;query=%s' % self.info.get('title', '')
 			self.close()
 			xbmc.executebuiltin('ActivateWindow(videos,%s,return)' % url)
@@ -225,23 +220,10 @@ def get_movie_window(window_type):
 				url = ''
 				PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=dbid)
 			else:
-				
-				#wm.add_to_stack(self)
-				##url = 'plugin://plugin.video.diamondplayer/movies/play/tmdb/%s' % self.info.get('id', '')
 				url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=movie&amp;tmdb_id=%s' % self.info.get('id', '')
 				#PLAYER.play_from_button(url, listitem=None, window=self)
 				Utils.hide_busy()
 				PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=0)
-				#self.close()
-				#xbmc.executebuiltin('Dialog.Close(movieinformation)')
-				#xbmc.executebuiltin('Dialog.Close(all,true)')
-				#xbmc.executebuiltin('RunPlugin(%s)' % url)
-				#xbmcgui.Window(10000).clearProperty('infodialogs.active')
-				#xbmcgui.Window(10000).clearProperty('diamondinfo_running')
-				#PLAYER.wait_for_video_end()
-				#xbmcgui.Window(10000).setProperty('diamondinfo_running', 'True')
-				#xbmcgui.Window(10000).setProperty('infodialogs.active', 'true')
-				#return wm.pop_stack()
 
 		@ch.action('contextmenu', 8)
 		def play_movie_choose_player(self):
@@ -250,15 +232,13 @@ def get_movie_window(window_type):
 				url = ''
 				PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=dbid)
 			else:
-				#url = 'plugin://plugin.video.diamondplayer/movies/play_choose_player/tmdb/%s/False' % self.info.get('id', '')
 				url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=movie&amp;tmdb_id=%s' % self.info.get('id', '')
-				#xbmc.executebuiltin('RunPlugin(%s)' % url)
 				PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=dbid)
 
 		@ch.click(445)
 		def show_manage_dialog(self):
 			manage_list = []
-			manage_list.append(["Diamond Info's settings", 'Addon.OpenSettings("script.diamondinfo")'])
+			manage_list.append(["Diamond Info's settings", 'Addon.OpenSettings("'+str(library.addon_ID())+'")'])
 			manage_list.append(["TmdbHelper Context", 'RunScript(plugin.video.themoviedb.helper,sync_trakt,tmdb_type=movie,tmdb_id='+str(self.info.get('id', ''))+')'])
 			manage_list.append(["TmdbHelper settings", 'Addon.OpenSettings("plugin.video.themoviedb.helper")'])
 			manage_list.append(["YouTube's settings", 'Addon.OpenSettings("plugin.video.youtube")'])
@@ -266,10 +246,6 @@ def get_movie_window(window_type):
 			settings_user_config = xbmcaddon.Addon(library.addon_ID()).getSetting('settings_user_config')
 			if settings_user_config == 'Settings Selection Menu':
 				selection = xbmcgui.Dialog().select(heading='Settings', list=[i[0] for i in manage_list])
-				#if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
-				#	selection = xbmcgui.Dialog().contextmenu([i[0] for i in manage_list])
-				#else:
-				#	selection = xbmcgui.Dialog().select(heading='Settings', list=listitems)
 			else:
 				selection = 1
 			if selection > -1:
@@ -278,19 +254,14 @@ def get_movie_window(window_type):
 
 		@ch.click(18)
 		def add_movie_to_library(self):
-			#if not xbmc.getCondVisibility('System.HasAddon(plugin.video.diamondplayer)'):
-			#	xbmc.executebuiltin('RunPlugin(plugin://plugin.video.diamondplayer/setup/total)')
-			if xbmcgui.Dialog().yesno('diamondinfo', 'Add [B]%s[/B] to library?' % self.info['title']):
-				#xbmc.executebuiltin('RunPlugin(plugin://plugin.video.diamondplayer/movies/add_to_library/tmdb/%s)' % self.info.get('id', ''))
+			if xbmcgui.Dialog().yesno(str(library.addon_ID_short()), 'Add [B]%s[/B] to library?' % self.info['title']):
 				library.trakt_add_movie(self.info['id'],'Add')
 				Utils.after_add(type='movie')
 				Utils.notify(header='[B]%s[/B] added to library' % self.info['title'], message='Exit & re-enter to refresh', icon=self.info['poster'], time=1000, sound=False)
 
 		@ch.click(19)
 		def remove_movie_from_library(self):
-			#if not xbmc.getCondVisibility('System.HasAddon(plugin.video.diamondplayer)'):
-			#	xbmc.executebuiltin('RunPlugin(plugin://plugin.video.diamondplayer/setup/total)')
-			if xbmcgui.Dialog().yesno('diamondinfo', 'Remove [B]%s[/B] from library?' % self.info['title']):
+			if xbmcgui.Dialog().yesno(str(library.addon_ID_short()), 'Remove [B]%s[/B] from library?' % self.info['title']):
 				if os.path.exists(xbmcvfs.translatePath('%s%s/' % (Utils.DIAMONDPLAYER_MOVIE_FOLDER, self.info['id']))):
 					Utils.get_kodi_json(method='VideoLibrary.RemoveMovie', params='{"movieid": %d}' % int(self.info['dbid']))
 					shutil.rmtree(xbmcvfs.translatePath('%s%s/' % (Utils.DIAMONDPLAYER_MOVIE_FOLDER, self.info['id'])))

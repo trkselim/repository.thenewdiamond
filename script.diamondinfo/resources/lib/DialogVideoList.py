@@ -133,15 +133,15 @@ def get_tmdb_window(window_type):
             if self.listitem.getProperty('dbid'):
                 listitems += ['Remove from library'] #1
                 if self.type == 'tv':
-                    listitems += ['Play Kodi Next Episode'] #2 (TV+ DBID)
-                    listitems += ['Play Trakt Next Episode'] #3 (TV + DBID)
+                    listitems += ['Play Kodi Next Episode']
+                    listitems += ['Play Trakt Next Episode']
             else:
-                listitems += ['Add to library'] #1
+                listitems += ['Add to library']
                 if self.type == 'tv':
-                    listitems += ['Play Trakt Next Episode'] #2 (TV + 0 DBID)
-                    listitems += ['Play Trakt Next Episode (Rewatch)'] #3 (TV + 0 DBID)
-            listitems += ['Search item'] #2 (movie) #4 (TV+ DBID) #4 (TV + 0 DBID)
-            listitems += ['Trailer'] #3 (movie) #5 (TV+ DBID) #5 (TV + 0 DBID)
+                    listitems += ['Play Trakt Next Episode']
+                    listitems += ['Play Trakt Next Episode (Rewatch)']
+            listitems += ['Search item']
+            listitems += ['Trailer']
             listitems += ['TMDBHelper Context']
 
             if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
@@ -151,15 +151,13 @@ def get_tmdb_window(window_type):
             selection_text = listitems[selection]
             if selection == -1:
                 return
-            #if selection == 0:
+
             xbmcgui.Window(10000).setProperty('tmdbhelper_tvshow.poster', str(self.listitem.getProperty('poster')))
             if selection_text == 'Play first episode' or selection_text == 'Play':
                 if self.listitem.getProperty('TVShowTitle'):
-                    #url = 'plugin://plugin.video.diamondplayer/tv/play/%s/1/1' % tvdb_id
                     url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=%s&amp;season=1&amp;episode=1' % item_id
                     xbmc.executebuiltin('Dialog.Close(busydialog)')
                     PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
-                    #self.reload_trakt()
                 else:
                     xbmc.executebuiltin('Dialog.Close(busydialog)')
                     if self.listitem.getProperty('dbid'):
@@ -168,14 +166,11 @@ def get_tmdb_window(window_type):
                         PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=dbid)
                     else:
                         dbid = 0
-                        #url = 'plugin://plugin.video.diamondplayer/movies/play/tmdb/%s' % item_id
                         url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=movie&amp;tmdb_id=%s' % item_id
                         PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
-                    #self.reload_trakt()
-            #if selection == 1:
+
             if selection_text == 'Remove from library' or selection_text == 'Add to library':
                 if self.listitem.getProperty('TVShowTitle'):
-                    #TVLibrary = xbmcaddon.Addon('plugin.video.diamondinfo').getSetting('tv_library_folder')
                     TVLibrary = library.basedir_tv_path()
                     if self.listitem.getProperty('dbid'):
                         Utils.get_kodi_json(method='VideoLibrary.RemoveTVShow', params='{"tvshowid": %s}' % dbid)
@@ -189,16 +184,14 @@ def get_tmdb_window(window_type):
                             self.update(force_update=True)
                             self.getControl(500).selectItem(self.position)
                     else:
-                        if xbmcgui.Dialog().yesno('diamondinfo', 'Add [B]%s[/B] to library?' % self.listitem.getProperty('TVShowTitle')):
-                            #xbmc.executebuiltin('RunPlugin(plugin://plugin.video.diamondplayer/tv/add_to_library/%s)' % tvdb_id)
+                        if xbmcgui.Dialog().yesno(str(library.addon_ID_short()), 'Add [B]%s[/B] to library?' % self.listitem.getProperty('TVShowTitle')):
                             library.trakt_add_tv(item_id,'Add')
                             Utils.after_add(type='tv')
                             Utils.notify(header='[B]%s[/B] added to library' % self.listitem.getProperty('TVShowTitle'), message='Exit & re-enter to refresh', icon=self.listitem.getProperty('poster'), time=1000, sound=False)
                 else:
                     if self.listitem.getProperty('dbid'):
-                        if xbmcgui.Dialog().yesno('diamondinfo', 'Remove [B]%s[/B] from library?' % self.listitem.getProperty('title')):
+                        if xbmcgui.Dialog().yesno(str(library.addon_ID_short()), 'Remove [B]%s[/B] from library?' % self.listitem.getProperty('title')):
                             Utils.get_kodi_json(method='VideoLibrary.RemoveMovie', params='{"movieid": %s}' % dbid)
-                            #MovieLibrary = xbmcaddon.Addon('plugin.video.diamondinfo').getSetting('movies_library_folder')
                             MovieLibrary = library.basedir_movies_path()
                             if os.path.exists(xbmcvfs.translatePath('%s%s/' % (MovieLibrary, imdb_id))):
                                 shutil.rmtree(xbmcvfs.translatePath('%s%s/' % (MovieLibrary, imdb_id)))
@@ -210,49 +203,35 @@ def get_tmdb_window(window_type):
                                 self.update(force_update=True)
                                 self.getControl(500).selectItem(self.position)
                     else:
-                        if xbmcgui.Dialog().yesno('diamondinfo', 'Add [B]%s[/B] to library?' % self.listitem.getProperty('title')):
-                            #xbmc.executebuiltin('RunPlugin(plugin://plugin.video.diamondplayer/movies/add_to_library/tmdb/%s)' % item_id)
+                        if xbmcgui.Dialog().yesno(str(library.addon_ID_short()), 'Add [B]%s[/B] to library?' % self.listitem.getProperty('title')):
                             library.trakt_add_movie(item_id,'Add')
                             Utils.after_add(type='movie')
                             Utils.notify(header='[B]%s[/B] added to library' % self.listitem.getProperty('title'), message='Exit & re-enter to refresh', icon=self.listitem.getProperty('poster'), time=1000, sound=False)
-            #if (selection == 2 and self.type == 'tv' and int(dbid) > 0):
             if selection_text == 'Play Kodi Next Episode':
                 url = library.next_episode_show(tmdb_id_num=item_id,dbid_num=dbid)
                 xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
                 PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
-                #self.reload_trakt()
-            ##if (selection == 3 and self.type == 'tv' and int(dbid) > 0):
-            #if selection_text == 'Play Trakt Next Episode':
-            #    url = library.trakt_next_episode_normal(tmdb_id_num=item_id)
-            #    xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
-            #if (selection == 2 and self.type == 'tv' and int(dbid) == 0):
+
             if selection_text == 'Play Trakt Next Episode':
                 url = library.trakt_next_episode_normal(tmdb_id_num=item_id)
                 xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
                 PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
-                #self.reload_trakt()
-            #if (selection == 3 and self.type == 'tv' and int(dbid) == 0):
+
             if selection_text == 'Play Trakt Next Episode (Rewatch)':
                 url = library.trakt_next_episode_rewatch(tmdb_id_num=item_id)
                 xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
                 PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
-                #self.reload_trakt()
-            #2 (movie) #4 (TV+ DBID) #4 (TV + 0 DBID)
-            #if (selection == 2 and not self.type == 'tv') or (selection == 4 and self.type == 'tv' and int(dbid) > 0) or (selection == 4 and self.type == 'tv' and int(dbid) == 0):
+
             if selection_text == 'Search item':
                 item_title = self.listitem.getProperty('TVShowTitle') or self.listitem.getProperty('Title')
-                #item_title = urllib.parse.quote_plus(item_title)
-#                xbmc.executebuiltin('RunPlugin(plugin://script.extendedinfo/?info=search_string&str=%s' % item_title)
-#                xbmc.log(str('RunPlugin(plugin://script.extendedinfo/?info=search_string&str=%s)' % item_title)+'===>TMDB_HELPER_3', level=xbmc.LOGNOTICE)
                 self.close()
-                xbmc.executebuiltin('RunScript(script.diamondinfo,info=search_string,str=%s)' % item_title)
-            #3 (movie) #5 (TV+ DBID) #5 (TV + 0 DBID)
-            #if (selection == 3 and not self.type == 'tv') or (selection == 5 and self.type == 'tv' and int(dbid) > 0) or (selection == 5 and self.type == 'tv' and int(dbid) == 0):
+                xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=search_string,str=%s)' % item_title)
+
             if selection_text == 'Trailer':
                 if self.listitem.getProperty('TVShowTitle'):
-                    url = 'plugin://script.diamondinfo?info=playtvtrailer&&id=' + item_id
+                    url = 'plugin://'+str(library.addon_ID())+'?info=playtvtrailer&&id=' + item_id
                 else:
-                    url = 'plugin://script.diamondinfo?info=playtrailer&&id=' + item_id
+                    url = 'plugin://'+str(library.addon_ID())+'?info=playtrailer&&id=' + item_id
                 PLAYER.play(url, listitem=None, window=self)
             if selection_text == 'TMDBHelper Context':
                 if self.type == 'tv':
@@ -269,10 +248,6 @@ def get_tmdb_window(window_type):
             listitems = [key for key in list(SORTS[sort_key].values())]
             sort_strings = [value for value in list(SORTS[sort_key].keys())]
             index = xbmcgui.Dialog().select(heading='Sort by', list=listitems)
-            #if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
-            #    index = xbmcgui.Dialog().contextmenu([i for i in listitems])
-            #else:
-            #    index = xbmcgui.Dialog().select(heading='Sort by', list=listitems)
 
             if index == -1:
                 return None
@@ -441,11 +416,6 @@ def get_tmdb_window(window_type):
             response = TheMovieDB.search_company(result)
             if len(response) > 1:
                 selection = xbmcgui.Dialog().select(heading='Choose studio', list=[item['name'] for item in response])
-                #if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
-                #    selection = xbmcgui.Dialog().contextmenu([item['name'] for item in response])
-                #else:
-                #    selection = xbmcgui.Dialog().select(heading='Choose studio', list=[item['name'] for item in response])
-
                 if selection > -1:
                     response = response[selection]
             elif response:
@@ -476,19 +446,11 @@ def get_tmdb_window(window_type):
             response = TheMovieDB.get_certification_list(self.type)
             country_list = [key for key in list(response.keys())]
             index = xbmcgui.Dialog().select(heading='Country code', list=country_list)
-            #if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
-            #    index = xbmcgui.Dialog().contextmenu([i for i in country_list])
-            #else:
-            #    index = xbmcgui.Dialog().select(heading='Country code', list=country_list)
             if index == -1:
                 return None
             country = country_list[index]
             cert_list = ['%s  -  %s' % (i['certification'], i['meaning']) for i in response[country]]
             index = xbmcgui.Dialog().select(heading='Choose certification', list=cert_list)
-            #if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
-            #    index = xbmcgui.Dialog().contextmenu([i for i in cert_list])
-            #else:
-            #    index = xbmcgui.Dialog().select(heading='Choose certification', list=cert_list)
 
             if index == -1:
                 return None
@@ -505,10 +467,6 @@ def get_tmdb_window(window_type):
             ids = [i['id'] for i in list]
             names = [i['name'] for i in list]
             index = xbmcgui.Dialog().select(heading='Choose language', list=names)
-            #if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
-            #    index = xbmcgui.Dialog().contextmenu([i for i in names])
-            #else:
-            #    index = xbmcgui.Dialog().select(heading='Choose language', list=names)
 
             if index == -1:
                 return None
@@ -556,7 +514,7 @@ def get_tmdb_window(window_type):
             Utils.show_busy()
             from imdb import IMDb, IMDbError
             ia = IMDb()
-            #xbmc.log(str(list_str)+'===>PHIL', level=xbmc.LOGINFO)
+
             self.search_str = ia.get_movie_list(imdb_list[selection])
             self.filter_label = 'Results for:  ' + imdb_list_name[selection]
             self.fetch_data()
@@ -602,7 +560,6 @@ def get_tmdb_window(window_type):
                 if str(i['name']) != '':
                     listitems += [i['name']]
 
-            #selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
             if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
                 selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
             else:
@@ -612,7 +569,6 @@ def get_tmdb_window(window_type):
                 return
             self.mode = 'trakt'
             Utils.show_busy()
-            #xbmc.log(str(list_str)+'===>PHIL', level=xbmc.LOGINFO)
             if selection == -1:
                 Utils.hide_busy()
                 return
@@ -672,7 +628,7 @@ def get_tmdb_window(window_type):
             for key, value in items:
                 listitems.append(value)
                 listitems_key.append(key)
-            #selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
+
             if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
                 selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
             else:
@@ -795,7 +751,6 @@ def get_tmdb_window(window_type):
                 url = 'list/%s?language=%s&' % (str(self.list_id), xbmcaddon.Addon().getSetting('LanguageID'))
             elif self.mode == 'imdb':
                 movies = self.search_str
-                #xbmc.log(str(movies)+'===>PHIL', level=xbmc.LOGINFO)
                 x = 0
                 y = 0
                 page = int(self.page)
@@ -814,7 +769,6 @@ def get_tmdb_window(window_type):
                             x = x + 1
                         except:
                             try:
-                                #xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
                                 response['tv_results'][0]['media_type'] = 'tv'
                                 if listitems == None:
                                     listitems = TheMovieDB.handle_tmdb_multi_search(response['tv_results'])
@@ -824,7 +778,7 @@ def get_tmdb_window(window_type):
                                 continue
                     else:
                         x = x + 1
-                
+
                 #response['total_pages'] = y 
                 response['total_pages'] = int(x/20) + (1 if x % 20 > 0 else 0)
                 response['total_results'] = x

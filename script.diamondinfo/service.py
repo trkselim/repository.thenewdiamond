@@ -701,15 +701,10 @@ class CronJobMonitor(Thread):
             if int(time.time()) > self.next_time and library_auto_sync == True:  # Scheduled time has past so lets update
                 library_update_period = int(xbmcaddon.Addon(library.addon_ID()).getSetting('library_sync_hours'))
                 self.next_time = self.curr_time + library_update_period*60*60
-                #xbmc.executebuiltin('RunScript(script.diamondinfo,info=auto_library)')
+
                 from resources.lib import process
                 process.auto_library()
-                #xbmc.log(str(datetime.datetime.now())+'datetime.datetime.now()===>___OPEN_INFO', level=xbmc.LOGFATAL)
-                #xbmc.log(str(self.next_time)+'self.next_time===>___OPEN_INFO', level=xbmc.LOGFATAL)
-                #xbmc.log(str(self.curr_time)+'self.curr_time===>___OPEN_INFO', level=xbmc.LOGFATAL)
-                #self.next_time = datetime.datetime.combine(datetime.datetime.today(),datetime.time(datetime.datetime.today().hour))+ datetime.timedelta(hours=8)
-                #self.next_time = self.next_time.timestamp()
-                #xbmc.log(str(self.next_time)+'self.next_time2===>___OPEN_INFO', level=xbmc.LOGFATAL)
+
             self.xbmc_monitor.waitForAbort(self.poll_time)
 
         del self.xbmc_monitor
