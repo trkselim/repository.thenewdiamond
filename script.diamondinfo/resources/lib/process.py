@@ -149,6 +149,9 @@ def start_info_actions(infos, params):
 			search_str = xbmcgui.Dialog().input(heading='Enter search string', type=xbmcgui.INPUT_ALPHANUM)
 			return wm.open_video_list(search_str=search_str, mode='search')
 
+		elif info == 'reopen_window':
+			reopen_window()
+
 		elif info == 'test_route':
 			#from pathlib import Path
 			#tvdb_id = 295685
@@ -228,18 +231,14 @@ def start_info_actions(infos, params):
 				if info == 'trakt_watched' and trakt_type == 'movie':
 					movies = library.trakt_watched_movies()
 					trakt_label = 'Trakt Watched Movies'
-					xbmcgui.Window(10000).setProperty('diamond_info_var', 'info=trakt_watched&trakt_type=movie')
 				elif info == 'trakt_watched' and trakt_type == 'tv':
 					movies = library.trakt_watched_tv_shows()
-					xbmcgui.Window(10000).setProperty('diamond_info_var', 'info=trakt_watched&trakt_type=tv')
 					trakt_label = 'Trakt Watched Shows'
 				elif info == 'trakt_coll' and trakt_type == 'movie':
 					movies = library.trakt_collection_movies()
-					xbmcgui.Window(10000).setProperty('diamond_info_var', 'info=trakt_coll&trakt_type=movie')
 					trakt_label = 'Trakt Collection Movies'
 				elif info == 'trakt_coll' and trakt_type == 'tv':
 					movies = library.trakt_collection_shows()
-					xbmcgui.Window(10000).setProperty('diamond_info_var', 'info=trakt_watched&trakt_type=tv')
 					trakt_label = 'Trakt Collection Shows'
 				elif info == 'trakt_list':
 					trakt_type = str(params['trakt_type'])
@@ -535,6 +534,9 @@ def resolve_url(handle):
 	import xbmcplugin
 	if handle:
 		xbmcplugin.setResolvedUrl(handle=int(handle), succeeded=False, listitem=xbmcgui.ListItem())
+
+def reopen_window():
+	return wm.open_video_list(search_str='', mode='reopen_window')
 
 def auto_library():
 	import xbmcaddon

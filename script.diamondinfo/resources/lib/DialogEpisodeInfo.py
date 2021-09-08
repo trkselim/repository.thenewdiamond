@@ -75,7 +75,6 @@ def get_episode_window(window_type):
 			if selection == 1:
 				wm.open_season_info(prev_window=self, tvshow_id=self.tvshow_id, season=self.info['season'], tvshow='')
 			if selection == 2:
-				#xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=search_string,str=%s)' % self.listitem.getLabel())
 				self.close()
 				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=search_person,person=%s)' % self.listitem.getLabel())
 
@@ -95,7 +94,6 @@ def get_episode_window(window_type):
 				url = ''
 				PLAYER.play_from_button(url, listitem=None, window=self, type='episodeid', dbid=dbid)
 			else:
-				#url = 'plugin://plugin.video.diamondplayer/tv/play/%s/%s/%s' % (Utils.fetch(TheMovieDB.get_tvshow_ids(self.tvshow_id), 'tvdb_id'), self.info['season'], self.info['episode'])
 				url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;tmdb_id=%s&amp;type=episode&amp;season=%s&amp;episode=%s' % (self.tvshow_id, self.info['season'], self.info['episode'])
 				xbmc.executebuiltin('RunPlugin(%s)' % url)
 
@@ -106,14 +104,13 @@ def get_episode_window(window_type):
 				url = ''
 				PLAYER.play_from_button(url, listitem=None, window=self, type='episodeid', dbid=dbid)
 			else:
-				#url = 'plugin://plugin.video.diamondplayer/tv/play_choose_player/%s/%s/%s/False' % (Utils.fetch(TheMovieDB.get_tvshow_ids(self.tvshow_id), 'tvdb_id'), self.info['season'], self.info['episode'])
 				url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;tmdb_id=%s&amp;type=episode&amp;season=%s&amp;episode=%s' % (self.tvshow_id, self.info['season'], self.info['episode'])
 				xbmc.executebuiltin('RunPlugin(%s)' % url)
 
 		@ch.click(445)
 		def show_manage_dialog(self):
 			manage_list = []
-			manage_list.append(["Diamond Info's settings", 'Addon.OpenSettings("'+str(library.addon_ID())+'")'])
+			manage_list.append([str(library.addon_ID_short()) + " Settings", 'Addon.OpenSettings("'+str(library.addon_ID())+'")'])
 			manage_list.append(["TMDBHelper Context", 'RunScript(plugin.video.themoviedb.helper,sync_trakt,tmdb_type=tv,tmdb_id='+str(self.info['season'])+',season='+str(self.tvshow_id)+',episode='+str(self.info['episode'])+')'])
 			manage_list.append(["TmdbHelper settings", 'Addon.OpenSettings("plugin.video.themoviedb.helper")'])
 			manage_list.append(["YouTube's settings", 'Addon.OpenSettings("plugin.video.youtube")'])

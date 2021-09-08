@@ -220,6 +220,9 @@ class PlayerMonitor(xbmc.Player):
 
     def onPlayBackEnded(self):
         xbmc.log(str('onPlayBackEnded')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
+
+        from resources.lib import process
+        process.reopen_window()
         #self.set_watched()
         #self.reset_properties()
         #return wm.pop_stack()
@@ -228,6 +231,8 @@ class PlayerMonitor(xbmc.Player):
         trakt_scrobble = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_scrobble'))
 
         if trakt_scrobble == 'false':
+            from resources.lib import process
+            process.reopen_window()
             return
 
         xbmc.log(str('onPlayBackStopped')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
@@ -265,8 +270,12 @@ class PlayerMonitor(xbmc.Player):
                 json_object  = json.loads(json_result)
                 xbmc.log(str(json_object)+'=episode resume set, '+str(dbID)+'=dbID', level=xbmc.LOGFATAL)
         except:
+            from resources.lib import process
+            process.reopen_window()
             return
 
+        from resources.lib import process
+        process.reopen_window()
         #self.set_watched()
         #self.reset_properties()
 

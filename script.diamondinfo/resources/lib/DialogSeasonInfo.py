@@ -66,7 +66,6 @@ def get_season_window(window_type):
 
 		@ch.click(120)
 		def browse_season(self):
-			#url = 'plugin://plugin.video.diamondplayer/tv/tvdb/%s/%s/' % (self.info['tvdb_id'], self.info['season'])
 			url = 'plugin://plugin.video.themoviedb.helper/?info=episodes&amp;season='+str(self.info['season'])+'&amp;tmdb_id='+str(self.info['id'])+'&amp;tmdb_type=tv'
 			self.close()
 			xbmc.executebuiltin('ActivateWindow(videos,%s,return)' % url)
@@ -80,7 +79,6 @@ def get_season_window(window_type):
 		@ch.action('contextmenu', 1000)
 		def actor_context_menu(self):
 			listitems = ['Search Person']
-			#selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
 			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
 				selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
 			else:
@@ -102,13 +100,10 @@ def get_season_window(window_type):
 				dbid = 0
 			item_id = self.listitem.getProperty('id')
 			episode_id = self.listitem.getProperty('episode')
-#			season_id = self.listitem.getProperty('season')
-#			xbmc.log(str(dbid)+'===>OPENINFO', level=xbmc.LOGNOTICE)
 			imdb_id = Utils.fetch(TheMovieDB.get_tvshow_ids(self.tvshow_id), 'imdb_id')
 			tvdb_id = Utils.fetch(TheMovieDB.get_tvshow_ids(self.tvshow_id), 'tvdb_id')
 			listitems = ['Play - TMDB Helper']
 			listitems += ['TV Show Info']
-			#selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
 			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
 				selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
 			else:
@@ -116,32 +111,24 @@ def get_season_window(window_type):
 			Utils.hide_busy()
 			if selection == 0:
 				url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;tmdb_id=%s&amp;type=episode&amp;season=%s&amp;episode=%s' % (self.tvshow_id, self.listitem.getProperty('season'), episode_id)
-#				xbmc.log(str(self.data)+'===>OPENINFO', level=xbmc.LOGNOTICE)
-#				xbmc.log(str(self.info['poster_original'])+'===>OPENINFO', level=xbmc.LOGNOTICE)
-#				self.close()
-#				Utils.hide_busy()
-#				xbmc.executebuiltin('RunPlugin(%s)' % url)
-#				xbmc.log(str(url)+'===>OPENINFO', level=xbmc.LOGNOTICE)
 				PLAYER.play_from_button(url, listitem=None, window=self)
 			if selection == 1:
 				wm.open_tvshow_info(prev_window=self, tmdb_id=self.tvshow_id, dbid=0)
 
 		@ch.click(10)
 		def play_season(self):
-			#url = 'plugin://plugin.video.diamondplayer/tv/play/%s/%s/1' % (self.info['tvdb_id'], self.info['season'])
 			url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=%s&amp;season=%s&amp;episode=1' % (self.tvshow_id, self.info['season'])
 			xbmc.executebuiltin('RunPlugin(%s)' % url)
 
 		@ch.action('contextmenu', 10)
 		def play_season_choose_player(self):
-			#url = 'plugin://plugin.video.diamondplayer/tv/play_choose_player/%s/%s/1/False' % (self.info['tvdb_id'], self.info['season'])
 			url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=%s&amp;season=%s&amp;episode=1' % (self.tvshow_id, self.info['season'])
 			xbmc.executebuiltin('RunPlugin(%s)' % url)
 
 		@ch.click(445)
 		def show_manage_dialog(self):
 			manage_list = []
-			manage_list.append(["Diamond Info's settings", 'Addon.OpenSettings("'+str(library.addon_ID())+'")'])
+			manage_list.append([str(library.addon_ID_short())+" Settings", 'Addon.OpenSettings("'+str(library.addon_ID())+'")'])
 			manage_list.append(["TMDBHelper Context", 'RunScript(plugin.video.themoviedb.helper,sync_trakt,tmdb_type=tv,tmdb_id='+str(self.info['season'])+',season='+str(self.tvshow_id)+')'])
 			manage_list.append(["TmdbHelper settings", 'Addon.OpenSettings("plugin.video.themoviedb.helper")'])
 			manage_list.append(["YouTube's settings", 'Addon.OpenSettings("plugin.video.youtube")'])
@@ -149,10 +136,6 @@ def get_season_window(window_type):
 			settings_user_config = xbmcaddon.Addon(library.addon_ID()).getSetting('settings_user_config')
 			if settings_user_config == 'Settings Selection Menu':
 				selection = xbmcgui.Dialog().select(heading='Settings', list=[i[0] for i in manage_list])
-				#if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
-				#	selection = xbmcgui.Dialog().contextmenu([i[0] for i in manage_list])
-				#else:
-				#	selection = xbmcgui.Dialog().select(heading='Settings', list=listitems)
 			else:
 				selection = 1
 			if selection > -1:

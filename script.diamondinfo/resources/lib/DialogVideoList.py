@@ -560,6 +560,8 @@ def get_tmdb_window(window_type):
                 if str(i['name']) != '':
                     listitems += [i['name']]
 
+
+
             if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
                 selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
             else:
@@ -575,19 +577,15 @@ def get_tmdb_window(window_type):
             if selection == 0:
                 self.search_str = library.trakt_watched_movies()
                 self.type = 'movie'
-                xbmcgui.Window(10000).setProperty('diamond_info_var', 'info=trakt_watched&trakt_type=movie')
             elif selection == 1:
                 self.search_str = library.trakt_watched_tv_shows()
                 self.type = 'tv'
-                xbmcgui.Window(10000).setProperty('diamond_info_var', 'info=trakt_watched&trakt_type=tv')
             elif selection == 2:
                 self.search_str = library.trakt_collection_movies()
                 self.type = 'movie'
-                xbmcgui.Window(10000).setProperty('diamond_info_var', 'info=trakt_coll&trakt_type=movie')
             elif selection == 3:
                 self.search_str = library.trakt_collection_shows()
                 self.type = 'tv'
-                xbmcgui.Window(10000).setProperty('diamond_info_var', 'info=trakt_coll&trakt_type=tv')
             else:
                 for i in trakt_data['trakt_list']:
                     if i['name'] == listitems[selection]:
@@ -599,8 +597,6 @@ def get_tmdb_window(window_type):
                         trakt_sort_by = str(i['sort_by'])
                         trakt_sort_order = str(i['sort_order'])
                         self.search_str = library.trakt_lists(list_name=trakt_list_name,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
-                        info_line = 'info=trakt_list&script=False&trakt_type=' +str(trakt_type)+'&list_slug='+str(takt_list_slug)+'&user_id=' +str(trakt_user_id)+'&trakt_sort_by='+str(trakt_sort_by)+'&trakt_sort_order='+str(trakt_sort_order)+'&trakt_list_name='+str(i['name'])
-                        xbmcgui.Window(10000).setProperty('diamond_info_var', info_line)
             self.filter_label = 'Results for:  ' + listitems[selection]
             Utils.show_busy()
             self.fetch_data()
@@ -698,10 +694,46 @@ def get_tmdb_window(window_type):
             Utils.hide_busy()
 
         def fetch_data(self, force=False):
+            from pathlib import Path
+            addon = xbmcaddon.Addon()
+            addon_path = addon.getAddonInfo('path')
+            addonID = addon.getAddonInfo('id')
+            addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
+            fetch_data_dict_file = open(Path(addonUserDataFolder + '/fetch_data_dict'), "r")
             Utils.show_busy()
+            if self.mode == 'reopen_window':
+                import ast
+                fetch_data_dict_read = ast.literal_eval(fetch_data_dict_file.read())
+                try: self.mode = fetch_data_dict_read['self.mode']
+                except: pass
+                try: self.type = fetch_data_dict_read['self.type']
+                except: pass
+                try: self.order = fetch_data_dict_read['self.order']
+                except: pass
+                try: self.search_str = fetch_data_dict_read['self.search_str']
+                except: pass
+                try: self.filter_label = fetch_data_dict_read['self.filter_label'].replace('Results for:  ','')
+                except: pass
+                try: self.page = fetch_data_dict_read['self.page']
+                except: pass
+                try: self.list_id = fetch_data_dict_read['self.list_id']
+                except: pass
+                try: self.filter_url = fetch_data_dict_read['self.filter_url']
+                except: pass
+                reopen_window = True
+                if self.mode == 'trakt' and 'Trakt Watched Movies' in str(self.filter_label):
+                    self.search_str = library.trakt_watched_movies()
+                if self.mode == 'trakt' and 'Trakt Watched Shows' in str(self.filter_label):
+                    self.search_str = library.trakt_watched_tv_shows()
+            else:
+                reopen_window = False
+            fetch_data_dict_file = open(Path(addonUserDataFolder + '/fetch_data_dict'), "w")
             sort_by = self.sort + '.' + self.order
-            if self.mode != 'trakt':
-                xbmcgui.Window(10000).clearProperty('diamond_info_var')
+            fetch_data_dict = {}
+            fetch_data_dict['self.mode'] = self.mode
+            fetch_data_dict['self.sort'] = self.sort
+            fetch_data_dict['self.order'] = self.order
+            fetch_data_dict['self.type'] = self.type
             if self.type == 'tv':
                 temp = 'tv'
                 rated = 'Rated TV shows'
@@ -710,13 +742,15 @@ def get_tmdb_window(window_type):
                 temp = 'movies'
                 rated = 'Rated movies'
                 starred = 'Starred movies'
-
             if self.mode == 'search':
                 url = 'search/multi?query=%s&page=%i&include_adult=%s&' % (urllib.parse.quote_plus(self.search_str), self.page, xbmcaddon.Addon().getSetting('include_adults'))
                 if self.search_str:
                     self.filter_label = 'Results for:  ' + self.search_str
                 else:
                     self.filter_label = ''
+                fetch_data_dict['self.search_str'] = self.search_str
+                fetch_data_dict['self.filter_label'] = self.filter_label
+                fetch_data_dict['self.page'] = self.page
             elif self.mode == 'person':
                 self.filter_label = 'Results for:  ' + self.search_str['person']
                 listitems = self.search_str['cast_crew']
@@ -725,6 +759,10 @@ def get_tmdb_window(window_type):
                     'results_per_page': 1,
                     'total_results': len(self.search_str['cast_crew'])
                     }
+                fetch_data_dict['self.search_str'] = self.search_str
+                fetch_data_dict['self.filter_label'] = self.filter_label
+                fetch_data_dict_file.write(str(fetch_data_dict))
+                fetch_data_dict_file.close()
                 return info
             elif self.mode == 'list_items':
                 if int(self.page) == 1:
@@ -746,9 +784,15 @@ def get_tmdb_window(window_type):
                     'results_per_page': int(int(x/20) + (1 if x % 20 > 0 else 0)),
                     'total_results': len(self.search_str)
                     }
+                fetch_data_dict['self.filter_label'] = self.filter_label
+                fetch_data_dict['self.page'] = self.page
+                fetch_data_dict['self.search_str'] = self.search_str
+                fetch_data_dict_file.write(str(fetch_data_dict))
+                fetch_data_dict_file.close()
                 return info
             elif self.mode == 'list':
                 url = 'list/%s?language=%s&' % (str(self.list_id), xbmcaddon.Addon().getSetting('LanguageID'))
+                fetch_data_dict['self.list_id'] = self.list_id
             elif self.mode == 'imdb':
                 movies = self.search_str
                 x = 0
@@ -787,6 +831,12 @@ def get_tmdb_window(window_type):
                     'results_per_page': response['total_pages'],
                     'total_results': response['total_results']
                     }
+
+                fetch_data_dict['self.filter_label'] = self.filter_label
+                fetch_data_dict['self.page'] = self.page
+                fetch_data_dict['self.search_str'] = self.search_str
+                fetch_data_dict_file.write(str(fetch_data_dict))
+                fetch_data_dict_file.close()
                 return info
             elif self.mode == 'trakt':
                 movies = self.search_str
@@ -829,18 +879,32 @@ def get_tmdb_window(window_type):
                     'results_per_page': response['total_pages'],
                     'total_results': response['total_results']
                     }
+                fetch_data_dict['self.filter_label'] = self.filter_label
+                fetch_data_dict['self.page'] = self.page
+                fetch_data_dict['self.search_str'] = self.search_str
+                fetch_data_dict_file.write(str(fetch_data_dict))
+                fetch_data_dict_file.close()
                 return info
             else:
-                self.set_filter_url()
-                self.set_filter_label()
+                if reopen_window == False:
+                    self.set_filter_url()
+                    self.set_filter_label()
+                fetch_data_dict['self.filter_url'] = self.filter_url
+                fetch_data_dict['self.filter_label'] = self.filter_label
+                fetch_data_dict['self.page'] = self.page
+                fetch_data_dict['self.search_str'] = self.search_str
                 url = 'discover/%s?sort_by=%s&%slanguage=%s&page=%i&include_adult=%s&' % (self.type, sort_by, self.filter_url, xbmcaddon.Addon().getSetting('LanguageID'), int(self.page), xbmcaddon.Addon().getSetting('include_adults'))
             if force:
                 response = TheMovieDB.get_tmdb_data(url=url, cache_days=0)
             else:
                 response = TheMovieDB.get_tmdb_data(url=url, cache_days=2)
             if not response:
+                fetch_data_dict_file.write(str(fetch_data_dict))
+                fetch_data_dict_file.close()
                 return None
             if 'results' not in response:
+                fetch_data_dict_file.write(str(fetch_data_dict))
+                fetch_data_dict_file.close()
                 return {'listitems': [], 'results_per_page': 0, 'total_results': 0}
             if not response['results']:
                 Utils.notify('No results found')
@@ -855,6 +919,8 @@ def get_tmdb_window(window_type):
                 'results_per_page': response['total_pages'],
                 'total_results': response['total_results']
                 }
+            fetch_data_dict_file.write(str(fetch_data_dict))
+            fetch_data_dict_file.close()
             return info
     Utils.hide_busy()
     return DialogVideoList

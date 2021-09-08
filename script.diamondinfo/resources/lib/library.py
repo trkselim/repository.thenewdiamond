@@ -195,12 +195,15 @@ def setup_library_movies():
 	return xbmc.translatePath(library_folder)
 
 def setup_xml_filenames():
+	import fileinput
 	dir_path = Path(str(main_file_path()) + '/resources/skins/Default/1080i/')
 	for dirpath, dnames, fnames in os.walk(dir_path):
 		for f in fnames:
 			if '.xml' in f:
 				old_name = f
 				name1 = str(f).split('script.')[0]
+				name2 = str(f).split('script.')[1].split('-')[0]
+				old_addonID = 'script.' + name2
 				name = ''
 				for i in str(f).split('-')[1:]:
 					if name == '':
@@ -210,10 +213,27 @@ def setup_xml_filenames():
 				new_name = name1 + str(addon_ID()) + '-' + name
 				new_path = Path(str(dir_path) +'/'+ new_name)
 				old_path = Path(str(dir_path) +'/'+ old_name)
-				#xbmc.log(str(new_path)+'===>PHIL', level=xbmc.LOGINFO)
-				#xbmc.log(str(old_path)+'===>PHIL2', level=xbmc.LOGINFO)
+				xbmc.log(str(old_name)+'= OLD NAME,' + str(new_name) + ' = NEW NAME -- DIAMONDINFO_MOD', level=xbmc.LOGINFO)
+				filename = old_path
+				if 'Netflix' in str(filename):
+					xbmc.log(str(old_addonID)+'= REPLACE OLD ADDONID,' + str(addon_ID()) + ' = NEW ADDONID -- DIAMONDINFO_MOD', level=xbmc.LOGINFO)
+					with fileinput.FileInput(filename, inplace=True, backup='.bak') as file:
+						for line in file:
+							print(line.replace(old_addonID, str(addon_ID())), end='')
 				if old_name != new_name:
 					os.rename(old_path, new_path)
+	settings_xml = Path(str(main_file_path()) + '/resources/settings.xml')
+	filename = settings_xml
+	xbmc.log(str(old_addonID)+'= REPLACE OLD ADDONID - SETTINGS.XML,' + str(addon_ID()) + ' = NEW ADDONID -- DIAMONDINFO_MOD', level=xbmc.LOGINFO)
+	with fileinput.FileInput(filename, inplace=True, backup='.bak') as file:
+		for line in file:
+			print(line.replace(old_addonID, str(addon_ID())), end='')
+	readme_md = Path(str(main_file_path()) + '/README.md')
+	filename = readme_md
+	xbmc.log(str(old_addonID)+'= REPLACE OLD ADDONID - README.MD,' + str(addon_ID()) + ' = NEW ADDONID -- DIAMONDINFO_MOD', level=xbmc.LOGINFO)
+	with fileinput.FileInput(filename, inplace=True, backup='.bak') as file:
+		for line in file:
+			print(line.replace(old_addonID, str(addon_ID())), end='')
 
 def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api):
 	import requests
