@@ -188,10 +188,10 @@ def start_info_actions(infos, params):
 			import xbmcvfs, xbmcaddon
 			library_tv_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_tv_sync'))
 			library_movies_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_movies_sync'))
-			library_folder = library.basedir_tv_path()
+			library_folder = str(library.basedir_tv_path())
 			if not xbmcvfs.exists(library_folder):
 				xbmcvfs.mkdir(library_folder)
-			library_folder = library.basedir_movies_path()
+			library_folder = str(library.basedir_movies_path())
 			if not xbmcvfs.exists(library_folder):
 				xbmcvfs.mkdir(library_folder)
 			if not library.library_source_exists_tv() and library_tv_sync == 'true':

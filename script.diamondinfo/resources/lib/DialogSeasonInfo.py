@@ -53,6 +53,10 @@ def get_season_window(window_type):
 		def onInit(self):
 			self.get_youtube_vids('%s %s tv' % (self.info['TVShowTitle'], self.info['title']))
 			super(DialogSeasonInfo, self).onInit()
+			try: clearlogo = TheMovieDB.get_fanart_clearlogo(tmdb_id=self.info['tmdb_id'],media_type='tv')
+			except: clearlogo = ''
+			xbmcgui.Window(self.window_id).setProperty('movie.logo', str(clearlogo))
+			xbmcgui.Window(10000).setProperty('movie.logo', str(clearlogo))
 			Utils.pass_dict_to_skin(data=self.info, prefix='movie.', window_id=self.window_id)
 			self.fill_lists()
 

@@ -331,6 +331,54 @@ def get_tmdb_data(url='', cache_days=14, folder='TheMovieDB'):
 	url = 'https://api.themoviedb.org/3/%sapi_key=%s' % (url, API_key)
 	return Utils.get_JSON_response(url, cache_days, folder)
 
+def get_fanart_clearlogo(tmdb_id=None, media_type=None):
+	if media_type !='tv' and media_type != 'movie':
+		clearlogo = ''
+		return clearlogo
+	response = get_fanart_data(tmdb_id=tmdb_id,media_type=media_type)
+	if media_type =='tv':
+		try:
+			for i in response['hdtvlogo']:
+				if i['lang'] in ('en','00',''):
+					clearlogo = i['url']
+					break
+		except: 
+			try:
+				for i in response['clearlogo']:
+					if i['lang'] in ('en','00',''):
+						clearlogo = i['url']
+						break
+			except: 
+				pass
+	if media_type =='movie':
+		try:
+			for i in response['hdmovielogo']:
+				if i['lang'] in ('en','00',''):
+					clearlogo = i['url']
+					break
+		except: 
+			try:
+				for i in response['clearlogo']:
+					if i['lang'] in ('en','00',''):
+						clearlogo = i['url']
+						break
+			except: 
+				pass
+	return clearlogo
+
+def get_fanart_data(url='', tmdb_id=None, media_type=None, cache_days=14, folder='FanartTV'):
+	fanart_api = library.fanart_api_key()
+	import requests,json
+	if media_type =='tv':
+		tvdb_id = get_tvshow_ids(tmdb_id)
+		tvdb_id = tvdb_id['tvdb_id']
+		url = 'http://webservice.fanart.tv/v3/tv/'+str(tvdb_id)+'?api_key=' + fanart_api
+		#response = requests.get(url).json()
+	else:
+		url = 'http://webservice.fanart.tv/v3/movies/'+str(tmdb_id)+'?api_key=' + fanart_api
+		#response = requests.get(url).json()
+	return Utils.get_JSON_response(url, cache_days, folder)
+
 def get_company_data(company_id):
 	response = get_tmdb_data('company/%s/movies?' % company_id, 30)
 	if response and 'results' in response:

@@ -70,7 +70,7 @@ def basedir_movies_path():
 def library_source_exists_tv():
 	xml_file = xbmcvfs.translatePath('special://profile/sources.xml')
 	#root_dir = xbmcaddon.Addon(addon_ID()).getSetting('library_folder')
-	root_dir = basedir_tv_path()
+	root_dir = str(basedir_tv_path())
 	f = open(xml_file, "r")
 	string_f = str(f.read())
 	test_var = root_dir in string_f
@@ -80,7 +80,7 @@ def library_source_exists_tv():
 def library_source_exists_movies():
 	xml_file = xbmcvfs.translatePath('special://profile/sources.xml')
 	#root_dir = xbmcaddon.Addon(addon_ID()).getSetting('library_folder')
-	root_dir = basedir_movies_path()
+	root_dir = str(basedir_movies_path())
 	f = open(xml_file, "r")
 	string_f = str(f.read())
 	test_var = root_dir in string_f
@@ -193,6 +193,16 @@ def setup_library_movies():
 	source_content = "('%s','movies','metadata.themoviedb.org','',2147483647,1,'<settings version=\"2\"><setting id=\"certprefix\" default=\"true\">Rated </setting><setting id=\"fanart\">true</setting><setting id=\"imdbanyway\">true</setting><setting id=\"keeporiginaltitle\" default=\"true\">false</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TMDb</setting><setting id=\"tmdbcertcountry\" default=\"true\">us</setting><setting id=\"trailer\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
 	AddSource.add_source(source_name, library_folder, source_content, source_thumbnail)
 	return xbmc.translatePath(library_folder)
+
+def auto_setup_xml_filenames():
+	from pathlib import Path
+	settings_xml = Path(str(main_file_path()) + '/resources/settings.xml')
+	settings_xml = open(Path(settings_xml), "r")
+	if not str(addon_ID()) in settings_xml:
+		setup_xml_filenames()
+	else:
+		settings_xml.close()
+		return
 
 def setup_xml_filenames():
 	import fileinput

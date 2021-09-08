@@ -699,9 +699,9 @@ def get_tmdb_window(window_type):
             addon_path = addon.getAddonInfo('path')
             addonID = addon.getAddonInfo('id')
             addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
-            fetch_data_dict_file = open(Path(addonUserDataFolder + '/fetch_data_dict'), "r")
             Utils.show_busy()
             if self.mode == 'reopen_window':
+                fetch_data_dict_file = open(Path(addonUserDataFolder + '/fetch_data_dict'), "r")
                 import ast
                 fetch_data_dict_read = ast.literal_eval(fetch_data_dict_file.read())
                 try: self.mode = fetch_data_dict_read['self.mode']

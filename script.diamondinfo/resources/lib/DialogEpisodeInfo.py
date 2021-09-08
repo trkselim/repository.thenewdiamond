@@ -46,6 +46,10 @@ def get_episode_window(window_type):
 
 		def onInit(self):
 			super(DialogEpisodeInfo, self).onInit()
+			try: clearlogo = TheMovieDB.get_fanart_clearlogo(tmdb_id=self.tvshow_id,media_type='tv')
+			except: clearlogo = ''
+			xbmcgui.Window(self.window_id).setProperty('movie.logo', str(clearlogo))
+			xbmcgui.Window(10000).setProperty('movie.logo', str(clearlogo))
 			Utils.pass_dict_to_skin(self.info, 'movie.', False, False, self.window_id)
 			self.get_youtube_vids('%s tv' % self.info['title'])
 			self.fill_lists()

@@ -27,6 +27,11 @@ class DialogBaseInfo(object):
 		self.window = xbmcgui.Window(self.window_id)
 		self.window.setProperty('type', self.type)
 		xbmcgui.Window(10000).setProperty('diamondinfo_fanart', self.info.get('fanart', ''))
+
+		try: clearlogo = TheMovieDB.get_fanart_clearlogo(tmdb_id=self.info['tmdb_id'],media_type=self.info['media_type'])
+		except: clearlogo = ''
+		xbmcgui.Window(self.window_id).setProperty('movie.logo', str(clearlogo))
+
 		xbmcgui.Window(10000).setProperty(str(library.addon_ID_short())+'_fanart', self.info.get('fanart', ''))
 
 	def onAction(self, action):
@@ -97,6 +102,7 @@ class DialogBaseInfo(object):
 
 	@ch.action('parentdir', '*')
 	@ch.action('parentfolder', '*')
+	#@ch.action('back', '*')
 	def previous_menu(self):
 		onback = self.window.getProperty('%i_onback' % self.control_id)
 		if onback:

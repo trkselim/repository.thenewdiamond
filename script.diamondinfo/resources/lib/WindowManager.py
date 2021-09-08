@@ -43,7 +43,7 @@ class WindowManager(object):
 		else:
 			if Utils.SKIN_DIR == 'skin.estuary':
 				dialog = movieclass(str(library.addon_ID())+'-DialogVideoInfo-Estuary.xml', Utils.ADDON_PATH, id=movie_id, dbid=dbid)
-			elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod' or 'skin.xonfluence' or 'skin.xenon18':
+			elif Utils.SKIN_DIR == 'skin.aura' or Utils.SKIN_DIR == 'skin.auramod' or Utils.SKIN_DIR == 'skin.xonfluence' or Utils.SKIN_DIR == 'skin.xenon18':
 				dialog = movieclass(str(library.addon_ID())+'-DialogVideoInfo-Aura.xml', Utils.ADDON_PATH, id=movie_id, dbid=dbid)
 			else:
 				dialog = movieclass(str(library.addon_ID())+'-DialogVideoInfo.xml', Utils.ADDON_PATH, id=movie_id, dbid=dbid)
@@ -85,7 +85,7 @@ class WindowManager(object):
 		else:
 			if Utils.SKIN_DIR == 'skin.estuary':
 				dialog = tvshow_class(str(library.addon_ID())+'-DialogVideoInfo-Estuary.xml', Utils.ADDON_PATH, tmdb_id=tmdb_id, dbid=dbid)
-			elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod' or 'skin.xonfluence' or 'skin.xenon18':
+			elif Utils.SKIN_DIR == 'skin.aura' or Utils.SKIN_DIR == 'skin.auramod' or Utils.SKIN_DIR == 'skin.xonfluence' or Utils.SKIN_DIR == 'skin.xenon18':
 				dialog = tvshow_class(str(library.addon_ID())+'-DialogVideoInfo-Aura.xml', Utils.ADDON_PATH, tmdb_id=tmdb_id, dbid=dbid)
 			else:
 				dialog = tvshow_class(str(library.addon_ID())+'-DialogVideoInfo.xml', Utils.ADDON_PATH, tmdb_id=tmdb_id, dbid=dbid)
@@ -111,7 +111,7 @@ class WindowManager(object):
 		else:
 			if Utils.SKIN_DIR == 'skin.estuary':
 				dialog = season_class(str(library.addon_ID())+'-DialogVideoInfo-Estuary.xml', Utils.ADDON_PATH, tvshow_id=tvshow_id, season=season, dbid=dbid)
-			elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod' or 'skin.xonfluence' or 'skin.xenon18':
+			elif Utils.SKIN_DIR == 'skin.aura' or Utils.SKIN_DIR == 'skin.auramod' or Utils.SKIN_DIR == 'skin.xonfluence' or Utils.SKIN_DIR == 'skin.xenon18':
 				dialog = season_class(str(library.addon_ID())+'-DialogVideoInfo-Aura.xml', Utils.ADDON_PATH, tvshow_id=tvshow_id, season=season, dbid=dbid)
 			else:
 				dialog = season_class(str(library.addon_ID())+'-DialogVideoInfo.xml', Utils.ADDON_PATH, tvshow_id=tvshow_id, season=season, dbid=dbid)
@@ -140,7 +140,7 @@ class WindowManager(object):
 		else:
 			if Utils.SKIN_DIR == 'skin.estuary':
 				dialog = ep_class(str(library.addon_ID())+'-DialogVideoInfo-Estuary.xml', Utils.ADDON_PATH, tvshow_id=tvshow_id, season=season, episode=episode, dbid=dbid)
-			elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod' or 'skin.xonfluence' or 'skin.xenon18':
+			elif Utils.SKIN_DIR == 'skin.aura' or Utils.SKIN_DIR == 'skin.auramod' or Utils.SKIN_DIR == 'skin.xonfluence' or Utils.SKIN_DIR == 'skin.xenon18':
 				dialog = ep_class(str(library.addon_ID())+'-DialogVideoInfo-Aura.xml', Utils.ADDON_PATH, tvshow_id=tvshow_id, season=season, episode=episode, dbid=dbid)
 			else:
 				dialog = ep_class(str(library.addon_ID())+'-DialogVideoInfo.xml', Utils.ADDON_PATH, tvshow_id=tvshow_id, season=season, episode=episode, dbid=dbid)
@@ -171,7 +171,7 @@ class WindowManager(object):
 		actor_class = get_actor_window(DialogXML)
 		if Utils.SKIN_DIR == 'skin.estuary':
 			dialog = actor_class(str(library.addon_ID())+'-DialogInfo-Estuary.xml', Utils.ADDON_PATH, id=actor_id)
-		elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod' or 'skin.xonfluence' or 'skin.xenon18':
+		elif Utils.SKIN_DIR == 'skin.aura' or Utils.SKIN_DIR == 'skin.auramod' or Utils.SKIN_DIR == 'skin.xonfluence' or Utils.SKIN_DIR == 'skin.xenon18':
 			dialog = actor_class(str(library.addon_ID())+'-DialogInfo-Aura.xml', Utils.ADDON_PATH, id=actor_id)
 		else:
 			dialog = actor_class(str(library.addon_ID())+'-DialogInfo.xml', Utils.ADDON_PATH, id=actor_id)
@@ -187,7 +187,7 @@ class WindowManager(object):
 		else:
 			if Utils.SKIN_DIR == 'skin.estuary':
 				dialog = browser_class(str(library.addon_ID())+'-VideoList-Estuary.xml', Utils.ADDON_PATH, listitems=listitems, filters=filters, mode=mode, list_id=list_id, filter_label=filter_label, type=media_type, search_str=search_str)
-			elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod' or 'skin.xonfluence' or 'skin.xenon18':
+			elif Utils.SKIN_DIR == 'skin.aura' or Utils.SKIN_DIR == 'skin.auramod' or Utils.SKIN_DIR == 'skin.xonfluence' or Utils.SKIN_DIR == 'skin.xenon18':
 				dialog = browser_class(str(library.addon_ID())+'-VideoList-Aura.xml', Utils.ADDON_PATH, listitems=listitems, filters=filters, mode=mode, list_id=list_id, filter_label=filter_label, type=media_type, search_str=search_str)
 			else:
 				dialog = browser_class(str(library.addon_ID())+'-VideoList.xml', Utils.ADDON_PATH, listitems=listitems, filters=filters, mode=mode, list_id=list_id, filter_label=filter_label, type=media_type, search_str=search_str)
@@ -200,7 +200,7 @@ class WindowManager(object):
 	def open_slideshow(self, listitems, index):
 		if Utils.SKIN_DIR == 'skin.estuary':
 			slideshow = SlideShow(str(library.addon_ID())+'-SlideShow-Estuary.xml', Utils.ADDON_PATH, listitems=listitems, index=index)
-		elif Utils.SKIN_DIR == 'skin.aura' or 'skin.auramod' or 'skin.xonfluence' or 'skin.xenon18':
+		elif Utils.SKIN_DIR == 'skin.aura' or Utils.SKIN_DIR == 'skin.auramod' or Utils.SKIN_DIR == 'skin.xonfluence' or Utils.SKIN_DIR == 'skin.xenon18':
 			slideshow = SlideShow(str(library.addon_ID())+'-SlideShow-Aura.xml', Utils.ADDON_PATH, listitems=listitems, index=index)
 		else:
 			slideshow = SlideShow(str(library.addon_ID())+'-SlideShow.xml', Utils.ADDON_PATH, listitems=listitems, index=index)

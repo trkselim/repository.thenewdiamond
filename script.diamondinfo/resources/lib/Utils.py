@@ -399,6 +399,7 @@ def set_window_props(name, data, prefix='', debug=False):
 	xbmcgui.Window(10000).setProperty('%s%s.Count' % (prefix, name), str(len(data)))
 
 def create_listitems(data=None, preload_images=0):
+	fanart_api = library.fanart_api_key()
 	INT_INFOLABELS = ['year', 'episode', 'season', 'tracknumber', 'playcount', 'overlay']
 	FLOAT_INFOLABELS = ['rating']
 	STRING_INFOLABELS = ['mediatype', 'genre', 'director', 'mpaa', 'plot', 'plotoutline', 'title', 'originaltitle', 'sorttitle', 'duration', 'studio', 'tagline', 'writer', 'tvshowtitle', 'premiered', 'status', 'code', 'aired', 'credits', 'lastplayed', 'album', 'votes', 'trailer', 'dateadded']
@@ -409,6 +410,16 @@ def create_listitems(data=None, preload_images=0):
 	image_requests = []
 	for (count, result) in enumerate(data):
 		listitem = xbmcgui.ListItem('%s' % str(count))
+
+		if 'logo\':' not in str(result.items()):
+			tmdb_id = result['id']
+			media_type = result['media_type']
+			from resources.lib import TheMovieDB
+			try: clearlogo = TheMovieDB.get_fanart_clearlogo(tmdb_id=tmdb_id,media_type=media_type)
+			except: clearlogo = ''
+			#xbmc.log(str(clearlogo)+'===>PHIL', level=xbmc.LOGINFO)
+			result['clearlogo'] = clearlogo
+			result['logo'] = clearlogo
 		for (key, value) in result.items():
 			if not value:
 				continue
