@@ -229,10 +229,12 @@ class PlayerMonitor(xbmc.Player):
 
     def onPlayBackStopped(self):
         trakt_scrobble = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_scrobble'))
+        reopen_window_bool = str(xbmcaddon.Addon(library.addon_ID()).getSetting('reopen_window_bool'))
 
         if trakt_scrobble == 'false':
-            from resources.lib import process
-            process.reopen_window()
+            if reopen_window_bool == 'true' and diamond_info_started:
+                from resources.lib import process
+                process.reopen_window()
             return
 
         xbmc.log(str('onPlayBackStopped')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
@@ -270,12 +272,14 @@ class PlayerMonitor(xbmc.Player):
                 json_object  = json.loads(json_result)
                 xbmc.log(str(json_object)+'=episode resume set, '+str(dbID)+'=dbID', level=xbmc.LOGFATAL)
         except:
-            from resources.lib import process
-            process.reopen_window()
+            if reopen_window_bool == 'true' and diamond_info_started:
+                from resources.lib import process
+                process.reopen_window()
             return
 
-        from resources.lib import process
-        process.reopen_window()
+        if reopen_window_bool == 'true' and diamond_info_started:
+            from resources.lib import process
+            process.reopen_window()
         #self.set_watched()
         #self.reset_properties()
 

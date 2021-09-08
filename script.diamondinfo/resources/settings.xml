@@ -15,6 +15,7 @@
 		<setting label="Info Dialog Settings Button" type="select" id="settings_user_config" values="TMDBHelper Context Menu|Settings Selection Menu" default="Settings Selection Menu"/>
 		<setting label="Trakt/Kodi Scrobbling with Scene filename parsing" type="lsep"/>
 		<setting label="Enable Trakt/Kodi Scrobbling with PTN" type="bool" id="trakt_scrobble" default="false"/>
+		<setting label="Reopen Last UI Screen After Playback Ends" type="bool" id="reopen_window_bool" default="false"/>
 		<setting label="Use Context Menus or Dialog Select Boxes?" type="bool" id="context_menu" default="false"/>
 		<setting label="Maintenance" type="lsep"/>
 		<setting label="Clear cache..." type="action" action="RunScript(script.diamondinfo,info=deletecache)"/>
