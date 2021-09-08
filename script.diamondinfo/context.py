@@ -9,7 +9,9 @@ if __name__ == '__main__':
 	type = info.getMediaType()
 	remote_id = sys.listitem.getProperty('id')
 	if type   == 'movie':
-		xbmc.executebuiltin('%s'+str(library.addon_ID_short())+',dbid=%s,id=%s,imdb_id=%s,name=%s)' % (base, dbid, remote_id, info.getIMDBNumber(), info.getTitle()))
+		base = 'RunScript('+str(library.addon_ID())+',info='+str(library.addon_ID_short())
+		url = '%s,dbid=%s,id=%s,imdb_id=%s,name=%s)' % (base, dbid, remote_id, info.getIMDBNumber(), info.getTitle())
+		xbmc.executebuiltin(url)
 	elif type == 'tvshow':
 		xbmc.executebuiltin('%sextendedtvinfo,dbid=%s,id=%s,name=%s)' % (base, dbid, remote_id, info.getTVShowTitle()))
 	elif type == 'season':

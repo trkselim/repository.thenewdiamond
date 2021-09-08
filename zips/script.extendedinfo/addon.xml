@@ -31,7 +31,7 @@
 	</extension>
 	<extension point="xbmc.service" library="service.py"  start="login"/>
 	<extension point="xbmc.addon.metadata">
-		<reuselanguageinvoker>false</reuselanguageinvoker>
+		<reuselanguageinvoker>true</reuselanguageinvoker>
 		<platform>all</platform>
 		<summary>Diamond Info (EIM)</summary>
 		<description>The New Diamond Info is a fork of the old Diamond Info which in turn was a fork of the OpenInfo Script.  Currently the addonid is:  script.diamoninfo
