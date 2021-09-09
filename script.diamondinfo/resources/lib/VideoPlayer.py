@@ -1,7 +1,7 @@
 import xbmc, xbmcgui
 from resources.lib import Utils
 from resources.lib.WindowManager import wm
-import time
+
 
 class VideoPlayer(xbmc.Player):
 
@@ -29,6 +29,7 @@ class VideoPlayer(xbmc.Player):
 		self.stopped = False
 
 	def play(self, url, listitem, window=False):
+		import time
 		xbmcgui.Window(10000).setProperty('diamond_info_time', str(int(time.time())))
 		super(VideoPlayer, self).play(item=url, listitem=listitem, windowed=False, startpos=-1)
 		for i in range(600):
@@ -41,6 +42,7 @@ class VideoPlayer(xbmc.Player):
 			xbmc.sleep(50)
 
 	def play_from_button(self, url, listitem, window=False, type='', dbid=0):
+		import time
 		xbmcgui.Window(10000).setProperty('diamond_info_time', str(int(time.time())))
 		if dbid != 0:
 			item = '{"%s": %s}' % (type, dbid)
@@ -57,7 +59,7 @@ class VideoPlayer(xbmc.Player):
 			xbmc.sleep(50)
 
 	def playtube(self, youtube_id=False, listitem=None, window=False):
-		url = 'plugin://plugin.video.youtube/play/?video_id=%s' % youtube_id
+		url = 'plugin://plugin.video.youtube/play/?video_id=%s' % str(youtube_id)
 		self.play(url=url, listitem=listitem, window=window)
 
 PLAYER = VideoPlayer()

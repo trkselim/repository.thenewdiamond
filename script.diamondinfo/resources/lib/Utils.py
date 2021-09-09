@@ -1,17 +1,20 @@
 import os, re, time, json, urllib.request, urllib.parse, urllib.error, hashlib, datetime, requests, threading
 import xbmc, xbmcgui, xbmcvfs, xbmcaddon, xbmcplugin
 from functools import wraps
-from resources.lib import library
+from resources.lib.library import addon_ID
+from resources.lib.library import basedir_tv_path
+from resources.lib.library import basedir_movies_path
+from resources.lib.library import fanart_api_key
 
 
-ADDON_PATH = xbmcvfs.translatePath('special://home/addons/'+str(library.addon_ID()))
-ADDON_DATA_PATH = xbmcvfs.translatePath('special://profile/addon_data/'+str(library.addon_ID()))
-IMAGES_DATA_PATH = xbmcvfs.translatePath('special://profile/addon_data/'+str(library.addon_ID())+'/images')
+ADDON_PATH = xbmcvfs.translatePath('special://home/addons/'+str(addon_ID()))
+ADDON_DATA_PATH = xbmcvfs.translatePath('special://profile/addon_data/'+str(addon_ID()))
+IMAGES_DATA_PATH = xbmcvfs.translatePath('special://profile/addon_data/'+str(addon_ID())+'/images')
 SKIN_DIR = xbmc.getSkinDir()
 AUTOPLAY_TRAILER = xbmcaddon.Addon().getSetting('autoplay_trailer')
 NETFLIX_VIEW = xbmcaddon.Addon().getSetting('netflix_view')
-DIAMONDPLAYER_TV_FOLDER = library.basedir_tv_path()
-DIAMONDPLAYER_MOVIE_FOLDER = library.basedir_movies_path()
+DIAMONDPLAYER_TV_FOLDER = basedir_tv_path()
+DIAMONDPLAYER_MOVIE_FOLDER = basedir_movies_path()
 
 def show_busy():
 	if xbmc.Player().isPlaying():
@@ -287,7 +290,7 @@ def get_file(url):
 
 def log(txt):
 	if isinstance(txt, str):
-		message = ''+str(library.addon_ID())+':  %s' % txt
+		message = ''+str(addon_ID())+':  %s' % txt
 
 def get_browse_dialog(default='', heading='Browse', dlg_type=3, shares='files', mask='', use_thumbs=False, treat_as_folder=False):
 	value = xbmcgui.Dialog().browse(dlg_type, heading, shares, mask, use_thumbs, treat_as_folder, default)
@@ -399,7 +402,7 @@ def set_window_props(name, data, prefix='', debug=False):
 	xbmcgui.Window(10000).setProperty('%s%s.Count' % (prefix, name), str(len(data)))
 
 def create_listitems(data=None, preload_images=0):
-	fanart_api = library.fanart_api_key()
+	fanart_api = fanart_api_key()
 	INT_INFOLABELS = ['year', 'episode', 'season', 'tracknumber', 'playcount', 'overlay']
 	FLOAT_INFOLABELS = ['rating']
 	STRING_INFOLABELS = ['mediatype', 'genre', 'director', 'mpaa', 'plot', 'plotoutline', 'title', 'originaltitle', 'sorttitle', 'duration', 'studio', 'tagline', 'writer', 'tvshowtitle', 'premiered', 'status', 'code', 'aired', 'credits', 'lastplayed', 'album', 'votes', 'trailer', 'dateadded']
@@ -410,10 +413,13 @@ def create_listitems(data=None, preload_images=0):
 	image_requests = []
 	for (count, result) in enumerate(data):
 		listitem = xbmcgui.ListItem('%s' % str(count))
-
-		if 'logo\':' not in str(result.items()):
+		try: 
 			tmdb_id = result['id']
 			media_type = result['media_type']
+		except: 
+			tmdb_id = 0
+			media_type = 0
+		if not 'logo\':' in str(result.items()) and tmdb_id != 0 and (media_type != 0 or media_type == 'tv' or media_type == 'movie'):
 			from resources.lib import TheMovieDB
 			try: clearlogo = TheMovieDB.get_fanart_clearlogo(tmdb_id=tmdb_id,media_type=media_type)
 			except: clearlogo = ''

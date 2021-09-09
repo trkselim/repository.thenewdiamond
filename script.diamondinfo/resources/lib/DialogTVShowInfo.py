@@ -7,7 +7,15 @@ from resources.lib.WindowManager import wm
 from resources.lib.VideoPlayer import PLAYER
 from resources.lib.OnClickHandler import OnClickHandler
 from resources.lib.DialogBaseInfo import DialogBaseInfo
-from resources.lib import library
+from resources.lib.library import addon_ID
+from resources.lib.library import addon_ID_short
+from resources.lib.library import basedir_tv_path
+from resources.lib.library import basedir_movies_path
+from resources.lib.library import trakt_add_tv
+from resources.lib.library import trakt_add_movie
+from resources.lib.library import next_episode_show
+from resources.lib.library import trakt_next_episode_normal
+from resources.lib.library import trakt_next_episode_rewatch
 
 ch = OnClickHandler()
 
@@ -88,7 +96,7 @@ def get_tvshow_window(window_type):
 				listitems += ['Remove from library']
 			else:
 				listitems += ['Add to library']
-			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
+			if xbmcaddon.Addon(addon_ID()).getSetting('context_menu') == 'true':
 				selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
 			else:
 				selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
@@ -96,7 +104,7 @@ def get_tvshow_window(window_type):
 		@ch.click(750)
 		@ch.click(1000)
 		def credit_dialog(self):
-			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
+			if xbmcaddon.Addon(addon_ID()).getSetting('context_menu') == 'true':
 				selection = xbmcgui.Dialog().contextmenu(['Show TV show information', 'Show actor TV show appearances'])
 			else:
 				selection = xbmcgui.Dialog().select(heading='Choose option', list=['Show TV show information', 'Show actor TV show appearances'])
@@ -109,13 +117,13 @@ def get_tvshow_window(window_type):
 		@ch.action('contextmenu', 1000)
 		def actor_context_menu(self):
 			listitems = ['Search Person']
-			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
+			if xbmcaddon.Addon(addon_ID()).getSetting('context_menu') == 'true':
 				selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
 			else:
 				selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
 			if selection == 0:
 				self.close()
-				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=search_person,person=%s)' % self.listitem.getLabel())
+				xbmc.executebuiltin('RunScript('+str(addon_ID())+',info=search_person,person=%s)' % self.listitem.getLabel())
 
 		@ch.click(150)
 		def open_tvshow_dialog(self):
@@ -128,7 +136,7 @@ def get_tvshow_window(window_type):
 		@ch.action('contextmenu', 250)
 		def season_context_menu(self):
 			listitems = ['Play Season']
-			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
+			if xbmcaddon.Addon(addon_ID()).getSetting('context_menu') == 'true':
 				selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
 			else:
 				selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
@@ -173,12 +181,12 @@ def get_tvshow_window(window_type):
 		@ch.click(445)
 		def show_manage_dialog(self):
 			manage_list = []
-			manage_list.append([str(library.addon_ID_short())+ ' Settings', 'Addon.OpenSettings("'+str(library.addon_ID())+'")'])
+			manage_list.append([str(addon_ID_short())+ ' Settings', 'Addon.OpenSettings("'+str(addon_ID())+'")'])
 			manage_list.append(["TMDBHelper Context", 'RunScript(plugin.video.themoviedb.helper,sync_trakt,tmdb_type=tv,tmdb_id='+str(self.info['id'])+')'])
 			manage_list.append(["TmdbHelper settings", 'Addon.OpenSettings("plugin.video.themoviedb.helper")'])
 			manage_list.append(["YouTube's settings", 'Addon.OpenSettings("plugin.video.youtube")'])
 			import xbmcaddon
-			settings_user_config = xbmcaddon.Addon(library.addon_ID()).getSetting('settings_user_config')
+			settings_user_config = xbmcaddon.Addon(addon_ID()).getSetting('settings_user_config')
 			if settings_user_config == 'Settings Selection Menu':
 				selection = xbmcgui.Dialog().select(heading='Settings', list=[i[0] for i in manage_list])
 			else:
@@ -231,7 +239,7 @@ def get_tvshow_window(window_type):
 					listitems += ['Play Trakt Next Episode (Rewatch)']
 			listitems += ['Search item']
 			listitems += ['Trailer']
-			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
+			if xbmcaddon.Addon(addon_ID()).getSetting('context_menu') == 'true':
 				selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
 			else:
 				selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
@@ -256,68 +264,68 @@ def get_tvshow_window(window_type):
 					PLAYER.play_from_button(url, listitem=None, window=self, type='movieid', dbid=dbid)
 			if selection_text == 'Remove from library' or selection_text == 'Add to library':
 				if self.info['TVShowTitle']:
-					TVLibrary = library.basedir_tv_path()
+					TVLibrary = basedir_tv_path()
 					if dbid > 0:
 						Utils.get_kodi_json(method='VideoLibrary.RemoveTVShow', params='{"tvshowid": %s}' % dbid)
 						if os.path.exists(xbmcvfs.translatePath('%s%s/' % (TVLibrary, tvdb_id))):
 							shutil.rmtree(xbmcvfs.translatePath('%s%s/' % (TVLibrary, tvdb_id)))
 							
-							library.trakt_add_tv(item_id,'Remove')
+							trakt_add_tv(item_id,'Remove')
 							Utils.after_add(type='tv')
 							Utils.notify(header='[B]%s[/B]' % self.info['TVShowTitle'], message='Removed from library', icon=self.info['poster'], time=1000, sound=False)
 							xbmc.sleep(250)
 							self.update(force_update=True)
 							self.getControl(500).selectItem(self.position)
 					else:
-						if xbmcgui.Dialog().yesno(str(library.addon_ID_short()), 'Add [B]%s[/B] to library?' % self.info['TVShowTitle']):
-							library.trakt_add_tv(item_id,'Add')
+						if xbmcgui.Dialog().yesno(str(addon_ID_short()), 'Add [B]%s[/B] to library?' % self.info['TVShowTitle']):
+							trakt_add_tv(item_id,'Add')
 							Utils.after_add(type='tv')
 							Utils.notify(header='[B]%s[/B] added to library' % self.info['TVShowTitle'], message='Exit & re-enter to refresh', icon=self.info['poster'], time=1000, sound=False)
 				else:
 					if dbid > 0:
-						if xbmcgui.Dialog().yesno(str(library.addon_ID_short()), 'Remove [B]%s[/B] from library?' % self.info['title']):
+						if xbmcgui.Dialog().yesno(str(addon_ID_short()), 'Remove [B]%s[/B] from library?' % self.info['title']):
 							Utils.get_kodi_json(method='VideoLibrary.RemoveMovie', params='{"movieid": %s}' % dbid)
-							MovieLibrary = library.basedir_movies_path()
+							MovieLibrary = basedir_movies_path()
 							if os.path.exists(xbmcvfs.translatePath('%s%s/' % (MovieLibrary, imdb_id))):
 								shutil.rmtree(xbmcvfs.translatePath('%s%s/' % (MovieLibrary, imdb_id)))
 								
-								library.trakt_add_movie(item_id,'Remove')
+								trakt_add_movie(item_id,'Remove')
 								Utils.after_add(type='movie')
 								Utils.notify(header='[B]%s[/B]' % self.info['title'], message='Removed from library', icon=self.info['poster'], time=1000, sound=False)
 								xbmc.sleep(250)
 								self.update(force_update=True)
 								self.getControl(500).selectItem(self.position)
 					else:
-						if xbmcgui.Dialog().yesno(str(library.addon_ID_short()), 'Add [B]%s[/B] to library?' % self.info['title']):
-							library.trakt_add_movie(item_id,'Add')
+						if xbmcgui.Dialog().yesno(str(addon_ID_short()), 'Add [B]%s[/B] to library?' % self.info['title']):
+							trakt_add_movie(item_id,'Add')
 							Utils.after_add(type='movie')
 							Utils.notify(header='[B]%s[/B] added to library' % self.info['title'], message='Exit & re-enter to refresh', icon=self.info['poster'], time=1000, sound=False)
 
 			if selection_text == 'Play Kodi Next Episode':
-				url = library.next_episode_show(tmdb_id_num=item_id,dbid_num=dbid)
+				url = next_episode_show(tmdb_id_num=item_id,dbid_num=dbid)
 				xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
 				PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
 
 			if selection_text == 'Play Trakt Next Episode':
-				url = library.trakt_next_episode_normal(tmdb_id_num=item_id)
+				url = trakt_next_episode_normal(tmdb_id_num=item_id)
 				xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
 				PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
 
 			if selection_text == 'Play Trakt Next Episode (Rewatch)':
-				url = library.trakt_next_episode_rewatch(tmdb_id_num=item_id)
+				url = trakt_next_episode_rewatch(tmdb_id_num=item_id)
 				xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
 				PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
 
 			if selection_text == 'Search item':
 				item_title = self.info['TVShowTitle'] or self.info['Title']
 				self.close()
-				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=search_string,str=%s)' % item_title)
+				xbmc.executebuiltin('RunScript('+str(addon_ID())+',info=search_string,str=%s)' % item_title)
 
 			if selection_text == 'Trailer':
 				if self.info['TVShowTitle']:
-					url = 'plugin://'+str(library.addon_ID())+'?info=playtvtrailer&&id=' + item_id
+					url = 'plugin://'+str(addon_ID())+'?info=playtvtrailer&&id=' + str(item_id)
 				else:
-					url = 'plugin://'+str(library.addon_ID())+'?info=playtrailer&&id=' + item_id
+					url = 'plugin://'+str(addon_ID())+'?info=playtrailer&&id=' + str(item_id)
 				PLAYER.play(url, listitem=None, window=self)
 
 
@@ -334,18 +342,18 @@ def get_tvshow_window(window_type):
 
 		@ch.click(20)
 		def add_tvshow_to_library(self):
-			if xbmcgui.Dialog().yesno(str(library.addon_ID_short()), 'Add [B]%s[/B] to library?' % self.info['TVShowTitle']):
-				library.trakt_add_tv(self.info['id'],'Add')
+			if xbmcgui.Dialog().yesno(str(addon_ID_short()), 'Add [B]%s[/B] to library?' % self.info['TVShowTitle']):
+				trakt_add_tv(self.info['id'],'Add')
 				Utils.after_add(type='tv')
 				Utils.notify(header='[B]%s[/B] added to library' % self.info['TVShowTitle'], message='Exit & re-enter to refresh', icon=self.info['poster'], time=1000, sound=False)
 
 		@ch.click(21)
 		def remove_tvshow_from_library(self):
-			if xbmcgui.Dialog().yesno(str(library.addon_ID_short()), 'Remove [B]%s[/B] from library?' % self.info['TVShowTitle']):
+			if xbmcgui.Dialog().yesno(str(addon_ID_short()), 'Remove [B]%s[/B] from library?' % self.info['TVShowTitle']):
 				if os.path.exists(xbmcvfs.translatePath('%s%s/' % (Utils.DIAMONDPLAYER_TV_FOLDER, self.info['tvdb_id']))):
 					Utils.get_kodi_json(method='VideoLibrary.RemoveTVShow', params='{"tvshowid": %s}' % int(self.info['dbid']))
 					shutil.rmtree(xbmcvfs.translatePath('%s%s/' % (Utils.DIAMONDPLAYER_TV_FOLDER, self.info['tvdb_id'])))
-					library.trakt_add_tv(item_id,'Remove')
+					trakt_add_tv(item_id,'Remove')
 					Utils.after_add(type='tv')
 					Utils.notify(header='Removed [B]%s[/B] from library' % self.info['TVShowTitle'], message='Exit & re-enter to refresh', icon=self.info['poster'], time=1000, sound=False)
 

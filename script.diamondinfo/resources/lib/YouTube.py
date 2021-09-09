@@ -1,5 +1,5 @@
 from resources.lib import Utils
-from resources.lib import library
+from resources.lib.library import addon_ID
 
 API_key = 'AIzaSyA-7-vxSFjNqfcOyCG33rwzRB0UZW30Pic'
 
@@ -16,8 +16,8 @@ def handle_youtube_videos(results, extended=False):
 		video = {
 			'thumb': thumb,
 			'youtube_id': video_id,
-			'Play': 'plugin://'+str(library.addon_ID())+'?info=youtubevideo&&id=' + video_id,
-			'path': 'plugin://'+str(library.addon_ID())+'?info=youtubevideo&&id=' + video_id,
+			'Play': 'plugin://'+str(addon_ID())+'?info=youtubevideo&&id=' + video_id,
+			'path': 'plugin://'+str(addon_ID())+'?info=youtubevideo&&id=' + video_id,
 			'Description': item['snippet']['description'],
 			'title': item['snippet']['title'],
 			'channel_title': item['snippet']['channelTitle'],

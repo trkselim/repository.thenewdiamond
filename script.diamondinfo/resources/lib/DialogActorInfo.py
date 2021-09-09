@@ -6,7 +6,7 @@ from resources.lib.WindowManager import wm
 from resources.lib.VideoPlayer import PLAYER
 from resources.lib.OnClickHandler import OnClickHandler
 from resources.lib.DialogBaseInfo import DialogBaseInfo
-from resources.lib import library
+from resources.lib.library import addon_ID
 
 ch = OnClickHandler()
 
@@ -55,7 +55,7 @@ def get_actor_window(window_type):
 		@ch.click(650)
 		def open_tvshow_dialog(self):
 			#selection = xbmcgui.Dialog().select(heading='Choose option', list=['Show TV show information', 'Show actor TV show appearances'])
-			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
+			if xbmcaddon.Addon(addon_ID()).getSetting('context_menu') == 'true':
 				selection = xbmcgui.Dialog().contextmenu(['Show TV show information', 'Show actor TV show appearances'])
 			else:
 				selection = xbmcgui.Dialog().select(heading='Choose option', list=['Show TV show information', 'Show actor TV show appearances'])
@@ -86,7 +86,7 @@ def get_actor_window(window_type):
 
 			listitems += ['Search item']
 			#selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
-			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
+			if xbmcaddon.Addon(addon_ID()).getSetting('context_menu') == 'true':
 				selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
 			else:
 				selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
@@ -105,7 +105,7 @@ def get_actor_window(window_type):
 #				xbmc.executebuiltin('RunPlugin(plugin://script.extendedinfo/?info=search_string&str=%s' % item_title)
 #				xbmc.log(str('RunPlugin(plugin://script.extendedinfo/?info=search_string&str=%s)' % item_title)+'===>TMDB_HELPER_3', level=xbmc.LOGNOTICE)
 				self.close()
-				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=search_string,str=%s)' % item_title)
+				xbmc.executebuiltin('RunScript('+str(addon_ID())+',info=search_string,str=%s)' % item_title)
 
 		@ch.click(450)
 		@ch.click(750)

@@ -1,15 +1,16 @@
 import sys
 import xbmc
-from resources.lib import library
+from resources.lib.library import addon_ID
+from resources.lib.library import addon_ID_short
 
 if __name__ == '__main__':
-	base = 'RunScript('+str(library.addon_ID())+',info='
+	base = 'RunScript('+str(addon_ID())+',info='
 	info = sys.listitem.getVideoInfoTag()
 	dbid = info.getDbId() if info.getDbId() else sys.listitem.getProperty('dbid')
 	type = info.getMediaType()
 	remote_id = sys.listitem.getProperty('id')
 	if type   == 'movie':
-		base = 'RunScript('+str(library.addon_ID())+',info='+str(library.addon_ID_short())
+		base = 'RunScript('+str(addon_ID())+',info='+str(addon_ID_short())
 		url = '%s,dbid=%s,id=%s,imdb_id=%s,name=%s)' % (base, dbid, remote_id, info.getIMDBNumber(), info.getTitle())
 		xbmc.executebuiltin(url)
 	elif type == 'tvshow':

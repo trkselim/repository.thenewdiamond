@@ -3,7 +3,9 @@ import xbmc, xbmcgui, xbmcaddon
 from resources.lib import Utils
 from resources.lib import local_db
 from resources.lib.WindowManager import wm
-from resources.lib import library
+from resources.lib.library import addon_ID
+from resources.lib.library import addon_ID_short
+from resources.lib.library import fanart_api_key
 
 ext_key = xbmcaddon.Addon().getSetting('tmdb_api')
 
@@ -54,8 +56,8 @@ def handle_tmdb_movies(results=[], local_first=True, sortkey='year'):
 			genres = ''
 		tmdb_id = str(Utils.fetch(movie, 'id'))
 		artwork = get_image_urls(poster=movie.get('poster_path'), fanart=movie.get('backdrop_path'))
-		trailer = 'plugin://'+str(library.addon_ID())+'?info=playtrailer&&id=%s' % tmdb_id
-		path = 'plugin://'+str(library.addon_ID())+'?info='+str(library.addon_ID_short())+'&&id=%s' % tmdb_id
+		trailer = 'plugin://'+str(addon_ID())+'?info=playtrailer&&id=%s' % str(tmdb_id)
+		path = 'plugin://'+str(addon_ID())+'?info='+str(addon_ID_short())+'&&id=%s' % str(tmdb_id)
 		listitem = {
 			'title': Utils.fetch(movie, 'title'),
 			'Label': Utils.fetch(movie, 'title'),
@@ -116,12 +118,12 @@ def handle_tmdb_tvshows(results, local_first=True, sortkey='year'):
 			'Popularity': Utils.fetch(tv, 'popularity'),
 			'credit_id': Utils.fetch(tv, 'credit_id'),
 			'Plot': Utils.fetch(tv, 'overview'),
-			'Trailer': 'plugin://'+str(library.addon_ID())+'?info=tvtrailer&&id=%s' % tmdb_id,
+			'Trailer': 'plugin://'+str(addon_ID())+'?info=tvtrailer&&id=%s' % str(tmdb_id),
 			'year': Utils.get_year(Utils.fetch(tv, 'first_air_date')),
 			'media_type': 'tv',
 			'mediatype': 'tvshow',
 			'character': Utils.fetch(tv, 'character'),
-			'path': 'plugin://'+str(library.addon_ID())+'?info=extendedtvinfo&&id=%s' % tmdb_id,
+			'path': 'plugin://'+str(addon_ID())+'?info=extendedtvinfo&&id=%s' % str(tmdb_id),
 			'Rating': Utils.fetch(tv, 'vote_average'),
 			'User_Rating': str(Utils.fetch(tv, 'rating')),
 			'Votes': Utils.fetch(tv, 'vote_count'),
@@ -193,7 +195,7 @@ def handle_tmdb_misc(results):
 			'certification': Utils.fetch(item, 'certification') + Utils.fetch(item, 'rating'),
 			'item_count': Utils.fetch(item, 'item_count'),
 			'release_date': Utils.fetch(item, 'release_date'),
-			'path': 'plugin://'+str(library.addon_ID())+'?info=listmovies&---id=%s' % Utils.fetch(item, 'id'),
+			'path': 'plugin://'+str(addon_ID())+'?info=listmovies&---id=%s' % Utils.fetch(item, 'id'),
 			'year': Utils.get_year(Utils.fetch(item, 'release_date')),
 			'iso_3166_1': Utils.fetch(item, 'iso_3166_1').lower(),
 			'author': Utils.fetch(item, 'author'),
@@ -245,7 +247,7 @@ def handle_tmdb_people(results):
 			'id': str(person['id']),
 			'cast_id': str(Utils.fetch(person, 'cast_id')),
 			'credit_id': str(Utils.fetch(person, 'credit_id')),
-			'path': 'plugin://'+str(library.addon_ID())+'?info=extendedactorinfo&&id=%s' % str(person['id']),
+			'path': 'plugin://'+str(addon_ID())+'?info=extendedactorinfo&&id=%s' % str(person['id']),
 			'deathday': Utils.fetch(person, 'deathday'),
 			'place_of_birth': Utils.fetch(person, 'place_of_birth'),
 			'placeofbirth': Utils.fetch(person, 'place_of_birth'),
@@ -367,7 +369,7 @@ def get_fanart_clearlogo(tmdb_id=None, media_type=None):
 	return clearlogo
 
 def get_fanart_data(url='', tmdb_id=None, media_type=None, cache_days=14, folder='FanartTV'):
-	fanart_api = library.fanart_api_key()
+	fanart_api = fanart_api_key()
 	import requests,json
 	if media_type =='tv':
 		tvdb_id = get_tvshow_ids(tmdb_id)
@@ -472,21 +474,21 @@ def get_tvtrailer(tvshow_id):
 
 def play_movie_trailer(id):
 	trailer = get_trailer(id)
-	xbmc.executebuiltin('PlayMedia(plugin://plugin.video.youtube/play/?video_id=%s,1)' % trailer)
+	xbmc.executebuiltin('PlayMedia(plugin://plugin.video.youtube/play/?video_id=%s,1)' % str(trailer))
 	xbmc.executebuiltin('Dialog.Close(busydialog)')
 
 def play_movie_trailer_fullscreen(id):
 	trailer = get_trailer(id)
-	xbmc.executebuiltin('PlayMedia(plugin://plugin.video.youtube/play/?video_id=%s)' % trailer)
+	xbmc.executebuiltin('PlayMedia(plugin://plugin.video.youtube/play/?video_id=%s)' % str(trailer))
 
 def play_tv_trailer(id):
 	trailer = get_tvtrailer(id)
-	xbmc.executebuiltin('PlayMedia(plugin://plugin.video.youtube/play/?video_id=%s,1)' % trailer)
+	xbmc.executebuiltin('PlayMedia(plugin://plugin.video.youtube/play/?video_id=%s,1)' % str(trailer))
 	xbmc.executebuiltin('Dialog.Close(busydialog)')
 
 def play_tv_trailer_fullscreen(id):
 	trailer = get_tvtrailer(id)
-	xbmc.executebuiltin('PlayMedia(plugin://plugin.video.youtube/play/?video_id=%s)' % trailer)
+	xbmc.executebuiltin('PlayMedia(plugin://plugin.video.youtube/play/?video_id=%s)' % str(trailer))
 
 def extended_movie_info(movie_id=None, dbid=None, cache_time=14):
 	if not movie_id:
@@ -546,8 +548,8 @@ def extended_movie_info(movie_id=None, dbid=None, cache_time=14):
 		'Premiered': Utils.fetch(response, 'release_date'),
 		'Studio': ' / '.join(Studio),
 		'year': Utils.get_year(Utils.fetch(response, 'release_date')),
-		'path': 'plugin://'+str(library.addon_ID())+'?info='+str(library.addon_ID_short())+'&&id=%s' % movie_id,
-		'trailer': 'plugin://'+str(library.addon_ID())+'?info=playtrailer&&id=%s' % movie_id
+		'path': 'plugin://'+str(addon_ID())+'?info='+str(addon_ID_short())+'&&id=%s' % str(movie_id),
+		'trailer': 'plugin://'+str(addon_ID())+'?info=playtrailer&&id=%s' % str(movie_id)
 		}
 	movie.update(artwork)
 	videos = handle_tmdb_videos(response['videos']['results']) if 'videos' in response else []
@@ -628,8 +630,8 @@ def extended_tvshow_info(tvshow_id=None, cache_time=7, dbid=None):
 		'User_Rating': str(Utils.fetch(response, 'rating')),
 		'Votes': Utils.fetch(response, 'vote_count'),
 		'Status': translate_status(Utils.fetch(response, 'status')),
-		'path': 'plugin://'+str(library.addon_ID())+'?info=extendedtvinfo&&id=%s' % tvshow_id,
-		'trailer': 'plugin://'+str(library.addon_ID())+'?info=playtvtrailer&&id=%s' % tvshow_id,
+		'path': 'plugin://'+str(addon_ID())+'?info=extendedtvinfo&&id=%s' % str(tvshow_id),
+		'trailer': 'plugin://'+str(addon_ID())+'?info=playtvtrailer&&id=%s' % str(tvshow_id),
 		'ShowType': Utils.fetch(response, 'type'),
 		'homepage': Utils.fetch(response, 'homepage'),
 		'last_air_date': Utils.fetch(response, 'last_air_date'),
@@ -697,7 +699,7 @@ def extended_season_info(tvshow_id, season_number):
 		'tvrage_id': tvrage_id,
 		'year': year,
 		'season': season_number,
-		'path': 'plugin://'+str(library.addon_ID())+'?info=seasoninfo&tvshow=%s&season=%s' % (Utils.fetch(tvshow, 'name'), season_number),
+		'path': 'plugin://'+str(addon_ID())+'?info=seasoninfo&tvshow=%s&season=%s' % (Utils.fetch(tvshow, 'name'), season_number),
 		'release_date': response['air_date'],
 		'AirDate': response['air_date']
 		}
@@ -754,7 +756,7 @@ def extended_episode_info(tvshow_id, season, episode, cache_time=7):
 		'tvshow_id': tmdb_id,
 		'tvdb_id': tvdb_id,
 		'actors': actors,
-		'path': 'plugin://'+str(library.addon_ID())+'?info=extendedepisodeinfo&tvshow_id=%s&season=%s&episode=%s' % (tvshow_id, season, episode),
+		'path': 'plugin://'+str(addon_ID())+'?info=extendedepisodeinfo&tvshow_id=%s&season=%s&episode=%s' % (tvshow_id, season, episode),
 		'crew': crew,
 		'guest_stars': guest_stars,
 		'videos': videos,
@@ -869,8 +871,8 @@ def get_imdb_list(list_str=None):
 	return listitems
 
 def get_trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_order=None):
-	from resources.lib import library
-	movies = library.trakt_lists(list_name,user_id,list_slug,sort_by,sort_order)
+	from resources.lib.library import trakt_lists
+	movies = trakt_lists(list_name,user_id,list_slug,sort_by,sort_order)
 	listitems = None
 	for i in movies:
 		imdb_id = i['ids']['imdb']
@@ -894,20 +896,23 @@ def get_trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort
 	return listitems
 
 def get_trakt(trakt_type=None,info=None):
-	from resources.lib import library
+	from resources.lib.library import trakt_watched_movies
+	from resources.lib.library import trakt_collection_movies
+	from resources.lib.library import trakt_watched_tv_shows
+	from resources.lib.library import trakt_collection_shows
 	if trakt_type == 'movie':
 		if info == 'trakt_watched':
-			movies = library.trakt_watched_movies()
+			movies = trakt_watched_movies()
 			#self.type = 'movie'
 		if info == 'trakt_coll':
-			movies = library.trakt_collection_movies()
+			movies = trakt_collection_movies()
 			#self.type = 'movie'
 	else:
 		if info == 'trakt_watched':
-			movies = library.trakt_watched_tv_shows()
+			movies = trakt_watched_tv_shows()
 			#self.type = 'tv'
 		if info == 'trakt_coll':
-			movies = library.trakt_collection_shows()
+			movies = trakt_collection_shows()
 			#self.type = 'tv'
 
 	listitems = None

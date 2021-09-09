@@ -6,7 +6,8 @@ from resources.lib.WindowManager import wm
 from resources.lib.VideoPlayer import PLAYER
 from resources.lib.OnClickHandler import OnClickHandler
 from resources.lib.DialogBaseInfo import DialogBaseInfo
-from resources.lib import library
+from resources.lib.library import addon_ID
+from resources.lib.library import addon_ID_short
 
 ch = OnClickHandler()
 
@@ -83,13 +84,13 @@ def get_season_window(window_type):
 		@ch.action('contextmenu', 1000)
 		def actor_context_menu(self):
 			listitems = ['Search Person']
-			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
+			if xbmcaddon.Addon(addon_ID()).getSetting('context_menu') == 'true':
 				selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
 			else:
 				selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
 			if selection == 0:
 				self.close()
-				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=search_person,person=%s)' % self.listitem.getLabel())
+				xbmc.executebuiltin('RunScript('+str(addon_ID())+',info=search_person,person=%s)' % self.listitem.getLabel())
 
 		@ch.click(2000)
 		def open_episode_info(self):
@@ -108,7 +109,7 @@ def get_season_window(window_type):
 			tvdb_id = Utils.fetch(TheMovieDB.get_tvshow_ids(self.tvshow_id), 'tvdb_id')
 			listitems = ['Play - TMDB Helper']
 			listitems += ['TV Show Info']
-			if xbmcaddon.Addon(library.addon_ID()).getSetting('context_menu') == 'true':
+			if xbmcaddon.Addon(addon_ID()).getSetting('context_menu') == 'true':
 				selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
 			else:
 				selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
@@ -132,12 +133,12 @@ def get_season_window(window_type):
 		@ch.click(445)
 		def show_manage_dialog(self):
 			manage_list = []
-			manage_list.append([str(library.addon_ID_short())+" Settings", 'Addon.OpenSettings("'+str(library.addon_ID())+'")'])
+			manage_list.append([str(addon_ID_short())+" Settings", 'Addon.OpenSettings("'+str(addon_ID())+'")'])
 			manage_list.append(["TMDBHelper Context", 'RunScript(plugin.video.themoviedb.helper,sync_trakt,tmdb_type=tv,tmdb_id='+str(self.info['season'])+',season='+str(self.tvshow_id)+')'])
 			manage_list.append(["TmdbHelper settings", 'Addon.OpenSettings("plugin.video.themoviedb.helper")'])
 			manage_list.append(["YouTube's settings", 'Addon.OpenSettings("plugin.video.youtube")'])
 			import xbmcaddon
-			settings_user_config = xbmcaddon.Addon(library.addon_ID()).getSetting('settings_user_config')
+			settings_user_config = xbmcaddon.Addon(addon_ID()).getSetting('settings_user_config')
 			if settings_user_config == 'Settings Selection Menu':
 				selection = xbmcgui.Dialog().select(heading='Settings', list=[i[0] for i in manage_list])
 			else:

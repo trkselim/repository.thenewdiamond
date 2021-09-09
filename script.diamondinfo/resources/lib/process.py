@@ -2,12 +2,13 @@ import os, shutil
 import xbmc, xbmcgui
 from resources.lib import Utils
 from resources.lib.WindowManager import wm
-from resources.lib import library
-
+from resources.lib.library import addon_ID
+from resources.lib.library import addon_ID_short
+from resources.lib.library import icon_path
 
 def start_info_actions(infos, params):
-	addonID = library.addon_ID()
-	addonID_short = library.addon_ID_short()
+	addonID = addon_ID()
+	addonID_short = addon_ID_short()
 
 	if 'imdbid' in params and 'imdb_id' not in params:
 		params['imdb_id'] = params['imdbid']
@@ -153,6 +154,7 @@ def start_info_actions(infos, params):
 			reopen_window()
 
 		elif info == 'test_route':
+			from resources.lib import library 
 			#from pathlib import Path
 			#tvdb_id = 295685
 			#tmdb_id = 63174
@@ -171,43 +173,48 @@ def start_info_actions(infos, params):
 		
 			import xbmcvfs, xbmcaddon
 			xbmc.log(str(library.basedir_movies_path())+'===>PHIL', level=xbmc.LOGINFO)
-			xbmc.log(str(library.addon_ID())+'===>PHIL', level=xbmc.LOGINFO)
-			xbmc.log(str(library.addon_ID_short())+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(addon_ID())+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(addon_ID_short())+'===>PHIL', level=xbmc.LOGINFO)
 			xbmc.log(str(library.main_file_path())+'===>PHIL', level=xbmc.LOGINFO)
 			xbmc.log(str(library.tmdb_settings_path())+'===>PHIL', level=xbmc.LOGINFO)
 			xbmc.log(str(library.tmdb_traktapi_path())+'===>PHIL', level=xbmc.LOGINFO)
 			xbmc.log(str(library.tmdb_traktapi_new_path())+'===>PHIL', level=xbmc.LOGINFO)
 			xbmc.log(str(library.basedir_tv_path())+'===>PHIL', level=xbmc.LOGINFO)
 			xbmc.log(str(library.basedir_movies_path())+'===>PHIL', level=xbmc.LOGINFO)
-			xbmc.log(str(library.icon_path())+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(icon_path())+'===>PHIL', level=xbmc.LOGINFO)
 			realizer_test = xbmc.getCondVisibility('System.HasAddon(plugin.video.realizer)')
 			xbmc.log(str(realizer_test)+'===>PHIL', level=xbmc.LOGINFO)
 
 
 		elif info == 'setup_sources':
 			import xbmcvfs, xbmcaddon
-			library_tv_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_tv_sync'))
-			library_movies_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_movies_sync'))
-			library_folder = str(library.basedir_tv_path())
+			from resources.lib.library import basedir_tv_path
+			from resources.lib.library import basedir_movies_path
+			from resources.lib.library import library_source_exists_tv
+			from resources.lib.library import setup_library_tv
+			from resources.lib.library import library_source_exists_movies
+			setup_library_movies
+			library_tv_sync = str(xbmcaddon.Addon(addon_ID()).getSetting('library_tv_sync'))
+			library_movies_sync = str(xbmcaddon.Addon(addon_ID()).getSetting('library_movies_sync'))
+			library_folder = str(basedir_tv_path())
 			if not xbmcvfs.exists(library_folder):
 				xbmcvfs.mkdir(library_folder)
-			library_folder = str(library.basedir_movies_path())
+			library_folder = str(basedir_movies_path())
 			if not xbmcvfs.exists(library_folder):
 				xbmcvfs.mkdir(library_folder)
-			if not library.library_source_exists_tv() and library_tv_sync == 'true':
-				response = library.setup_library_tv()
+			if not library_source_exists_tv() and library_tv_sync == 'true':
+				response = setup_library_tv()
 				xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
-			if not library.library_source_exists_movies() and library_movies_sync == 'true':
-				response = library.setup_library_movies()
+			if not library_source_exists_movies() and library_movies_sync == 'true':
+				response = setup_library_movies()
 				xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
-			icon_path = library.icon_path()
-			xbmcgui.Dialog().notification(heading='Setup Sources', message='Sources Setup, Please Reboot to finish setup.', icon=icon_path,time=2000,sound=False)
+			xbmcgui.Dialog().notification(heading='Setup Sources', message='Sources Setup, Please Reboot to finish setup.', icon=icon_path(),time=2000,sound=False)
 			Utils.hide_busy()
 
 		elif info == 'setup_xml_filenames':
-			library.setup_xml_filenames()
-			icon_path = library.icon_path()
-			xbmcgui.Dialog().notification(heading='Setup XML Names', message='XML files renamed to match = '+ library.addon_ID(), icon=icon_path,time=2000,sound=False)
+			from resources.lib.library import setup_xml_filenames
+			setup_xml_filenames()
+			xbmcgui.Dialog().notification(heading='Setup XML Names', message='XML files renamed to match = '+ addon_ID(), icon=icon_path(),time=2000,sound=False)
 			return
 
 		elif info == 'auto_library':
@@ -215,10 +222,15 @@ def start_info_actions(infos, params):
 
 		elif info == 'trakt_watched' or info == 'trakt_coll' or info == 'trakt_list':
 			from resources.lib import TheMovieDB
-			#kodi-send --action='RunPlugin(plugin://'+str(library.addon_ID())+'/?info=trakt_watched&trakt_type=movie&script=True)'
-			#kodi-send --action='RunPlugin(plugin://'+str(library.addon_ID())+'/?info=trakt_watched&trakt_type=tv&script=True)'
-			#kodi-send --action='RunPlugin(plugin://'+str(library.addon_ID())+'/?info=trakt_coll&trakt_type=movie&script=True)'
-			#kodi-send --action='RunPlugin(plugin://'+str(library.addon_ID())+'/?info=trakt_coll&trakt_type=tv&script=True)'
+			from resources.lib.library import trakt_watched_tv_shows
+			from resources.lib.library import trakt_watched_movies
+			from resources.lib.library import trakt_collection_shows
+			from resources.lib.library import trakt_collection_movies
+			from resources.lib.library import trakt_lists
+			#kodi-send --action='RunPlugin(plugin://'+str(addon_ID())+'/?info=trakt_watched&trakt_type=movie&script=True)'
+			#kodi-send --action='RunPlugin(plugin://'+str(addon_ID())+'/?info=trakt_watched&trakt_type=tv&script=True)'
+			#kodi-send --action='RunPlugin(plugin://'+str(addon_ID())+'/?info=trakt_coll&trakt_type=movie&script=True)'
+			#kodi-send --action='RunPlugin(plugin://'+str(addon_ID())+'/?info=trakt_coll&trakt_type=tv&script=True)'
 			trakt_type = str(params['trakt_type'])
 			Utils.show_busy()
 			try:
@@ -229,16 +241,16 @@ def start_info_actions(infos, params):
 				return TheMovieDB.get_trakt(trakt_type=trakt_type,info=info)
 			else:
 				if info == 'trakt_watched' and trakt_type == 'movie':
-					movies = library.trakt_watched_movies()
+					movies = trakt_watched_movies()
 					trakt_label = 'Trakt Watched Movies'
 				elif info == 'trakt_watched' and trakt_type == 'tv':
-					movies = library.trakt_watched_tv_shows()
+					movies = trakt_watched_tv_shows()
 					trakt_label = 'Trakt Watched Shows'
 				elif info == 'trakt_coll' and trakt_type == 'movie':
-					movies = library.trakt_collection_movies()
+					movies = trakt_collection_movies()
 					trakt_label = 'Trakt Collection Movies'
 				elif info == 'trakt_coll' and trakt_type == 'tv':
-					movies = library.trakt_collection_shows()
+					movies = trakt_collection_shows()
 					trakt_label = 'Trakt Collection Shows'
 				elif info == 'trakt_list':
 					trakt_type = str(params['trakt_type'])
@@ -247,7 +259,7 @@ def start_info_actions(infos, params):
 					takt_list_slug = str(params['list_slug'])
 					trakt_sort_by = str(params['trakt_sort_by'])
 					trakt_sort_order = str(params['trakt_sort_order'])
-					movies = library.trakt_lists(list_name=trakt_label,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
+					movies = trakt_lists(list_name=trakt_label,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
 					if trakt_script == 'False':
 						return TheMovieDB.get_trakt_lists(list_name=trakt_label,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
 				return wm.open_video_list(mode='trakt', listitems=[], search_str=movies, media_type=trakt_type, filter_label=trakt_label)
@@ -381,7 +393,7 @@ def start_info_actions(infos, params):
 			resolve_url(params.get('handle'))
 			Utils.get_kodi_json(method='Player.Open', params='{"item": {"songid": %s}}' % params.get('dbid'))
 
-		elif info == 'diamondinfodialog' or info == 'extendedinfodialog' or info == str(library.addon_ID_short()) + 'dialog':
+		elif info == 'diamondinfodialog' or info == 'extendedinfodialog' or info == str(addon_ID_short()) + 'dialog':
 			resolve_url(params.get('handle'))
 			if xbmc.getCondVisibility('System.HasActiveModalDialog | System.HasModalDialog'):
 				container_id = ''
@@ -392,19 +404,19 @@ def start_info_actions(infos, params):
 				dbid = xbmc.getInfoLabel('%sListItem.Property(dbid)' % container_id)
 			db_type = xbmc.getInfoLabel('%sListItem.DBType' % container_id)
 			if db_type == 'movie':
-				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info='+str(library.addon_ID_short())+',dbid=%s,id=%s,imdb_id=%s,name=%s)' % (dbid, xbmc.getInfoLabel('ListItem.Property(id)'), xbmc.getInfoLabel('ListItem.IMDBNumber'), xbmc.getInfoLabel('ListItem.Title')))
+				xbmc.executebuiltin('RunScript('+str(addon_ID())+',info='+str(addon_ID_short())+',dbid=%s,id=%s,imdb_id=%s,name=%s)' % (dbid, xbmc.getInfoLabel('ListItem.Property(id)'), xbmc.getInfoLabel('ListItem.IMDBNumber'), xbmc.getInfoLabel('ListItem.Title')))
 			elif db_type == 'tvshow':
-				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=extendedtvinfo,dbid=%s,id=%s,tvdb_id=%s,name=%s)' % (dbid, xbmc.getInfoLabel('ListItem.Property(id)'), xbmc.getInfoLabel('ListItem.Property(tvdb_id)'), xbmc.getInfoLabel('ListItem.Title')))
+				xbmc.executebuiltin('RunScript('+str(addon_ID())+',info=extendedtvinfo,dbid=%s,id=%s,tvdb_id=%s,name=%s)' % (dbid, xbmc.getInfoLabel('ListItem.Property(id)'), xbmc.getInfoLabel('ListItem.Property(tvdb_id)'), xbmc.getInfoLabel('ListItem.Title')))
 			elif db_type == 'season':
-				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=seasoninfo,tvshow=%s,season=%s)' % (xbmc.getInfoLabel('ListItem.TVShowTitle'), xbmc.getInfoLabel('ListItem.Season')))
+				xbmc.executebuiltin('RunScript('+str(addon_ID())+',info=seasoninfo,tvshow=%s,season=%s)' % (xbmc.getInfoLabel('ListItem.TVShowTitle'), xbmc.getInfoLabel('ListItem.Season')))
 			elif db_type == 'episode':
-				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=extendedepisodeinfo,tvshow=%s,season=%s,episode=%s)' % (xbmc.getInfoLabel('ListItem.TVShowTitle'), xbmc.getInfoLabel('ListItem.Season'), xbmc.getInfoLabel('ListItem.Episode')))
+				xbmc.executebuiltin('RunScript('+str(addon_ID())+',info=extendedepisodeinfo,tvshow=%s,season=%s,episode=%s)' % (xbmc.getInfoLabel('ListItem.TVShowTitle'), xbmc.getInfoLabel('ListItem.Season'), xbmc.getInfoLabel('ListItem.Episode')))
 			elif db_type in ['actor', 'director']:
-				xbmc.executebuiltin('RunScript('+str(library.addon_ID())+',info=extendedactorinfo,name=%s)' % xbmc.getInfoLabel('ListItem.Label'))
+				xbmc.executebuiltin('RunScript('+str(addon_ID())+',info=extendedactorinfo,name=%s)' % xbmc.getInfoLabel('ListItem.Label'))
 			else:
 				Utils.notify('Error', 'Could not find valid content type')
 
-		elif info == 'diamondinfo' or info == 'extendedinfo' or info == str(library.addon_ID_short()):
+		elif info == 'diamondinfo' or info == 'extendedinfo' or info == str(addon_ID_short()):
 			resolve_url(params.get('handle'))
 			xbmcgui.Window(10000).setProperty('infodialogs.active', 'true')
 			wm.open_movie_info(movie_id=params.get('id'), dbid=params.get('dbid'), imdb_id=params.get('imdb_id'), name=params.get('name'))
@@ -520,7 +532,7 @@ def start_info_actions(infos, params):
 		elif info == 'deletecache':
 			resolve_url(params.get('handle'))
 			xbmcgui.Window(10000).clearProperty('infodialogs.active')
-			xbmcgui.Window(10000).clearProperty(str(library.addon_ID_short())+'_running')
+			xbmcgui.Window(10000).clearProperty(str(addon_ID_short())+'_running')
 			for rel_path in os.listdir(Utils.ADDON_DATA_PATH):
 				path = os.path.join(Utils.ADDON_DATA_PATH, rel_path)
 				try:
@@ -530,16 +542,60 @@ def start_info_actions(infos, params):
 					Utils.log(e)
 			Utils.notify('Cache deleted')
 
+		elif info == 'auto_clean_cache':
+			#info=auto_clean_cache&days=10
+			days = params['days']
+			resolve_url(params.get('handle'))
+			xbmcgui.Window(10000).clearProperty('infodialogs.active')
+			xbmcgui.Window(10000).clearProperty(str(addon_ID_short())+'_running')
+			auto_clean_cache(days=days)
+			Utils.notify('Cache deleted')
+
 def resolve_url(handle):
 	import xbmcplugin
 	if handle:
 		xbmcplugin.setResolvedUrl(handle=int(handle), succeeded=False, listitem=xbmcgui.ListItem())
 
 def reopen_window():
+	while xbmc.Player().isPlaying:
+		xbmc.sleep(500)
 	return wm.open_video_list(search_str='', mode='reopen_window')
+
+def auto_clean_cache(days=None):
+	import os 
+	import datetime
+	import glob
+	path = Utils.ADDON_DATA_PATH
+	if days==None:
+		days = -14
+	else:
+		days = int(date)*-1
+
+	today = datetime.datetime.today()#gets current time
+	os.chdir(path) #changing path to current path(same as cd command)
+
+	#we are taking current folder, directory and files 
+	#separetly using os.walk function
+	for root,directories,files in os.walk(path,topdown=False): 
+		for name in files:
+			#this is the last modified time
+			t = os.stat(os.path.join(root, name))[8] 
+			filetime = datetime.datetime.fromtimestamp(t) - today
+			#checking if file is more than 7 days old 
+			#or not if yes then remove them
+			if filetime.days <= days:
+				#print(os.path.join(root, name), filetime.days)
+				xbmc.log(str(os.path.join(root, name))+'===>DELETE', level=xbmc.LOGINFO)
+				os.remove(os.path.join(root, name))
 
 def auto_library():
 	import xbmcaddon
+	from resources.lib.library import library_auto_tv
+	from resources.lib.library import library_auto_movie
+	from resources.lib.library import trakt_calendar_list
+	from resources.lib.library import refresh_recently_added
+	from resources.lib.library import basedir_tv_path
+	from resources.lib.library import basedir_movies_path
 	Utils.hide_busy()
 	#xbmc.log(str(library.tmdb_settings_path())+'tmdb_settings===>PHIL', level=xbmc.LOGINFO)
 	#xbmc.log(str(library.main_file_path())+'file_path===>PHIL', level=xbmc.LOGINFO)
@@ -548,45 +604,44 @@ def auto_library():
 	#xbmc.log(str(library.basedir_tv_path())+'basedir_tv===>PHIL', level=xbmc.LOGINFO)
 	#xbmc.log(str(library.basedir_movies_path())+'basedir_movies===>PHIL', level=xbmc.LOGINFO)
 	#xbmc.log(str(library.db_path())+'db_path===>PHIL', level=xbmc.LOGINFO)
-	#xbmc.log(str(library.icon_path())+'icon_path===>PHIL', level=xbmc.LOGINFO)
+	#xbmc.log(str(icon_path())+'icon_path===>PHIL', level=xbmc.LOGINFO)
 	#xbmc.log(str(library.tmdb_api_key())+'tmdb_api===>PHIL', level=xbmc.LOGINFO)
 	#xbmc.log(str(library.fanart_api_key())+'fanart_api===>PHIL', level=xbmc.LOGINFO)
 	#return
-	library_tv_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_tv_sync'))
+	library_tv_sync = str(xbmcaddon.Addon(addon_ID()).getSetting('library_tv_sync'))
 	if library_tv_sync == 'true':
 		library_tv_sync = True
 	if library_tv_sync == 'false':
 		library_tv_sync = False
-	library_movies_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_movies_sync'))
+	library_movies_sync = str(xbmcaddon.Addon(addon_ID()).getSetting('library_movies_sync'))
 	if library_movies_sync == 'true':
 		library_movies_sync = True
 	if library_movies_sync == 'false':
 		library_movies_sync = False
 
-	icon_path = library.icon_path()
 	if not xbmc.Player().isPlaying() and (library_tv_sync or library_movies_sync):
-		xbmcgui.Dialog().notification(heading='Startup Tasks', message='TRAKT_SYNC', icon=icon_path,time=1000,sound=False)
+		xbmcgui.Dialog().notification(heading='Startup Tasks', message='TRAKT_SYNC', icon=icon_path(),time=1000,sound=False)
 	if library_movies_sync:
-		library.library_auto_movie()
+		library_auto_movie()
 	if library_tv_sync:
-		library.library_auto_tv()
+		library_auto_tv()
 		xbmc.log(str('refresh_recently_added')+'===>PHIL', level=xbmc.LOGFATAL)
-		library.refresh_recently_added()
+		refresh_recently_added()
 		xbmc.log(str('trakt_calendar_list')+'===>PHIL', level=xbmc.LOGFATAL)
 		if not xbmc.Player().isPlaying():
-			xbmcgui.Dialog().notification(heading='Startup Tasks', message='trakt_calendar_list', icon=icon_path,time=1000,sound=False)
-		library.trakt_calendar_list()
+			xbmcgui.Dialog().notification(heading='Startup Tasks', message='trakt_calendar_list', icon=icon_path(),time=1000,sound=False)
+		trakt_calendar_list()
 	if not xbmc.Player().isPlaying() and (library_tv_sync or library_movies_sync):
-		xbmcgui.Dialog().notification(heading='Startup Tasks', message='Startup Complete!', icon=icon_path, time=1000,sound=False)
+		xbmcgui.Dialog().notification(heading='Startup Tasks', message='Startup Complete!', icon=icon_path(), time=1000,sound=False)
 	#xbmc.log(str('UPDATE_WIDGETS')+'===>PHIL', level=xbmc.LOGFATAL)
 	#if not xbmc.Player().isPlaying():
 	#	xbmc.executebuiltin('UpdateLibrary(video,widget_refresh,true)')
 	if library_movies_sync:
 		xbmc.log(str('UpdateLibrary_MOVIES')+'===>PHIL', level=xbmc.LOGFATAL)
-		xbmc.executebuiltin('UpdateLibrary(video, {})'.format(library.basedir_movies_path()))
+		xbmc.executebuiltin('UpdateLibrary(video, {})'.format(basedir_movies_path()))
 	if library_tv_sync:
 		xbmc.log(str('UpdateLibrary_TV')+'===>PHIL', level=xbmc.LOGFATAL)
-		xbmc.executebuiltin('UpdateLibrary(video, {})'.format(library.basedir_tv_path()))
+		xbmc.executebuiltin('UpdateLibrary(video, {})'.format(basedir_tv_path()))
 	if library_tv_sync or library_movies_sync:
 		import time
 		time_since_up = time.monotonic()

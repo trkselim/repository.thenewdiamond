@@ -3,11 +3,12 @@ import xbmcgui, xbmcplugin
 import requests,json,xbmcaddon,xbmcvfs
 from resources.lib import process
 from resources.lib import Utils
-from resources.lib import library
+from resources.lib.library import addon_ID
+from resources.lib.library import addon_ID_short
 
 class Main:
 	def __init__(self):
-		xbmcgui.Window(10000).setProperty(str(library.addon_ID_short())+'_running', 'True')
+		xbmcgui.Window(10000).setProperty(str(addon_ID_short())+'_running', 'True')
 		self._parse_argv()
 		for info in self.infos:
 			listitems = process.start_info_actions(self.infos, self.params)
@@ -47,8 +48,8 @@ class Main:
 				('search_menu', 'Search...')
 				]
 			file_path = xbmcvfs.translatePath(xbmcaddon.Addon().getAddonInfo('path'))
-			imdb_json = xbmcaddon.Addon(library.addon_ID()).getSetting('imdb_json')
-			custom_imdb_json = xbmcaddon.Addon(library.addon_ID()).getSetting('custom_imdb_json')
+			imdb_json = xbmcaddon.Addon(addon_ID()).getSetting('imdb_json')
+			custom_imdb_json = xbmcaddon.Addon(addon_ID()).getSetting('custom_imdb_json')
 			#https://raw.githubusercontent.com/henryjfry/repository.thenewdiamond/main/imdb_list.json
 			if str(imdb_json) != '' and custom_imdb_json == 'true':
 				data = requests.get(imdb_json).json()
@@ -79,8 +80,8 @@ class Main:
 			NoFolder_items = NoFolder_items2
 
 			#https://raw.githubusercontent.com/henryjfry/repository.thenewdiamond/main/trakt_list.json
-			trakt_json = xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_json')
-			custom_trakt_json = xbmcaddon.Addon(library.addon_ID()).getSetting('custom_trakt_json')
+			trakt_json = xbmcaddon.Addon(addon_ID()).getSetting('trakt_json')
+			custom_trakt_json = xbmcaddon.Addon(addon_ID()).getSetting('custom_trakt_json')
 			if str(trakt_json) != '' and custom_trakt_json == 'true':
 				trakt_data = requests.get(trakt_json).json()
 				xbmc.log(str(trakt_json)+'===>PHIL', level=xbmc.LOGINFO)
@@ -95,18 +96,18 @@ class Main:
 
 			xbmcplugin.setContent(self.handle, 'addons')
 			for key, value in items:
-				thumb_path  = 'special://home/addons/'+str(library.addon_ID())+'/resources/skins/Default/media/tmdb/thumb.png'
-				fanart_path = 'special://home/addons/'+str(library.addon_ID())+'/resources/skins/Default/media/tmdb/fanart.jpg'
-				url = 'plugin://'+str(library.addon_ID())+'?info=%s&limit=0&script=False' % key
+				thumb_path  = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/thumb.png'
+				fanart_path = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/fanart.jpg'
+				url = 'plugin://'+str(addon_ID())+'?info=%s&limit=0&script=False' % key
 				li = xbmcgui.ListItem(label=value)
 				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
 				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=True)
 			for key, value in NoFolder_items:
-				thumb_path  = 'special://home/addons/'+str(library.addon_ID())+'/resources/skins/Default/media/tmdb/thumb.png'
-				fanart_path = 'special://home/addons/'+str(library.addon_ID())+'/resources/skins/Default/media/tmdb/fanart.jpg'
-				url = 'plugin://'+str(library.addon_ID())+'?info=%s' % key
+				thumb_path  = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/thumb.png'
+				fanart_path = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/fanart.jpg'
+				url = 'plugin://'+str(addon_ID())+'?info=%s' % key
 				if key == 'imdb_list':
-					url = 'plugin://'+str(library.addon_ID())+'?info=imdb_list&script=False&list=%s' % value[1]
+					url = 'plugin://'+str(addon_ID())+'?info=imdb_list&script=False&list=%s' % value[1]
 					#xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
 					li = xbmcgui.ListItem(label=value[0])
 					isFolder = True
@@ -116,8 +117,8 @@ class Main:
 				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
 				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=isFolder)
 			for key, value in trakt_items:
-				thumb_path  = 'special://home/addons/'+str(library.addon_ID())+'/resources/skins/Default/media/tmdb/thumb.png'
-				fanart_path = 'special://home/addons/'+str(library.addon_ID())+'/resources/skins/Default/media/tmdb/fanart.jpg'
+				thumb_path  = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/thumb.png'
+				fanart_path = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/fanart.jpg'
 				script = 'False'
 				if value == 'Trakt Watched Movies' or value == 'Trakt Collection Movies':
 					trakt_type = 'movie'
@@ -131,16 +132,16 @@ class Main:
 							list_slug = i['list_slug']
 							trakt_sort_by = i['sort_by']
 							trakt_sort_order = i['sort_order']
-					url = 'plugin://'+str(library.addon_ID())+'?info='+str(key)+'&script=False&trakt_type=' +str(trakt_type)+'&list_slug='+str(list_slug)+'&user_id=' +str(user_id)+'&trakt_sort_by='+str(trakt_sort_by)+'&trakt_sort_order='+str(trakt_sort_order)+'&trakt_list_name='+str(value)
-				#url = 'plugin://'+str(library.addon_ID())+'?info=%s&script=False&trakt_type=%s' % key, trakt_type
+					url = 'plugin://'+str(addon_ID())+'?info='+str(key)+'&script=False&trakt_type=' +str(trakt_type)+'&list_slug='+str(list_slug)+'&user_id=' +str(user_id)+'&trakt_sort_by='+str(trakt_sort_by)+'&trakt_sort_order='+str(trakt_sort_order)+'&trakt_list_name='+str(value)
+				#url = 'plugin://'+str(addon_ID())+'?info=%s&script=False&trakt_type=%s' % key, trakt_type
 				if key != 'trakt_list':
-					url = 'plugin://'+str(library.addon_ID())+'?info='+str(key)+'&script=False&trakt_type=' +str(trakt_type)
+					url = 'plugin://'+str(addon_ID())+'?info='+str(key)+'&script=False&trakt_type=' +str(trakt_type)
 				li = xbmcgui.ListItem(label=value)
 				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
 				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=True)
 			Utils.hide_busy()
 			xbmcplugin.endOfDirectory(self.handle)
-		xbmcgui.Window(10000).clearProperty(str(library.addon_ID_short())+'_running')
+		xbmcgui.Window(10000).clearProperty(str(addon_ID_short())+'_running')
 
 	def _parse_argv(self):
 		args = sys.argv[2][1:]
