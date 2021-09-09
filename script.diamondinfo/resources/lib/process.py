@@ -154,7 +154,11 @@ def start_info_actions(infos, params):
 			reopen_window()
 
 		elif info == 'test_route':
-			from resources.lib import library 
+			from resources.lib import library
+			#library.auto_setup_xml_filenames()
+			#library.trakt_add_movie(tmdb_id_num=604563,mode='Add')
+			#return
+			
 			#from pathlib import Path
 			#tvdb_id = 295685
 			#tmdb_id = 63174

@@ -37,7 +37,7 @@ class WindowManager(object):
 		if not movie_id:
 			movie_id = get_movie_tmdb_id(imdb_id=imdb_id, dbid=dbid, name=name)
 		movieclass = get_movie_window(DialogXML)
-		if Utils.NETFLIX_VIEW == 'true':
+		if Utils.NETFLIX_VIEW == 'true' or Utils.NETFLIX_VIEW2 == 'true':
 			dialog = movieclass(str(addon_ID())+'-DialogVideoInfo-Netflix.xml', Utils.ADDON_PATH, id=movie_id, dbid=dbid)
 			if Utils.AUTOPLAY_TRAILER == 'true' and not xbmc.getCondVisibility('VideoPlayer.IsFullscreen') and not xbmc.Player().isPlayingAudio():
 				play_movie_trailer(movie_id)
@@ -80,7 +80,7 @@ class WindowManager(object):
 		elif name:
 			tmdb_id = search_media(media_name=name, year='', media_type='tv')
 		tvshow_class = get_tvshow_window(DialogXML)
-		if Utils.NETFLIX_VIEW == 'true':
+		if Utils.NETFLIX_VIEW == 'true' or Utils.NETFLIX_VIEW2 == 'true':
 			dialog = tvshow_class(str(addon_ID())+'-DialogVideoInfo-Netflix.xml', Utils.ADDON_PATH, tmdb_id=tmdb_id, dbid=dbid)
 			if Utils.AUTOPLAY_TRAILER == 'true' and not xbmc.getCondVisibility('VideoPlayer.IsFullscreen') and not xbmc.Player().isPlayingAudio():
 				play_tv_trailer(tmdb_id)
@@ -109,7 +109,7 @@ class WindowManager(object):
 				if response['results']:
 					tvshow_id = str(response['results'][0]['id'])
 		season_class = get_season_window(DialogXML)
-		if Utils.NETFLIX_VIEW == 'true':
+		if Utils.NETFLIX_VIEW == 'true' or Utils.NETFLIX_VIEW2 == 'true':
 			dialog = season_class(str(addon_ID())+'-DialogVideoInfo-Netflix.xml', Utils.ADDON_PATH, tvshow_id=tvshow_id, season=season, dbid=dbid)
 		else:
 			if Utils.SKIN_DIR == 'skin.estuary':
@@ -139,7 +139,7 @@ class WindowManager(object):
 					if response['results']:
 						tvshow_id = str(response['results'][0]['id'])
 		ep_class = get_episode_window(DialogXML)
-		if Utils.NETFLIX_VIEW == 'true':
+		if Utils.NETFLIX_VIEW == 'true' or Utils.NETFLIX_VIEW2 == 'true':
 			dialog = ep_class(str(addon_ID())+'-DialogVideoInfo-Netflix.xml', Utils.ADDON_PATH, tvshow_id=tvshow_id, season=season, episode=episode, dbid=dbid)
 		else:
 			if Utils.SKIN_DIR == 'skin.estuary':

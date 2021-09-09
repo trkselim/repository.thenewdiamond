@@ -13,6 +13,7 @@ IMAGES_DATA_PATH = xbmcvfs.translatePath('special://profile/addon_data/'+str(add
 SKIN_DIR = xbmc.getSkinDir()
 AUTOPLAY_TRAILER = xbmcaddon.Addon().getSetting('autoplay_trailer')
 NETFLIX_VIEW = xbmcaddon.Addon().getSetting('netflix_view')
+NETFLIX_VIEW2 = xbmcaddon.Addon().getSetting('netflix_info_view')
 DIAMONDPLAYER_TV_FOLDER = basedir_tv_path()
 DIAMONDPLAYER_MOVIE_FOLDER = basedir_movies_path()
 

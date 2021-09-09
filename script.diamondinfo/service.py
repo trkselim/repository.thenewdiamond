@@ -824,7 +824,7 @@ class ServiceMonitor(object):
     def run(self):
         xbmc.log(str('run_diamond_info_service_started')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
         ServiceStarted = 'True'
-        #library.auto_setup_xml_filenames()
+        library.auto_setup_xml_filenames()
         self.cron_job.start()
         self.player_monitor = PlayerMonitor()
         self.poller()

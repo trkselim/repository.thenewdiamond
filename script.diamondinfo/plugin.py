@@ -51,7 +51,11 @@ class Main:
 			imdb_json = xbmcaddon.Addon(addon_ID()).getSetting('imdb_json')
 			custom_imdb_json = xbmcaddon.Addon(addon_ID()).getSetting('custom_imdb_json')
 			#https://raw.githubusercontent.com/henryjfry/repository.thenewdiamond/main/imdb_list.json
-			if str(imdb_json) != '' and custom_imdb_json == 'true':
+			if not '://' in str(imdb_json):
+				json_file = open(imdb_json)
+				data = json.load(json_file)
+				json_file.close()
+			elif str(imdb_json) != '' and custom_imdb_json == 'true':
 				data = requests.get(imdb_json).json()
 				xbmc.log(str(imdb_json)+'===>PHIL', level=xbmc.LOGINFO)
 			else:
@@ -70,19 +74,24 @@ class Main:
 				('trakt_coll', 'Trakt Collection Movies'),
 				('trakt_coll', 'Trakt Collection TV'),
 			]
+
+			NoFolder_items2.append(('search_menu', 'Search...'))
 			for i in data['imdb_list']:
 				list_name = (i[str(list(i)).replace('[\'','').replace('\']','')])
 				list_number = (str(list(i)).replace('[\'','').replace('\']',''))
 				new_list = ('imdb_list', [list_name, list_number])
 				NoFolder_items2.append(new_list)
-			NoFolder_items2.append(('search_menu', 'Search...'))
 
 			NoFolder_items = NoFolder_items2
 
 			#https://raw.githubusercontent.com/henryjfry/repository.thenewdiamond/main/trakt_list.json
 			trakt_json = xbmcaddon.Addon(addon_ID()).getSetting('trakt_json')
 			custom_trakt_json = xbmcaddon.Addon(addon_ID()).getSetting('custom_trakt_json')
-			if str(trakt_json) != '' and custom_trakt_json == 'true':
+			if not '://' in trakt_json:
+				json_file = open(trakt_json)
+				trakt_data = json.load(json_file)
+				json_file.close()
+			elif str(trakt_json) != '' and custom_trakt_json == 'true':
 				trakt_data = requests.get(trakt_json).json()
 				xbmc.log(str(trakt_json)+'===>PHIL', level=xbmc.LOGINFO)
 			else:
@@ -95,13 +104,7 @@ class Main:
 					trakt_items.append(('trakt_list', i['name']))
 
 			xbmcplugin.setContent(self.handle, 'addons')
-			for key, value in items:
-				thumb_path  = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/thumb.png'
-				fanart_path = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/fanart.jpg'
-				url = 'plugin://'+str(addon_ID())+'?info=%s&limit=0&script=False' % key
-				li = xbmcgui.ListItem(label=value)
-				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
-				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=True)
+
 			for key, value in NoFolder_items:
 				thumb_path  = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/thumb.png'
 				fanart_path = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/fanart.jpg'
@@ -116,6 +119,15 @@ class Main:
 					isFolder = False
 				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
 				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=isFolder)
+
+			for key, value in items:
+				thumb_path  = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/thumb.png'
+				fanart_path = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/fanart.jpg'
+				url = 'plugin://'+str(addon_ID())+'?info=%s&limit=0&script=False' % key
+				li = xbmcgui.ListItem(label=value)
+				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
+				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=True)
+
 			for key, value in trakt_items:
 				thumb_path  = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/thumb.png'
 				fanart_path = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/fanart.jpg'

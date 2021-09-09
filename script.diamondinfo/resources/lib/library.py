@@ -196,12 +196,11 @@ def setup_library_movies():
 
 def auto_setup_xml_filenames():
     from pathlib import Path
-    settings_xml = Path(str(main_file_path()) + '/resources/settings.xml')
-    settings_xml = open(Path(settings_xml), "r")
-    if not str(addon_ID()) in settings_xml:
+    import os
+    skin_xml = Path(str(main_file_path()) + '/resources/skins/Default/1080i/' + str(addon_ID()) + '-DialogInfo.xml')
+    if not os.path.exists(skin_xml):
         setup_xml_filenames()
     else:
-        settings_xml.close()
         return
 
 def setup_xml_filenames():
@@ -244,7 +243,8 @@ def setup_xml_filenames():
     xbmc.log(str(old_addonID)+'= REPLACE OLD ADDONID - README.MD,' + str(addon_ID()) + ' = NEW ADDONID -- DIAMONDINFO_MOD', level=xbmc.LOGINFO)
     with fileinput.FileInput(filename, inplace=True, backup='.bak') as file:
         for line in file:
-            print(line.replace(old_addonID, str(addon_ID())), end='')
+            try: print(line.replace(old_addonID, str(addon_ID())), end='')
+            except: pass
 
 def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api):
     import requests
@@ -815,7 +815,7 @@ def trakt_add_movie(tmdb_id_num=None,mode=None):
     movie_imdb = response[0]['movie']['ids']['imdb']
     
     movie_path = Path(str(basedir_movies_path()) + '/' + str(movie_tmdb))
-    
+
     values = """
       {
         "movies": [
@@ -828,13 +828,11 @@ def trakt_add_movie(tmdb_id_num=None,mode=None):
             "imdb": """+'"'+str(movie_imdb)+'"'+ """,
             "tmdb": """+str(movie_tmdb)+ """
             },
-            {
               "media_type": "digital",
               "resolution": "hd_1080p",
               "audio": "dolby_digital_plus",
               "audio_channels": "5.1"
             }
-          }
         ]
       }
     """
@@ -1955,16 +1953,15 @@ def library_auto_movie():
             file.close()
 
         art_path = Path(str(file_path) + '/' + str(i['movie']['ids']['tmdb']) + '/' + 'movie.fanart')
+        movie_title = i['movie']['title']
+        for c in r'[]/\;,><&*:%=+@!#^()|?^':
+            movie_title = movie_title.replace(c,'')
         if not os.path.exists(art_path):
             tmdb_api = tmdb_api_key()
             fanart_api = fanart_api_key()
             show_file_path = Path(str(basedir_tv) + '/' + str(i['movie']['ids']['tmdb']) + '/')
 
             get_art_fanart_movie(str(i['movie']['ids']['tmdb']), fanart_api, show_file_path, art_path, tmdb_api)
-
-            movie_title = i['movie']['title']
-            for c in r'[]/\;,><&*:%=+@!#^()|?^':
-                movie_title = movie_title.replace(c,'')
 
             file = open(art_path, 'w')
             file.write(str(i['movie']['ids']['tmdb']) + ' - '+str(movie_title))

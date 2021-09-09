@@ -5,6 +5,7 @@
 		<setting label="Alternative browser layout (does not affect all skins)" type="bool" id="alt_browser_layout" default="false"/>
 		<setting label="Experimental User Interface Options" type="lsep"/>
 		<setting label="Netflix view" type="bool" id="netflix_view" default="false"/>
+		<setting label="Netflix view2 (Only Info Screens?)" type="bool" id="netflix_info_view" default="false"/>
 		<setting label="Automatically play trailers (affects only Netflix view)" type="bool" enable="eq(-1,true)" id="autoplay_trailer"/>
 		<setting label="TMDB Options" type="lsep"/>
 		<setting label="Language" type="select" values="bg|cs|da|de|el|en|es|fi|fr|he|hr|hu|it|ja|ko|nl|no|pl|pt|ru|sl|sv|tr|zh" id="LanguageID" default="en"/>
