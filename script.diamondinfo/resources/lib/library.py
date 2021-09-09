@@ -424,25 +424,28 @@ def get_art_fanart_tv(tvdb_id, fanart_api, show_file_path, art_path,tmdb_id,tmdb
 	#TVDB_ID - poster, banner, fanart
 	#tvposter, tvbanner, showbackground
 	if not d1.__contains__('showbackground') or not d1.__contains__('tvposter') or not d1.__contains__('tvbanner'):
-		response = requests.get('https://api.thetvdb.com/series/'+str(tvdb_id))
+		try:
+			response = requests.get('https://api.thetvdb.com/series/'+str(tvdb_id))
 
-		if not d1.__contains__('showbackground'):
-			try: 
-				d1['showbackground'] = str('https://artworks.thetvdb.com/banners/') + response.json()['data']['fanart']
-			except:
-				pass
+			if not d1.__contains__('showbackground'):
+				try: 
+					d1['showbackground'] = str('https://artworks.thetvdb.com/banners/') + response.json()['data']['fanart']
+				except:
+					pass
 
-		if not d1.__contains__('tvposter'):
-			try:
-				d1['tvposter'] = str('https://artworks.thetvdb.com/banners/') + response.json()['data']['poster']
-			except:
-				pass
-			
-		if not d1.__contains__('tvbanner'):
-			try:
-				d1['tvbanner'] = str('https://artworks.thetvdb.com/banners/') + response.json()['data']['banner']
-			except:
-				pass
+			if not d1.__contains__('tvposter'):
+				try:
+					d1['tvposter'] = str('https://artworks.thetvdb.com/banners/') + response.json()['data']['poster']
+				except:
+					pass
+				
+			if not d1.__contains__('tvbanner'):
+				try:
+					d1['tvbanner'] = str('https://artworks.thetvdb.com/banners/') + response.json()['data']['banner']
+				except:
+					pass
+		except:
+			pass
 
 	#TMDB_ID - poster, fanart, season posters
 	#tvposter, showbackground, seasonposters
@@ -1720,8 +1723,13 @@ def library_auto_tv():
 			fanart_api = fanart_api_key()
 			show_file_path = Path(str(basedir_tv) + '/' + str(i['show']['ids']['tvdb']) + '/')
 			get_art_fanart_tv(str(i['show']['ids']['tvdb']), fanart_api, show_file_path, art_path, str(i['show']['ids']['tmdb']),tmdb_api)
+			
+			show_title = i['show']['title']
+			for c in r'[]/\;,><&*:%=+@!#^()|?^':
+				show_title = show_title.replace(c,'')
+
 			file = open(art_path, 'w')
-			file.write(str(i['show']['ids']['tvdb']) + ' - '+str(i['show']['title']))
+			file.write(str(i['show']['ids']['tvdb']) + ' - '+str(show_title))
 			file.close()
 
 		"""
@@ -1953,11 +1961,15 @@ def library_auto_movie():
 
 			get_art_fanart_movie(str(i['movie']['ids']['tmdb']), fanart_api, show_file_path, art_path, tmdb_api)
 
+			movie_title = i['movie']['title']
+			for c in r'[]/\;,><&*:%=+@!#^()|?^':
+				movie_title = movie_title.replace(c,'')
+
 			file = open(art_path, 'w')
-			file.write(str(i['movie']['ids']['tmdb']) + ' - '+str(i['movie']['title']))
+			file.write(str(i['movie']['ids']['tmdb']) + ' - '+str(movie_title))
 			file.close()
 
-		file_name = str(i['movie']['title']) +' - ' + str(i['movie']['year']) + '.strm'
+		file_name = str(movie_title) +' - ' + str(i['movie']['year']) + '.strm'
 		for c in r'[]/\;,><&*:%=+@!#^()|?^':
 			file_name = file_name.replace(c,'')
 		url = "plugin://plugin.video.themoviedb.helper?info=play&amp;type=movie&amp;tmdb_id=" + str(i['movie']['ids']['tmdb'])

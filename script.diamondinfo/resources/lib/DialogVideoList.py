@@ -85,10 +85,16 @@ def get_tmdb_window(window_type):
                 self.listitems = Utils.create_listitems(self.listitem_list)
                 self.total_items = len(self.listitem_list)
             elif self.filters == []:
-                #self.add_filter('with_original_language', 'en', 'Original language', 'English')
-                #self.add_filter('without_genres', '27', 'Genres', 'NOT Horror')
-                #self.add_filter('vote_count.gte', '1000', '%s (%s)' % ('Vote count', '>'), '1000')
-                self.filters == []
+                try:
+                    import os
+                    if os.path.exists('/home/osmc/.kodi/userdata/addon_data/script.diamondinfo/custom_for_me'):
+                        self.add_filter('with_original_language', 'en', 'Original language', 'English')
+                        self.add_filter('without_genres', '27', 'Genres', 'NOT Horror')
+                        self.add_filter('vote_count.gte', '1000', '%s (%s)' % ('Vote count', '>'), '1000')
+                    else:
+                        self.filters == []
+                except:
+                    self.filters == []
             self.update_content(force_update=kwargs.get('force', False))
 
         def onClick(self, control_id):
@@ -766,7 +772,7 @@ def get_tmdb_window(window_type):
             if self.mode == 'search':
                 url = 'search/multi?query=%s&page=%i&include_adult=%s&' % (urllib.parse.quote_plus(self.search_str), self.page, xbmcaddon.Addon().getSetting('include_adults'))
                 if self.search_str:
-                    self.filter_label = 'Results for:  ' + self.search_str
+                    self.filter_label = 'Results for:  ' + self.search_str.replace('Results for:  ','')
                 else:
                     self.filter_label = ''
                 fetch_data_dict['self.search_str'] = self.search_str
@@ -787,7 +793,7 @@ def get_tmdb_window(window_type):
                 return info
             elif self.mode == 'list_items':
                 if int(self.page) == 1:
-                    self.filter_label = 'Results for:  ' + self.filter_label
+                    self.filter_label = 'Results for:  ' + self.filter_label.replace('Results for:  ','')
                 movies = self.search_str
                 x = 0
                 page = int(self.page)
