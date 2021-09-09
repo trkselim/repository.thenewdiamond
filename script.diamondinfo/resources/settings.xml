@@ -9,14 +9,15 @@
 		<setting label="TMDB Options" type="lsep"/>
 		<setting label="Language" type="select" values="bg|cs|da|de|el|en|es|fi|fr|he|hr|hu|it|ja|ko|nl|no|pl|pt|ru|sl|sv|tr|zh" id="LanguageID" default="en"/>
 		<setting label="Include adult?" type="bool" id="include_adults" default="false"/>
-        <setting label="TMDB API key" id="tmdb_api" type="text" default=""/>
+		<setting label="TMDB API key" id="tmdb_api" type="text" default=""/>
 		<setting label="Fanart API key" id="fanart_api" type="text" default=""/>
+		<setting label="Fanart Clear Logo Lookups?" type="bool" id="fanart_clearlogos" default="false"/>
 		<setting label="Settings button => TMDBHelper Context Menu/Addon Settings Menu?" type="lsep"/>
 		<setting label="Info Dialog Settings Button" type="select" id="settings_user_config" values="TMDBHelper Context Menu|Settings Selection Menu" default="Settings Selection Menu"/>
 		<setting label="Trakt/Kodi Scrobbling with Scene filename parsing" type="lsep"/>
 		<setting label="Enable Trakt/Kodi Scrobbling with PTN" type="bool" id="trakt_scrobble" default="false"/>
 		<setting label="Reopen Last UI Screen After Playback Ends" type="bool" id="reopen_window_bool" default="false"/>
-		<setting label="Use Context Menus or Dialog Select Boxes?" type="bool" id="context_menu" default="false"/>
+		<setting label="Use Context Menus in UI?" type="bool" id="context_menu" default="false"/>
 		<setting label="Maintenance" type="lsep"/>
 		<setting label="Clear cache..." type="action" action="RunScript(script.diamondinfo,info=deletecache)"/>
 		<setting label="TEST ROUTE" type="action" action="RunScript(script.diamondinfo,info=test_route)"/>

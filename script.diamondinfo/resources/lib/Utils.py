@@ -83,11 +83,11 @@ def format_time(time, format=None):
 	hour = str(intTime / 60)
 	minute = str(intTime % 60).zfill(2)
 	if format == 'h':
-		return hour
+		return round(float(hour),2)
 	elif format == 'm':
 		return minute
 	elif intTime >= 60:
-		return hour + 'h ' + minute + 'm'
+		return str(int(float(hour))) + 'h ' + minute + 'm'
 	else:
 		return minute + 'm'
 

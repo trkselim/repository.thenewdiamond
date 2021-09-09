@@ -334,6 +334,10 @@ def get_tmdb_data(url='', cache_days=14, folder='TheMovieDB'):
 	return Utils.get_JSON_response(url, cache_days, folder)
 
 def get_fanart_clearlogo(tmdb_id=None, media_type=None):
+	fanart_clearlogos = xbmcaddon.Addon().getSetting('fanart_clearlogos')
+	if fanart_clearlogos == 'false':
+		clearlogo = ''
+		return clearlogo
 	if media_type !='tv' and media_type != 'movie':
 		clearlogo = ''
 		return clearlogo

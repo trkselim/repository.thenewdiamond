@@ -496,7 +496,7 @@ def start_info_actions(infos, params):
 			if movie_id:
 				TheMovieDB.play_movie_trailer_fullscreen(movie_id)
 
-		elif info == 'playtvtrailer':
+		elif info == 'playtvtrailer' or info == 'tvtrailer':
 			from resources.lib import local_db
 			from resources.lib import TheMovieDB
 			resolve_url(params.get('handle'))
