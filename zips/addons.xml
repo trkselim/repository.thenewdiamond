@@ -147,7 +147,7 @@ v1.1.25
     </extension>
 </addon>
 
-<addon id="script.extendedinfo" name="  [B][COLOR white]Extended Info-Diamond_MOD[/COLOR][/B]" version="2.8" provider-name="fryhenryj">
+<addon id="script.extendedinfo" name="  [B][COLOR white]Diamond Info_MOD[/COLOR][/B]" version="2.8" provider-name="fryhenryj">
 	<requires>
 		<import addon="xbmc.python" version="3.0.0"/>
 		<import addon="plugin.video.youtube" version="6.8.11+matrix.1"/>
@@ -669,7 +669,7 @@ v1.0.25 (marcelveldt)
 	</extension>
 </addon>
 
-<addon id="repository.newdiamond" name="New DiamondInfo_Mod Repo" version="2.0" provider-name="fryhenryj">
+<addon id="repository.newdiamond" name="New DiamondInfo_Mod Repo" version="2.1" provider-name="fryhenryj">
     <extension point="xbmc.addon.repository" name="newdiamondinfo_mod">
         <dir>
             <info compressed="false">https://raw.githubusercontent.com/henryjfry/repository.thenewdiamond/main/zips/addons.xml</info>
