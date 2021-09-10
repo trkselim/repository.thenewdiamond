@@ -83,12 +83,14 @@ def get_season_window(window_type):
 		@ch.action('contextmenu', 750)
 		@ch.action('contextmenu', 1000)
 		def actor_context_menu(self):
-			listitems = ['Search Person']
+			listitems = ['Show TV show information', 'Search Person']
 			if xbmcaddon.Addon(addon_ID()).getSetting('context_menu') == 'true':
 				selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
 			else:
 				selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
 			if selection == 0:
+				wm.open_tvshow_info(prev_window=self, tmdb_id=self.tvshow_id, dbid=0)
+			if selection == 1:
 				self.close()
 				xbmc.executebuiltin('RunScript('+str(addon_ID())+',info=search_person,person=%s)' % self.listitem.getLabel())
 

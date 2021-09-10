@@ -105,12 +105,10 @@ def get_tvshow_window(window_type):
 		@ch.click(1000)
 		def credit_dialog(self):
 			if xbmcaddon.Addon(addon_ID()).getSetting('context_menu') == 'true':
-				selection = xbmcgui.Dialog().contextmenu(['Show TV show information', 'Show actor TV show appearances'])
+				selection = xbmcgui.Dialog().contextmenu(['Show actor TV show appearances'])
 			else:
-				selection = xbmcgui.Dialog().select(heading='Choose option', list=['Show TV show information', 'Show actor TV show appearances'])
+				selection = xbmcgui.Dialog().select(heading='Choose option', list=['Show actor TV show appearances'])
 			if selection == 0:
-				wm.open_actor_info(prev_window=self, actor_id=self.listitem.getProperty('id'))
-			if selection == 1:
 				self.open_credit_dialog(self.listitem.getProperty('credit_id'))
 
 		@ch.action('contextmenu', 750)

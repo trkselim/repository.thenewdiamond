@@ -155,6 +155,12 @@ def start_info_actions(infos, params):
 
 		elif info == 'test_route':
 			from resources.lib import library
+			#from resources.lib import TheMovieDB
+			#import xbmcvfs, xbmcaddon
+			#title = 'Game of Thrones'
+			#response = TheMovieDB.get_tmdb_data('search/tv?query=%s&language=en-US&include_adult=%s&' % (title, xbmcaddon.Addon().getSetting('include_adults')), 30)
+			#xbmc.log(str(response['results'][0]['id'])+'===>PHIL', level=xbmc.LOGINFO)
+			#return
 			#library.auto_setup_xml_filenames()
 			#library.trakt_add_movie(tmdb_id_num=604563,mode='Add')
 			#return

@@ -241,10 +241,12 @@ def setup_xml_filenames():
     readme_md = Path(str(main_file_path()) + '/README.md')
     filename = readme_md
     xbmc.log(str(old_addonID)+'= REPLACE OLD ADDONID - README.MD,' + str(addon_ID()) + ' = NEW ADDONID -- DIAMONDINFO_MOD', level=xbmc.LOGINFO)
-    with fileinput.FileInput(filename, inplace=True, backup='.bak') as file:
-        for line in file:
-            try: print(line.replace(old_addonID, str(addon_ID())), end='')
-            except: pass
+    try: 
+        with fileinput.FileInput(filename, inplace=True, backup='.bak') as file:
+            for line in file:
+                print(line.replace(old_addonID, str(addon_ID())), end='')
+    except: 
+        pass
 
 def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api):
     import requests
