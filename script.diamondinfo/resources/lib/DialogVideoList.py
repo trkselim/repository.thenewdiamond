@@ -398,7 +398,10 @@ def get_tmdb_window(window_type):
         def open_media(self):
             self.last_position = self.control.getSelectedPosition()
             media_type = self.listitem.getProperty('media_type')
-
+            if media_type == 'tvshow':
+                media_type = 'tv'
+            if 'movie' in str(media_type):
+                media_type = 'movie'
             if media_type:
                 self.type = media_type
             else:

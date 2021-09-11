@@ -422,6 +422,7 @@ def create_listitems(data=None, preload_images=0):
 		except: 
 			tmdb_id = 0
 			media_type = 0
+			result['media_type'] = result['mediatype']
 		if not 'info=library' in str(sys.argv) and not 'script=False' in str(sys.argv):
 			if result['media_type'] == 'tv' and tmdb_id != 0:
 				from resources.lib.TheMovieDB import get_tvshow_ids
