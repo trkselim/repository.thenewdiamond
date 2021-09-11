@@ -309,7 +309,6 @@ def get_person_info(person_label):
 
 def get_keyword_id(keyword):
 	response = get_tmdb_data('search/keyword?query=%s&include_adult=%s&' % (Utils.url_quote(keyword), xbmcaddon.Addon().getSetting('include_adults')), 30)
-	xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
 	if response and 'results' in response and response['results']:
 		if len(response['results']) > 1:
 			names = [item['name'] for item in response['results']]
@@ -843,13 +842,10 @@ def get_set_movies(set_id):
 		
 def get_imdb_list(list_str=None):
 	list_str=list_str
-	xbmc.log(str('get_imdb_list')+'===>PHIL', level=xbmc.LOGINFO)
 	from imdb import IMDb, IMDbError
 	ia = IMDb()
-	xbmc.log(str(list_str)+'===>PHIL', level=xbmc.LOGINFO)
 	movies = ia.get_movie_list(list_str)
 	listitems = None
-	#xbmc.log(str(movies)+'===>PHIL', level=xbmc.LOGINFO)
 	for i in str(movies).split(', <'):
 		imdb_id = str('tt' + i.split(':')[1].split('[http]')[0])
 		movie_title = str(i.split(':_')[1].split('_>')[0])
@@ -861,7 +857,6 @@ def get_imdb_list(list_str=None):
 			else:
 				listitems += handle_tmdb_multi_search(response['movie_results'])
 		except:
-			#xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
 			try:
 				response['tv_results'][0]['media_type'] = 'tv'
 				if listitems == None:
@@ -871,7 +866,6 @@ def get_imdb_list(list_str=None):
 			except:
 				continue
 		#break
-	#xbmc.log(str(listitems)+'===>PHIL', level=xbmc.LOGINFO)
 	return listitems
 
 def get_trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_order=None):

@@ -205,6 +205,15 @@ def auto_setup_xml_filenames():
 
 def setup_xml_filenames():
     import fileinput
+    netflix_view = xbmcaddon.Addon(addon_ID()).getSetting('netflix_view')
+    if netflix_view == 'true':
+        xbmcaddon.Addon(addon_ID()).setSetting('netflix_view', 'false') 
+        xbmc.sleep(500)
+        xbmcaddon.Addon(addon_ID()).setSetting('netflix_view', 'true') 
+    else:
+        xbmcaddon.Addon(addon_ID()).setSetting('netflix_view', 'false') 
+        xbmc.sleep(500)
+        xbmcaddon.Addon(addon_ID()).setSetting('netflix_view', 'true') 
     dir_path = Path(str(main_file_path()) + '/resources/skins/Default/1080i/')
     for dirpath, dnames, fnames in os.walk(dir_path):
         for f in fnames:
@@ -1966,14 +1975,14 @@ def library_auto_movie():
             get_art_fanart_movie(str(i['movie']['ids']['tmdb']), fanart_api, show_file_path, art_path, tmdb_api)
 
             file = open(art_path, 'w')
-            file.write(str(i['movie']['ids']['tmdb']) + ' - '+str(movie_title))
+            try: file.write(str(i['movie']['ids']['tmdb']) + ' - '+str(movie_title))
+            except: file.write(str(i['movie']['ids']['tmdb']))
             file.close()
 
         file_name = str(movie_title) +' - ' + str(i['movie']['year']) + '.strm'
         for c in r'[]/\;,><&*:%=+@!#^()|?^':
             file_name = file_name.replace(c,'')
         url = "plugin://plugin.video.themoviedb.helper?info=play&amp;type=movie&amp;tmdb_id=" + str(i['movie']['ids']['tmdb'])
-        xbmc.log(str(url)+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 
         strm_path = Path(str(file_path) + '/' + str(i['movie']['ids']['tmdb']) + '/' + file_name)
         """

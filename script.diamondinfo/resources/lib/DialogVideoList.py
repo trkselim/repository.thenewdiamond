@@ -147,9 +147,10 @@ def get_tmdb_window(window_type):
                 tvdb_id = Utils.fetch(TheMovieDB.get_tvshow_ids(item_id), 'tvdb_id')
             else:
                 imdb_id = TheMovieDB.get_imdb_id_from_movie_id(item_id)
+            listitems = []
             if self.listitem.getProperty('dbid'):
                 if self.type == 'tv':
-                    listitems = ['Play Kodi Next Episode']
+                    listitems += ['Play Kodi Next Episode']
                     listitems += ['Play Trakt Next Episode']
                 if self.listitem.getProperty('TVShowTitle'):
                     listitems += ['Play first episode']
@@ -158,7 +159,7 @@ def get_tmdb_window(window_type):
                 listitems += ['Remove from library']
             else:
                 if self.type == 'tv':
-                    listitems = ['Play Trakt Next Episode']
+                    listitems += ['Play Trakt Next Episode']
                     listitems += ['Play Trakt Next Episode (Rewatch)']
                 if self.listitem.getProperty('TVShowTitle'):
                     listitems += ['Play first episode']
@@ -235,17 +236,14 @@ def get_tmdb_window(window_type):
                             Utils.notify(header='[B]%s[/B] added to library' % self.listitem.getProperty('title'), message='Exit & re-enter to refresh', icon=self.listitem.getProperty('poster'), time=1000, sound=False)
             if selection_text == 'Play Kodi Next Episode':
                 url = next_episode_show(tmdb_id_num=item_id,dbid_num=dbid)
-                xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
                 PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
 
             if selection_text == 'Play Trakt Next Episode':
                 url = trakt_next_episode_normal(tmdb_id_num=item_id)
-                xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
                 PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
 
             if selection_text == 'Play Trakt Next Episode (Rewatch)':
                 url = trakt_next_episode_rewatch(tmdb_id_num=item_id)
-                xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
                 PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
 
             if selection_text == 'Search item':
@@ -405,14 +403,15 @@ def get_tmdb_window(window_type):
                 self.type = self.media_type
             if self.type == 'tv':
                 if str(self.listitem.getProperty('id')) == '':
-                    import requests, json
-                    ext_key = xbmcaddon.Addon().getSetting('tmdb_api')
-                    if len(ext_key) == 32:
-                        API_key = ext_key
-                    else:
-                        API_key = '1248868d7003f60f2386595db98455ef'
-                    url = 'https://api.themoviedb.org/3/search/tv?api_key='+str(API_key)+'&language='+str(xbmcaddon.Addon().getSetting('LanguageID'))+'&page=1&query='+str(self.listitem.getProperty('title'))+'&include_adult=false&first_air_date_year='+str(self.listitem.getProperty('year'))
-                    response = requests.get(url).json()
+                    #import requests, json
+                    #ext_key = xbmcaddon.Addon().getSetting('tmdb_api')
+                    #if len(ext_key) == 32:
+                    #    API_key = ext_key
+                    #else:
+                    #    API_key = '1248868d7003f60f2386595db98455ef'
+                    response = TheMovieDB.get_tmdb_data('search/%s?query=%s&first_air_date_year=%s&language=%s&include_adult=%s&' % ('tv', str(self.listitem.getProperty('title')), str(self.listitem.getProperty('year')) , str(xbmcaddon.Addon().getSetting('LanguageID')) , xbmcaddon.Addon().getSetting('include_adults')), 30)
+                    #url = 'https://api.themoviedb.org/3/search/tv?api_key='+str(API_key)+'&language='+str(xbmcaddon.Addon().getSetting('LanguageID'))+'&page=1&query='+str(self.listitem.getProperty('title'))+'&include_adult=false&first_air_date_year='+str(self.listitem.getProperty('year'))
+                    #response = requests.get(url).json()
                     tmdb_id = response['results'][0]['id']
                     wm.open_tvshow_info(prev_window=self, tmdb_id=tmdb_id, dbid=self.listitem.getProperty('dbid'))
                 else:
@@ -421,14 +420,15 @@ def get_tmdb_window(window_type):
                 wm.open_actor_info(prev_window=self, actor_id=self.listitem.getProperty('id'))
             else:
                 if str(self.listitem.getProperty('id')) == '':
-                    import requests, json
-                    ext_key = xbmcaddon.Addon().getSetting('tmdb_api')
-                    if len(ext_key) == 32:
-                        API_key = ext_key
-                    else:
-                        API_key = '1248868d7003f60f2386595db98455ef'
-                    url = 'https://api.themoviedb.org/3/search/movie?api_key='+str(API_key)+'&language='+str(xbmcaddon.Addon().getSetting('LanguageID'))+'&page=1&query='+str(self.listitem.getProperty('title'))+'&include_adult=false&primary_release_year='+str(self.listitem.getProperty('year'))
-                    response = requests.get(url).json()
+                    #import requests, json
+                    #ext_key = xbmcaddon.Addon().getSetting('tmdb_api')
+                    #if len(ext_key) == 32:
+                    #    API_key = ext_key
+                    #else:
+                    #    API_key = '1248868d7003f60f2386595db98455ef'
+                    response = TheMovieDB.get_tmdb_data('search/%s?query=%s&primary_release_year=%s&language=%s&include_adult=%s&' % ('movie', str(self.listitem.getProperty('title')), str(self.listitem.getProperty('year')) , str(xbmcaddon.Addon().getSetting('LanguageID')) , xbmcaddon.Addon().getSetting('include_adults')), 30)
+                    #url = 'https://api.themoviedb.org/3/search/movie?api_key='+str(API_key)+'&language='+str(xbmcaddon.Addon().getSetting('LanguageID'))+'&page=1&query='+str(self.listitem.getProperty('title'))+'&include_adult=false&primary_release_year='+str(self.listitem.getProperty('year'))
+                    #response = requests.get(url).json()
                     tmdb_id = response['results'][0]['id']
                     wm.open_movie_info(prev_window=self, movie_id=tmdb_id, dbid=self.listitem.getProperty('dbid'))
                 else:
@@ -456,7 +456,6 @@ def get_tmdb_window(window_type):
         @ch.click(5009)
         def set_keyword_filter(self):
             result = xbmcgui.Dialog().input(heading='Enter search string', type=xbmcgui.INPUT_ALPHANUM)
-            xbmc.log(str(result)+'===>PHIL', level=xbmc.LOGINFO)
             if not result or result == -1:
                 return None
             response = TheMovieDB.get_keyword_id(result)
@@ -518,7 +517,6 @@ def get_tmdb_window(window_type):
                 json_file.close()
             elif str(imdb_json) != '' and custom_imdb_json == 'true':
                 data = requests.get(imdb_json).json()
-                xbmc.log(str(imdb_json)+'===>PHIL', level=xbmc.LOGINFO)
             else:
                 imdb_json = file_path + 'imdb_list.json'
                 json_file = open(imdb_json)
@@ -552,15 +550,11 @@ def get_tmdb_window(window_type):
             self.update()
 
         def reload_trakt(self):
-            xbmc.log(str('reload_trakt')+'===>PHIL', level=xbmc.LOGINFO)
             if 'Trakt Watched Movies' in str(self.filter_label):
                 self.search_str = trakt_watched_movies()
-                xbmc.log(str('reload_trakt_1')+'===>PHIL', level=xbmc.LOGINFO)
             if 'Trakt Watched Shows' in str(self.filter_label):
                 self.search_str = trakt_watched_tv_shows()
-                xbmc.log(str('reload_trakt_2')+'===>PHIL', level=xbmc.LOGINFO)
             else:
-                xbmc.log(str('reload_trakt_3')+'===>PHIL', level=xbmc.LOGINFO)
                 return
             self.fetch_data()
             self.update()
@@ -578,7 +572,6 @@ def get_tmdb_window(window_type):
                 json_file.close()
             elif str(trakt_json) != '' and custom_trakt_json == 'true':
                 trakt_data = requests.get(trakt_json).json()
-                xbmc.log(str(trakt_json)+'===>PHIL', level=xbmc.LOGINFO)
             else:
                 trakt_json = file_path + 'trakt_list.json'
                 json_file = open(trakt_json)

@@ -62,6 +62,7 @@ def get_movie_window(window_type):
 				filter_thread.join()
 				self.info['ImageFilter'] = filter_thread.image
 				self.info['ImageColor'] = filter_thread.imagecolor
+				filter_thread.terminate()
 				self.listitems = [
 					(250, sets_thread.listitems),
 					(150, self.data['similar']),

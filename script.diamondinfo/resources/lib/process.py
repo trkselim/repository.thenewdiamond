@@ -159,7 +159,7 @@ def start_info_actions(infos, params):
 			#import xbmcvfs, xbmcaddon
 			#title = 'Game of Thrones'
 			#response = TheMovieDB.get_tmdb_data('search/tv?query=%s&language=en-US&include_adult=%s&' % (title, xbmcaddon.Addon().getSetting('include_adults')), 30)
-			#xbmc.log(str(response['results'][0]['id'])+'===>PHIL', level=xbmc.LOGINFO)
+			#xbmc.log(str(response['results'][0]['id'])+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			#return
 			#library.auto_setup_xml_filenames()
 			#library.trakt_add_movie(tmdb_id_num=604563,mode='Add')
@@ -182,18 +182,18 @@ def start_info_actions(infos, params):
 			#library.get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api)
 		
 			import xbmcvfs, xbmcaddon
-			xbmc.log(str(library.basedir_movies_path())+'===>PHIL', level=xbmc.LOGINFO)
-			xbmc.log(str(addon_ID())+'===>PHIL', level=xbmc.LOGINFO)
-			xbmc.log(str(addon_ID_short())+'===>PHIL', level=xbmc.LOGINFO)
-			xbmc.log(str(library.main_file_path())+'===>PHIL', level=xbmc.LOGINFO)
-			xbmc.log(str(library.tmdb_settings_path())+'===>PHIL', level=xbmc.LOGINFO)
-			xbmc.log(str(library.tmdb_traktapi_path())+'===>PHIL', level=xbmc.LOGINFO)
-			xbmc.log(str(library.tmdb_traktapi_new_path())+'===>PHIL', level=xbmc.LOGINFO)
-			xbmc.log(str(library.basedir_tv_path())+'===>PHIL', level=xbmc.LOGINFO)
-			xbmc.log(str(library.basedir_movies_path())+'===>PHIL', level=xbmc.LOGINFO)
-			xbmc.log(str(icon_path())+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(library.basedir_movies_path())+'===>OPEN_INFO', level=xbmc.LOGINFO)
+			xbmc.log(str(addon_ID())+'===>OPEN_INFO', level=xbmc.LOGINFO)
+			xbmc.log(str(addon_ID_short())+'===>OPEN_INFO', level=xbmc.LOGINFO)
+			xbmc.log(str(library.main_file_path())+'===>OPEN_INFO', level=xbmc.LOGINFO)
+			xbmc.log(str(library.tmdb_settings_path())+'===>OPEN_INFO', level=xbmc.LOGINFO)
+			xbmc.log(str(library.tmdb_traktapi_path())+'===>OPEN_INFO', level=xbmc.LOGINFO)
+			xbmc.log(str(library.tmdb_traktapi_new_path())+'===>OPEN_INFO', level=xbmc.LOGINFO)
+			xbmc.log(str(library.basedir_tv_path())+'===>OPEN_INFO', level=xbmc.LOGINFO)
+			xbmc.log(str(library.basedir_movies_path())+'===>OPEN_INFO', level=xbmc.LOGINFO)
+			xbmc.log(str(icon_path())+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			realizer_test = xbmc.getCondVisibility('System.HasAddon(plugin.video.realizer)')
-			xbmc.log(str(realizer_test)+'===>PHIL', level=xbmc.LOGINFO)
+			xbmc.log(str(realizer_test)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 
 
 		elif info == 'setup_sources':
@@ -214,10 +214,8 @@ def start_info_actions(infos, params):
 				xbmcvfs.mkdir(library_folder)
 			if not library_source_exists_tv() and library_tv_sync == 'true':
 				response = setup_library_tv()
-				xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
 			if not library_source_exists_movies() and library_movies_sync == 'true':
 				response = setup_library_movies()
-				xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
 			xbmcgui.Dialog().notification(heading='Setup Sources', message='Sources Setup, Please Reboot to finish setup.', icon=icon_path(),time=2000,sound=False)
 			Utils.hide_busy()
 
@@ -276,6 +274,7 @@ def start_info_actions(infos, params):
 
 		elif info == 'imdb_list':
 			from resources.lib import TheMovieDB
+			list_name = str(params['list_name'])
 			try:
 				list_script = str(params['script'])
 			except:
@@ -284,12 +283,10 @@ def start_info_actions(infos, params):
 			Utils.show_busy()
 			if list_script == 'False':
 				return TheMovieDB.get_imdb_list(list_str)
-			#xbmc.log(str('get_imdb_list')+'===>PHIL', level=xbmc.LOGINFO)
 			from imdb import IMDb, IMDbError
 			ia = IMDb()
-			#xbmc.log(str(list_str)+'===>PHIL', level=xbmc.LOGINFO)
 			movies = ia.get_movie_list(list_str)
-			wm.open_video_list(mode='imdb', listitems=[], search_str=movies)
+			wm.open_video_list(mode='imdb', listitems=[], search_str=movies, filter_label=list_name)
 			return
 
 		elif info == 'search_string':
@@ -607,17 +604,6 @@ def auto_library():
 	from resources.lib.library import basedir_tv_path
 	from resources.lib.library import basedir_movies_path
 	Utils.hide_busy()
-	#xbmc.log(str(library.tmdb_settings_path())+'tmdb_settings===>PHIL', level=xbmc.LOGINFO)
-	#xbmc.log(str(library.main_file_path())+'file_path===>PHIL', level=xbmc.LOGINFO)
-	#xbmc.log(str(library.tmdb_traktapi_path())+'tmdb_traktapi===>PHIL', level=xbmc.LOGINFO)
-	#xbmc.log(str(library.tmdb_traktapi_new_path())+'tmdb_traktapi_new===>PHIL', level=xbmc.LOGINFO)
-	#xbmc.log(str(library.basedir_tv_path())+'basedir_tv===>PHIL', level=xbmc.LOGINFO)
-	#xbmc.log(str(library.basedir_movies_path())+'basedir_movies===>PHIL', level=xbmc.LOGINFO)
-	#xbmc.log(str(library.db_path())+'db_path===>PHIL', level=xbmc.LOGINFO)
-	#xbmc.log(str(icon_path())+'icon_path===>PHIL', level=xbmc.LOGINFO)
-	#xbmc.log(str(library.tmdb_api_key())+'tmdb_api===>PHIL', level=xbmc.LOGINFO)
-	#xbmc.log(str(library.fanart_api_key())+'fanart_api===>PHIL', level=xbmc.LOGINFO)
-	#return
 	library_tv_sync = str(xbmcaddon.Addon(addon_ID()).getSetting('library_tv_sync'))
 	if library_tv_sync == 'true':
 		library_tv_sync = True
@@ -635,22 +621,22 @@ def auto_library():
 		library_auto_movie()
 	if library_tv_sync:
 		library_auto_tv()
-		xbmc.log(str('refresh_recently_added')+'===>PHIL', level=xbmc.LOGFATAL)
+		xbmc.log(str('refresh_recently_added')+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 		refresh_recently_added()
-		xbmc.log(str('trakt_calendar_list')+'===>PHIL', level=xbmc.LOGFATAL)
+		xbmc.log(str('trakt_calendar_list')+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 		if not xbmc.Player().isPlaying():
 			xbmcgui.Dialog().notification(heading='Startup Tasks', message='trakt_calendar_list', icon=icon_path(),time=1000,sound=False)
 		trakt_calendar_list()
 	if not xbmc.Player().isPlaying() and (library_tv_sync or library_movies_sync):
 		xbmcgui.Dialog().notification(heading='Startup Tasks', message='Startup Complete!', icon=icon_path(), time=1000,sound=False)
-	#xbmc.log(str('UPDATE_WIDGETS')+'===>PHIL', level=xbmc.LOGFATAL)
+	#xbmc.log(str('UPDATE_WIDGETS')+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 	#if not xbmc.Player().isPlaying():
 	#	xbmc.executebuiltin('UpdateLibrary(video,widget_refresh,true)')
 	if library_movies_sync:
-		xbmc.log(str('UpdateLibrary_MOVIES')+'===>PHIL', level=xbmc.LOGFATAL)
+		xbmc.log(str('UpdateLibrary_MOVIES')+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 		xbmc.executebuiltin('UpdateLibrary(video, {})'.format(basedir_movies_path()))
 	if library_tv_sync:
-		xbmc.log(str('UpdateLibrary_TV')+'===>PHIL', level=xbmc.LOGFATAL)
+		xbmc.log(str('UpdateLibrary_TV')+'===>OPEN_INFO', level=xbmc.LOGFATAL)
 		xbmc.executebuiltin('UpdateLibrary(video, {})'.format(basedir_tv_path()))
 	if library_tv_sync or library_movies_sync:
 		import time
@@ -661,14 +647,14 @@ def auto_library():
 				if time_since_up > 600:
 					#print('NOW')
 					hours_since_up = int((time_since_up)/60/60)
-					xbmc.log(str(hours_since_up)+str('=multiple of 8 hours=')+ str(hours_since_up % 8 == 0)+'=hours_since_up===>PHIL', level=xbmc.LOGINFO)
+					xbmc.log(str(hours_since_up)+str('=multiple of 8 hours=')+ str(hours_since_up % 8 == 0)+'=hours_since_up===>OPEN_INFO', level=xbmc.LOGINFO)
 					if hours_since_up >=1:
 						xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
 			except:
 				if time_since_up > 600:
 					#print('NOW')
 					hours_since_up = int((time_since_up)/60/60)
-					xbmc.log(str(hours_since_up)+str('=multiple of 8 hours=')+ str(hours_since_up % 8 == 0)+'=hours_since_up===>PHIL', level=xbmc.LOGINFO)
+					xbmc.log(str(hours_since_up)+str('=multiple of 8 hours=')+ str(hours_since_up % 8 == 0)+'=hours_since_up===>OPEN_INFO', level=xbmc.LOGINFO)
 					if hours_since_up >=1:
 						xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')
 		#xbmc.executebuiltin('RunPlugin(plugin://plugin.video.realizer/?action=rss_update)')

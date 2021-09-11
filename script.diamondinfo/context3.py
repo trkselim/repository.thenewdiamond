@@ -12,7 +12,7 @@ from resources.lib import TheMovieDB
 
 
 if __name__ == '__main__':
-	base = 'RunScript(plugin.video.themoviedb.helper,sync_trakt,tmdb_type='
+	base = 'RunScript(plugin.video.themoviedb.helper,play,tmdb_type='
 	info = sys.listitem.getVideoInfoTag()
 	type = info.getMediaType()
 	year = info.getYear()
@@ -36,10 +36,6 @@ if __name__ == '__main__':
 		tmdb_id = response['results'][0]['id']
 	if type == 'movie':
 		xbmc.executebuiltin('%s%s,tmdb_id=%s)' % (base, type, tmdb_id))
-	elif type == 'tvshow':
-		xbmc.executebuiltin('%s%s,tmdb_id=%s)' % (base, type, tmdb_id))
-	elif type == 'season':
-		xbmc.executebuiltin('%s%s,tmdb_id=%s,season=%s)' % (base, type, tmdb_id, info.getSeason()))
 	elif type == 'episode':
 		xbmc.executebuiltin('%s%s,tmdb_id=%s,season=%s,episode=%s)' % (base, type, tmdb_id, info.getSeason(), info.getEpisode()))
 

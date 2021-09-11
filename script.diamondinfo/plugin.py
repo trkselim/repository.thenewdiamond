@@ -10,6 +10,7 @@ class Main:
 	def __init__(self):
 		xbmcgui.Window(10000).setProperty(str(addon_ID_short())+'_running', 'True')
 		self._parse_argv()
+		log_urls = xbmcaddon.Addon(addon_ID()).getSetting('log_urls')
 		for info in self.infos:
 			listitems = process.start_info_actions(self.infos, self.params)
 			xbmcplugin.addSortMethod(self.handle, xbmcplugin.SORT_METHOD_TITLE)
@@ -57,7 +58,6 @@ class Main:
 				json_file.close()
 			elif str(imdb_json) != '' and custom_imdb_json == 'true':
 				data = requests.get(imdb_json).json()
-				xbmc.log(str(imdb_json)+'===>PHIL', level=xbmc.LOGINFO)
 			else:
 				imdb_json = file_path + 'imdb_list.json'
 				json_file = open(imdb_json)
@@ -93,7 +93,6 @@ class Main:
 				json_file.close()
 			elif str(trakt_json) != '' and custom_trakt_json == 'true':
 				trakt_data = requests.get(trakt_json).json()
-				xbmc.log(str(trakt_json)+'===>PHIL', level=xbmc.LOGINFO)
 			else:
 				trakt_json = file_path + 'trakt_list.json'
 				json_file = open(trakt_json)
@@ -104,20 +103,21 @@ class Main:
 					trakt_items.append(('trakt_list', i['name']))
 
 			xbmcplugin.setContent(self.handle, 'addons')
-
+			urls = ''
 			for key, value in NoFolder_items:
 				thumb_path  = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/thumb.png'
 				fanart_path = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/fanart.jpg'
 				url = 'plugin://'+str(addon_ID())+'?info=%s' % key
 				if key == 'imdb_list':
-					url = 'plugin://'+str(addon_ID())+'?info=imdb_list&script=False&list=%s' % value[1]
-					#xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
+					url = 'plugin://'+str(addon_ID())+'?info=imdb_list&script=False&list=%s&list_name=%s' % (value[1], value[0])
 					li = xbmcgui.ListItem(label=value[0])
 					isFolder = True
 				else:
 					li = xbmcgui.ListItem(label=value)
 					isFolder = False
 				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
+				urls +=  url.replace('&script=False','&script=True') + '\n'
+				urls +=  'ActivateWindow(10025, "' + url + '",return)\n\n'
 				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=isFolder)
 
 			for key, value in items:
@@ -126,6 +126,8 @@ class Main:
 				url = 'plugin://'+str(addon_ID())+'?info=%s&limit=0&script=False' % key
 				li = xbmcgui.ListItem(label=value)
 				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
+				urls +=  url.replace('&script=False','&script=True') + '\n'
+				urls +=  'ActivateWindow(10025, "' + url + '",return)\n\n'
 				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=True)
 
 			for key, value in trakt_items:
@@ -150,7 +152,12 @@ class Main:
 					url = 'plugin://'+str(addon_ID())+'?info='+str(key)+'&script=False&trakt_type=' +str(trakt_type)
 				li = xbmcgui.ListItem(label=value)
 				li.setArt({'thumb': thumb_path, 'fanart': fanart_path})
+				urls +=  url.replace('&script=False','&script=True') + '\n'
+				urls +=  'ActivateWindow(10025, "' + url + '",return)\n\n'
 				xbmcplugin.addDirectoryItem(handle=self.handle, url=url, listitem=li, isFolder=True)
+			if log_urls == 'true':
+				urls =  '\n' + urls
+				xbmc.log('DIAMONDINFO_URLS=====>\n'+str(urls)+'===>DIAMONDINFO_URLS', level=xbmc.LOGINFO)
 			Utils.hide_busy()
 			xbmcplugin.endOfDirectory(self.handle)
 		xbmcgui.Window(10000).clearProperty(str(addon_ID_short())+'_running')

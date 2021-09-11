@@ -421,10 +421,9 @@ def create_listitems(data=None, preload_images=0):
 			tmdb_id = 0
 			media_type = 0
 		if not 'logo\':' in str(result.items()) and tmdb_id != 0 and (media_type != 0 or media_type == 'tv' or media_type == 'movie'):
-			from resources.lib import TheMovieDB
+			from resources.lib.TheMovieDB import get_fanart_clearlogo
 			try: clearlogo = TheMovieDB.get_fanart_clearlogo(tmdb_id=tmdb_id,media_type=media_type)
 			except: clearlogo = ''
-			#xbmc.log(str(clearlogo)+'===>PHIL', level=xbmc.LOGINFO)
 			result['clearlogo'] = clearlogo
 			result['logo'] = clearlogo
 		for (key, value) in result.items():

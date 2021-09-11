@@ -9,8 +9,8 @@
 
 
 
-The New Diamond Info is a fork of the old Diamond Info which in turn was a fork of the OpenInfo Script.  Currently the addonid is:  script.diamoninfo
-And this will therefore replace any existing copy of script.extendedinfo on your system.
+The New Diamond Info is a fork of the old Diamond Info which in turn was a fork of the OpenInfo Script.  Currently the addonid is:  script.diamoninfo/script.extendedinfo
+WARNING: If you install the extendedinfo variant this will replace any existing copy of script.extendedinfo on your system.
 This is by design, so that it has full compatibility with any pre-existing implementations of OpenInfo Script in skins and other add-ons. **YOU HAVE BEEN WARNED !!!** . **Its best to turn OFF auto updates** for Diamond Info / Extended info mod / script / etc . to prevent any repos that have forks from overwriting Diamond Info . You can always force updates when you want updates .
 
  
@@ -27,7 +27,7 @@ Individual shows and movies can then be added to your collection and library fro
 The TMDBHelper context menu can be triggered from the information screens so the TMDBHelper trakt management options for an item can be used.  This can be set to be the default action for the "settings" button on the information screens in the settings.
 And additionally the show/movie can be browsed in tmdbhelper from the information screens.
 
-There are new context menu items available in various locations, so you can play from the videolist, from the recommended sections in the info screens, search the people/movies from the context menu on their poster/image. Play the season the the tvshowinfo screen, play the episode from the seasoninfo screen so you dont need to go into an episode before a play button can be accessed.
+There are new context menu items available in various locations, so you can play from the videolist, from the recommended sections in the info screens, search the people/movies from the context menu on their poster/image. Play the season from the tvshowinfo screen, play the episode from the seasoninfo screen so you dont need to go into an episode before a play button can be accessed.
 Additionally there are new play options "Play Kodi Next Episode" (play the next episode for the show after the last episode watched as recorded in your DB), "Play Trakt Next Episode" (play the next episode for the show as returned by trakt progrss (ie newest episode of the show), "Play Trakt Next Episode (Rewatch)" (play the next episode of the show after the last episode watched for a show you are rewatching).
 
 
@@ -47,19 +47,14 @@ If you wish to create your own lists of lists see the two JSON files in the addo
 These list items will then be available to the plugin and the UI so you can browse trakt/imdb lists (however only shows/movies will be returned)
 
 
-
-
-If this addon is pulled up though addons>programs > Diamond Info it will be displayed in the typical kodi directory script listings view. and if pulled up though Addons > Video addons > Diamond Info it will be in the Diamond Info fancy browser view
-
+If this addon is pulled up though addons>Video Addons > Diamond Info it will be displayed in the typical kodi directory script listings view. 
+And if pulled up though Addons > Program addons > Diamond Info it will be in the Diamond Info fancy UI view
  
 
 *Special Netflix theme with auto-trailer playback can be enabled in settings ! warning this is heavy and not recommended for low power devices like firesticks or mii box *
 
 
-
 WARNING !!!!!!!!!!!!!!!!!!! READ BELOW
-
-
 
 Because Diamond Info *replaces* OpenInfo Script, this maintains compatibility with any existing implementations in skins or other add-ons. **If you have have auto-updates turned on and this repository installed**, Diamond Info Script **will be updated** to Diamond Info, including the downloading of any applicable dependencies. If you **DO NOT** want Diamond Info, either disable updates for Diamond Info Script from its add-on information screen, or disable auto-updates from:
 

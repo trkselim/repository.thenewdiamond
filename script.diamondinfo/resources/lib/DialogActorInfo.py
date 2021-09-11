@@ -1,4 +1,4 @@
-import xbmcgui, xbmcaddon
+import xbmc, xbmcgui, xbmcaddon, threading
 from resources.lib import Utils
 from resources.lib import ImageTools
 from resources.lib import TheMovieDB
@@ -22,7 +22,19 @@ def get_actor_window(window_type):
 			if not data:
 				return None
 			self.info, self.data = data
-			self.info['ImageFilter'], self.info['ImageColor'] = ImageTools.filter_image(input_img=self.info.get('thumb', ''), radius=25)
+			#self.info['ImageFilter'], self.info['ImageColor'] = ImageTools.filter_image(input_img=self.info.get('thumb', ''), radius=25)
+			try:
+				filter_thread = ImageTools.FilterImageThread(self.data['images'][0]['thumb'], 25)
+				filter_thread.start()
+				filter_thread.join()
+				self.info['ImageFilter'] = filter_thread.image
+				self.info['ImageColor'] = filter_thread.imagecolor
+				filter_thread.terminate()
+			except:
+				#self.info['ImageFilter'] = ''
+				#self.info['ImageColor'] = ''
+				try: filter_thread.terminate()
+				except: pass
 			self.listitems = [
 				(150, self.data['movie_roles']),
 				(250, self.data['tvshow_roles']),

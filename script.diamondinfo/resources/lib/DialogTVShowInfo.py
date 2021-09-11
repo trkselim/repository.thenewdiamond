@@ -1,4 +1,4 @@
-import os, shutil
+import os, shutil, threading
 import xbmc, xbmcgui, xbmcvfs, xbmcaddon
 from resources.lib import Utils
 from resources.lib import ImageTools
@@ -53,7 +53,19 @@ def get_tvshow_window(window_type):
 				self.info, self.data = data
 				if 'dbid' not in self.info:
 					self.info['poster'] = Utils.get_file(self.info.get('poster', ''))
-				self.info['ImageFilter'], self.info['ImageColor'] = ImageTools.filter_image(input_img=self.info.get('poster', ''), radius=25)
+				#self.info['ImageFilter'], self.info['ImageColor'] = ImageTools.filter_image(input_img=self.info.get('poster', ''), radius=25)
+				try:
+					filter_thread = ImageTools.FilterImageThread(self.data['backdrops'][0]['thumb'], 25)
+					filter_thread.start()
+					filter_thread.join()
+					self.info['ImageFilter'] = filter_thread.image
+					self.info['ImageColor'] = filter_thread.imagecolor
+					filter_thread.terminate()
+				except:
+					#self.info['ImageFilter'] = ''
+					#self.info['ImageColor'] = ''
+					try: filter_thread.terminate()
+					except: pass
 				self.listitems = [
 					(250, self.data['seasons']),
 					(150, self.data['similar']),
@@ -303,17 +315,14 @@ def get_tvshow_window(window_type):
 
 			if selection_text == 'Play Kodi Next Episode':
 				url = next_episode_show(tmdb_id_num=item_id,dbid_num=dbid)
-				xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
 				PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
 
 			if selection_text == 'Play Trakt Next Episode':
 				url = trakt_next_episode_normal(tmdb_id_num=item_id)
-				xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
 				PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
 
 			if selection_text == 'Play Trakt Next Episode (Rewatch)':
 				url = trakt_next_episode_rewatch(tmdb_id_num=item_id)
-				xbmc.log(str(url)+'===>PHIL', level=xbmc.LOGINFO)
 				PLAYER.play_from_button(url, listitem=None, window=self, dbid=0)
 
 			if selection_text == 'Search item':

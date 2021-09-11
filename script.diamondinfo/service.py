@@ -64,9 +64,10 @@ class PlayerMonitor(xbmc.Player):
 
     def trakt_scrobble_title(self, movie_title, movie_year, percent):
         #headers = library.trak_auth()
-
-        url = 'https://api.themoviedb.org/3/search/movie?api_key='+str(tmdb_api)+'&query=' +str(movie_title) + '&language=en-US&include_image_language=en,null&year=' +str(movie_year)
-        response = requests.get(url).json()
+        from resources.lib import TheMovieDB
+        response = TheMovieDB.get_tmdb_data('search/movie?query=%s&year=%s&language=en-US&include_adult=%s&' % (movie_title,str(movie_year), xbmcaddon.Addon().getSetting('include_adults')), 30)
+        #url = 'https://api.themoviedb.org/3/search/movie?api_key='+str(tmdb_api)+'&query=' +str(movie_title) + '&language=en-US&include_image_language=en,null&year=' +str(movie_year)
+        #response = requests.get(url).json()
         tmdb_id = response['results'][0]['id']
 
         response = requests.get('https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=movie', headers=headers).json()

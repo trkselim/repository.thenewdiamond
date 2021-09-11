@@ -16,6 +16,7 @@ class WindowManager(object):
 
 	def add_to_stack(self, window):
 		self.window_stack.append(window)
+		xbmc.log(str(sys.getsizeof(window_stack))+'getsizeof===>PHIL', level=xbmc.LOGINFO)
 
 	def pop_stack(self):
 		if self.window_stack:

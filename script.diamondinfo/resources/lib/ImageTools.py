@@ -114,6 +114,19 @@ class FilterImageThread(threading.Thread):
 			self.imagecolor = ''
 			Utils.log('exception. probably android PIL issue.')
 
+	def raise_exc(self, excobj):
+		assert self.isAlive(), "thread must be started"
+		for tid, tobj in threading._active.items():
+			if tobj is self:
+				_async_raise(tid, excobj)
+				return
+
+
+	def terminate(self):
+		# must raise the SystemExit type, instead of a SystemExit() instance
+		# due to a bug in PyThreadState_SetAsyncExc
+		self.raise_exc(SystemExit)
+
 class MyGaussianBlur(ImageFilter.Filter):
 
 	name = 'GaussianBlur'
