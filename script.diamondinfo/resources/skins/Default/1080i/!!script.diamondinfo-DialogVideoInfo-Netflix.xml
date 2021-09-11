@@ -383,6 +383,30 @@
 								<radioheight>44</radioheight>
 								<visible>!Skin.HasSetting(kioskmode) + String.IsEqual(Window.Property(Type),tvshow) | String.IsEqual(Window.Property(Type),movie)</visible>
 							</control>
+
+							<control type="radiobutton" id="446">
+								<label>Return</label>
+								<textureradioonfocus colordiffuse="FFFFFFFF">icons/back_icon2.png</textureradioonfocus>
+								<textureradioofffocus colordiffuse="FFFFFFFF">icons/back_icon2.png</textureradioofffocus>
+								<textureradiooffnofocus colordiffuse="FF999999">icons/back_icon2.png</textureradiooffnofocus>
+								<textureradioonnofocus colordiffuse="FF999999">icons/back_icon2.png</textureradioonnofocus>
+								<width>250</width>
+								<height>120</height>
+								<textoffsetx>50</textoffsetx>
+								<align>right</align>
+								<aligny>center</aligny>
+								<texturefocus border="40" colordiffuse="FFB70000">common/roundedbutton-focus.png</texturefocus>
+								<texturenofocus border="40" colordiffuse="FFB70000">common/roundedbutton-nofocus-red.png</texturenofocus>
+								<font>font11</font>
+								<textcolor>FF999999</textcolor>
+								<focusedcolor>FFFFFFFF</focusedcolor>
+								<radioposx>48</radioposx>
+								<radioposy>35</radioposy>
+								<radiowidth>44</radiowidth>
+								<radioheight>44</radioheight>
+								<visible>!Skin.HasSetting(kioskmode) + String.IsEqual(Window.Property(Type),tvshow) | String.IsEqual(Window.Property(Type),movie)</visible>
+							</control>
+
 						</control>
 					</control>
 					<control type="group">

@@ -1,10 +1,10 @@
-import os, re, time, json, urllib.request, urllib.parse, urllib.error, hashlib, datetime, requests, threading
+import os, re, time, json, urllib.request, urllib.parse, urllib.error, hashlib, datetime, requests, threading, sys
 import xbmc, xbmcgui, xbmcvfs, xbmcaddon, xbmcplugin
 from functools import wraps
 from resources.lib.library import addon_ID
 from resources.lib.library import basedir_tv_path
 from resources.lib.library import basedir_movies_path
-from resources.lib.library import fanart_api_key
+#from resources.lib.library import fanart_api_key
 
 
 ADDON_PATH = xbmcvfs.translatePath('special://home/addons/'+str(addon_ID()))
@@ -16,6 +16,7 @@ NETFLIX_VIEW = xbmcaddon.Addon().getSetting('netflix_view')
 NETFLIX_VIEW2 = xbmcaddon.Addon().getSetting('netflix_info_view')
 DIAMONDPLAYER_TV_FOLDER = basedir_tv_path()
 DIAMONDPLAYER_MOVIE_FOLDER = basedir_movies_path()
+window_stack_enable = xbmcaddon.Addon().getSetting('window_stack_enable')
 
 def show_busy():
 	if xbmc.Player().isPlaying():
@@ -403,10 +404,10 @@ def set_window_props(name, data, prefix='', debug=False):
 	xbmcgui.Window(10000).setProperty('%s%s.Count' % (prefix, name), str(len(data)))
 
 def create_listitems(data=None, preload_images=0):
-	fanart_api = fanart_api_key()
+	#fanart_api = fanart_api_key()
 	INT_INFOLABELS = ['year', 'episode', 'season', 'tracknumber', 'playcount', 'overlay']
 	FLOAT_INFOLABELS = ['rating']
-	STRING_INFOLABELS = ['mediatype', 'genre', 'director', 'mpaa', 'plot', 'plotoutline', 'title', 'originaltitle', 'sorttitle', 'duration', 'studio', 'tagline', 'writer', 'tvshowtitle', 'premiered', 'status', 'code', 'aired', 'credits', 'lastplayed', 'album', 'votes', 'trailer', 'dateadded']
+	STRING_INFOLABELS = ['mediatype', 'genre', 'director', 'mpaa', 'plot', 'plotoutline', 'title', 'originaltitle', 'sorttitle', 'duration', 'studio', 'tagline', 'writer', 'tvshowtitle', 'premiered', 'status', 'code', 'aired', 'credits', 'lastplayed', 'album', 'votes', 'trailer', 'dateadded', 'IMDBNumber']
 	if not data:
 		return []
 	itemlist = []
@@ -414,18 +415,31 @@ def create_listitems(data=None, preload_images=0):
 	image_requests = []
 	for (count, result) in enumerate(data):
 		listitem = xbmcgui.ListItem('%s' % str(count))
+
 		try: 
 			tmdb_id = result['id']
 			media_type = result['media_type']
 		except: 
 			tmdb_id = 0
 			media_type = 0
-		if not 'logo\':' in str(result.items()) and tmdb_id != 0 and (media_type != 0 or media_type == 'tv' or media_type == 'movie'):
-			from resources.lib.TheMovieDB import get_fanart_clearlogo
-			try: clearlogo = TheMovieDB.get_fanart_clearlogo(tmdb_id=tmdb_id,media_type=media_type)
-			except: clearlogo = ''
-			result['clearlogo'] = clearlogo
-			result['logo'] = clearlogo
+		if not 'info=library' in str(sys.argv) and not 'script=False' in str(sys.argv):
+			if result['media_type'] == 'tv' and tmdb_id != 0:
+				from resources.lib.TheMovieDB import get_tvshow_ids
+				imdb_id = fetch(get_tvshow_ids(tmdb_id), 'imdb_id')
+				result['IMDBNumber'] = imdb_id
+			elif result['media_type'] == 'movie' and tmdb_id != 0:
+				from resources.lib.TheMovieDB import get_imdb_id_from_movie_id
+				imdb_id = get_imdb_id_from_movie_id(tmdb_id)
+				result['IMDBNumber'] = imdb_id
+
+			if not 'logo\':' in str(result.items()) and tmdb_id != 0 and (media_type != 0 and (media_type == 'tv' or media_type == 'movie')):
+				from resources.lib.TheMovieDB import get_fanart_clearlogo
+				try: clearlogo = TheMovieDB.get_fanart_clearlogo(tmdb_id=tmdb_id,media_type=media_type)
+				except: clearlogo = ''
+				result['clearlogo'] = clearlogo
+				result['logo'] = clearlogo
+
+
 		for (key, value) in result.items():
 			if not value:
 				continue
@@ -452,6 +466,13 @@ def create_listitems(data=None, preload_images=0):
 				listitem.setArt({key.lower(): value})
 			elif key.lower() in ['clearlogo','logo']:
 				listitem.setArt({'clearlogo': value})
+
+			elif key.lower() in ['imdbnumber','IMDBNumber']:
+				listitem.setInfo('video', {'IMDBNumber': str(value)})
+			elif key.lower() in ['dbid']:
+				listitem.setProperty('DBID', str(value))
+				listitem.setInfo('video', {'DBID': str(value)})
+
 			elif key.lower() in ['path']:
 				listitem.setPath(path=value)
 			elif key.lower() in ['poster', 'banner', 'fanart', 'clearart', 'clearlogo', 'landscape', 'discart', 'characterart', 'tvshow.fanart', 'tvshow.poster', 'tvshow.banner', 'tvshow.clearart', 'tvshow.characterart']:

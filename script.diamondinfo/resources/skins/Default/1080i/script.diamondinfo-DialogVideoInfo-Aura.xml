@@ -354,6 +354,31 @@
 								<label>Settings</label>
 								<visible>!Skin.HasSetting(kioskmode)</visible>
 							</control>
+
+							<control type="radiobutton" id="446">
+								<width>280</width>
+								<height>140</height>
+								<textoffsetx>0</textoffsetx>
+								<align>center</align>
+								<texturefocus border="40" colordiffuse="$VAR[ColorHighlight]">common/roundedbutton-focus.png</texturefocus>
+								<texturenofocus border="40" colordiffuse="$VAR[ColorHighlight]">common/roundedbutton-nofocus.png</texturenofocus>
+								<font>font13</font>
+								<textcolor>FF999999</textcolor>
+								<focusedcolor>FFFFFFFF</focusedcolor>
+								<aligny>bottom</aligny>
+								<textoffsety>77</textoffsety>
+								<radioposx>118</radioposx>
+								<radioposy>30</radioposy>
+								<radiowidth>44</radiowidth>
+								<radioheight>44</radioheight>
+								<textureradioonfocus colordiffuse="FFFFFFFF">icons/back_icon2.png</textureradioonfocus>
+								<textureradioofffocus colordiffuse="FFFFFFFF">icons/back_icon2.png</textureradioofffocus>
+								<textureradiooffnofocus colordiffuse="FF999999">icons/back_icon2.png</textureradiooffnofocus>
+								<textureradioonnofocus colordiffuse="FF999999">icons/back_icon2.png</textureradioonnofocus>
+								<label>Return</label>
+								<visible>!Skin.HasSetting(kioskmode)</visible>
+							</control>
+
 						</control>
 					</control>
 					<control type="group">

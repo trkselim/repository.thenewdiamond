@@ -19,6 +19,7 @@
 		<setting label="Enable Trakt/Kodi Scrobbling with PTN" type="bool" id="trakt_scrobble" default="false"/>
 		<setting label="Reopen Last UI Screen After Playback Ends" type="bool" id="reopen_window_bool" default="false"/>
 		<setting label="Use Context Menus in UI?" type="bool" id="context_menu" default="false"/>
+		<setting label="Use Window Stack?" type="bool" id="window_stack_enable" default="true"/>
 		<setting label="Maintenance" type="lsep"/>
 		<setting label="Clear cache..." type="action" action="RunScript(script.diamondinfo,info=deletecache)"/>
 		<setting label="Log Plugin URLS" type="bool" id="log_urls" default="false"/>

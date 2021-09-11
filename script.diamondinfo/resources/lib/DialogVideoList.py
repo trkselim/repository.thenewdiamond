@@ -79,6 +79,8 @@ def get_tmdb_window(window_type):
             self.sort = kwargs.get('sort', 'popularity')
             self.sort_label = kwargs.get('sort_label', 'Popularity')
             self.order = kwargs.get('order', 'desc')
+            xbmcgui.Window(10000).clearProperty('ImageFilter')
+            xbmcgui.Window(10000).clearProperty('ImageColor')
 
 
             if self.listitem_list:

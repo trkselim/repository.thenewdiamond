@@ -426,6 +426,11 @@ def start_info_actions(infos, params):
 		elif info == 'diamondinfo' or info == 'extendedinfo' or info == str(addon_ID_short()):
 			resolve_url(params.get('handle'))
 			xbmcgui.Window(10000).setProperty('infodialogs.active', 'true')
+			if not params.get('id'):
+				from resources.lib.TheMovieDB import get_tmdb_data
+				import xbmcaddon
+				response = get_tmdb_data('search/%s?query=%s&language=en-US&include_adult=%s&' % ('movie', params.get('name'), xbmcaddon.Addon().getSetting('include_adults')), 30)
+				params['id'] = response['results'][0]['id']
 			wm.open_movie_info(movie_id=params.get('id'), dbid=params.get('dbid'), imdb_id=params.get('imdb_id'), name=params.get('name'))
 			xbmcgui.Window(10000).clearProperty('infodialogs.active')
 
@@ -438,6 +443,11 @@ def start_info_actions(infos, params):
 		elif info == 'extendedtvinfo':
 			resolve_url(params.get('handle'))
 			xbmcgui.Window(10000).setProperty('infodialogs.active', 'true')
+			if not params.get('id'):
+				from resources.lib.TheMovieDB import get_tmdb_data
+				import xbmcaddon
+				response = get_tmdb_data('search/%s?query=%s&language=en-US&include_adult=%s&' % ('tv', params.get('name'), xbmcaddon.Addon().getSetting('include_adults')), 30)
+				params['id'] = response['results'][0]['id']
 			wm.open_tvshow_info(tmdb_id=params.get('id'), tvdb_id=params.get('tvdb_id'), dbid=params.get('dbid'), imdb_id=params.get('imdb_id'), name=params.get('name'))
 			xbmcgui.Window(10000).clearProperty('infodialogs.active')
 
@@ -564,8 +574,12 @@ def resolve_url(handle):
 		xbmcplugin.setResolvedUrl(handle=int(handle), succeeded=False, listitem=xbmcgui.ListItem())
 
 def reopen_window():
-	while xbmc.Player().isPlaying:
+	while xbmc.Player().isPlaying():
 		xbmc.sleep(500)
+	#window_id = xbmcgui.getCurrentWindowDialogId()
+	#window = xbmcgui.Window(self.window_id)
+	#xbmc.log(str(window_id)+'window_id===>PHIL', level=xbmc.LOGINFO)
+	#xbmc.log(str(window)+'window===>PHIL', level=xbmc.LOGINFO)
 	return wm.open_video_list(search_str='', mode='reopen_window')
 
 def auto_clean_cache(days=None):

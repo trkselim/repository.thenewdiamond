@@ -207,6 +207,12 @@ def get_tvshow_window(window_type):
 				for item in manage_list[selection][1].split('||'):
 					xbmc.executebuiltin(item)
 
+		@ch.click(446)
+		def return_button(self):
+			from resources.lib.process import reopen_window
+			self.close()
+			reopen_window()
+
 		@ch.click(6002)
 		def open_list(self):
 			index = xbmcgui.Dialog().select(heading='Choose list', list=['Starred TV shows', 'Rated TV shows'])

@@ -16,7 +16,6 @@ class WindowManager(object):
 
 	def add_to_stack(self, window):
 		self.window_stack.append(window)
-		xbmc.log(str(sys.getsizeof(window_stack))+'getsizeof===>PHIL', level=xbmc.LOGINFO)
 
 	def pop_stack(self):
 		if self.window_stack:
@@ -199,7 +198,8 @@ class WindowManager(object):
 			else:
 				dialog = browser_class(str(addon_ID())+'-VideoList.xml', Utils.ADDON_PATH, listitems=listitems, filters=filters, mode=mode, list_id=list_id, filter_label=filter_label, type=media_type, search_str=search_str)
 		if prev_window:
-			self.add_to_stack(prev_window)
+			if Utils.window_stack_enable == 'true':
+				self.add_to_stack(prev_window)
 			prev_window.close()
 		Utils.hide_busy()
 		dialog.doModal()
@@ -234,7 +234,8 @@ class WindowManager(object):
 			if prev_window:
 				if xbmc.Player().isPlayingVideo() and not xbmc.getCondVisibility('VideoPlayer.IsFullscreen'):
 					xbmc.Player().stop()
-				self.add_to_stack(prev_window)
+				if Utils.window_stack_enable == 'true':
+					self.add_to_stack(prev_window)
 				prev_window.close()
 			dialog.doModal()
 		else:

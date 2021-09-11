@@ -255,6 +255,12 @@ def get_movie_window(window_type):
 				for item in manage_list[selection][1].split('||'):
 					xbmc.executebuiltin(item)
 
+		@ch.click(446)
+		def return_button(self):
+			from resources.lib.process import reopen_window
+			self.close()
+			reopen_window()
+
 		@ch.click(18)
 		def add_movie_to_library(self):
 			if xbmcgui.Dialog().yesno(str(addon_ID_short()), 'Add [B]%s[/B] to library?' % self.info['title']):

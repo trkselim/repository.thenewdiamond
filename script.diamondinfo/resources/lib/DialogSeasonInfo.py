@@ -134,6 +134,14 @@ def get_season_window(window_type):
 			if selection == 1:
 				wm.open_tvshow_info(prev_window=self, tmdb_id=self.tvshow_id, dbid=0)
 
+		@ch.action('play', 2000)
+		@ch.action('playpause', 2000)
+		@ch.action('pause', 2000)
+		def play_episode(self):
+			episode_id = self.listitem.getProperty('episode')
+			url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;tmdb_id=%s&amp;type=episode&amp;season=%s&amp;episode=%s' % (self.tvshow_id, self.listitem.getProperty('season'), episode_id)
+			PLAYER.play_from_button(url, listitem=None, window=self)
+
 		@ch.click(10)
 		def play_season(self):
 			url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;type=episode&amp;tmdb_id=%s&amp;season=%s&amp;episode=1' % (self.tvshow_id, self.info['season'])
@@ -160,6 +168,12 @@ def get_season_window(window_type):
 			if selection > -1:
 				for item in manage_list[selection][1].split('||'):
 					xbmc.executebuiltin(item)
+
+		@ch.click(446)
+		def return_button(self):
+			from resources.lib.process import reopen_window
+			self.close()
+			reopen_window()
 
 		@ch.click(132)
 		def open_text(self):

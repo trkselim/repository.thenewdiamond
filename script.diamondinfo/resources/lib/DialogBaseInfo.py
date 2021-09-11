@@ -104,6 +104,20 @@ class DialogBaseInfo(object):
 	@ch.action('parentfolder', '*')
 	#@ch.action('back', '*')
 	def previous_menu(self):
+		import sys
+		if 'script=False' in str(sys.argv) or 'diamondinfo' in str(sys.argv) or 'extendedinfo' in str(sys.argv) or 'extendedactorinfo' in str(sys.argv) or 'extendedtvinfo' in str(sys.argv) or 'seasoninfo' in str(sys.argv) or 'extendedepisodeinfo' in str(sys.argv):
+			window_stack_enable2 = False
+		else:
+			window_stack_enable2 = True
+
+		if Utils.window_stack_enable == 'false' and window_stack_enable2:
+			#window_id = xbmcgui.getCurrentWindowDialogId()
+			#window = xbmcgui.Window(self.window_id)
+			#xbmc.log(str(window_id)+'window_id===>PHIL', level=xbmc.LOGINFO)
+			#xbmc.log(str(window)+'window===>PHIL', level=xbmc.LOGINFO)
+			self.close()
+			return wm.open_video_list(search_str='', mode='reopen_window')
+
 		onback = self.window.getProperty('%i_onback' % self.control_id)
 		if onback:
 			xbmc.executebuiltin(onback)

@@ -214,16 +214,17 @@ class PlayerMonitor(xbmc.Player):
             except: pass
         return response.json()
 
-    def onAVStarted(self):
-        xbmc.log(str('onAVStarted')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
-        #self.reset_properties()
-        #self.get_playingitem()
+    #def onAVStarted(self):
+    #    xbmc.log(str('onAVStarted')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
+    #    #self.reset_properties()
+    #    #self.get_playingitem()
 
     def onPlayBackEnded(self):
         xbmc.log(str('onPlayBackEnded')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
-
-        from resources.lib import process
-        process.reopen_window()
+        reopen_window_bool = str(xbmcaddon.Addon(library.addon_ID()).getSetting('reopen_window_bool'))
+        if reopen_window_bool == 'true' and diamond_info_started:
+            from resources.lib.process import reopen_window
+            reopen_window()
         #self.set_watched()
         #self.reset_properties()
         #return wm.pop_stack()
@@ -234,8 +235,8 @@ class PlayerMonitor(xbmc.Player):
 
         if trakt_scrobble == 'false':
             if reopen_window_bool == 'true' and diamond_info_started:
-                from resources.lib import process
-                process.reopen_window()
+                from resources.lib.process import reopen_window
+                reopen_window()
             return
 
         xbmc.log(str('onPlayBackStopped')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
@@ -274,13 +275,13 @@ class PlayerMonitor(xbmc.Player):
                 xbmc.log(str(json_object)+'=episode resume set, '+str(dbID)+'=dbID', level=xbmc.LOGFATAL)
         except:
             if reopen_window_bool == 'true' and diamond_info_started:
-                from resources.lib import process
-                process.reopen_window()
+                from resources.lib.process import reopen_window
+                reopen_window()
             return
 
         if reopen_window_bool == 'true' and diamond_info_started:
-            from resources.lib import process
-            process.reopen_window()
+            from resources.lib.process import reopen_window
+            reopen_window()
         #self.set_watched()
         #self.reset_properties()
 
@@ -321,11 +322,15 @@ class PlayerMonitor(xbmc.Player):
         elif diamond_info_time == 0:
             diamond_info_started = False
         elif diamond_info_time + 60 < int(time.time()):
-            if playlist_size > 1:
-                diamond_info_started = True
-            else:
-                diamond_info_started = False
-                xbmcgui.Window(10000).clearProperty('diamond_info_time')
+            #if playlist_size > 1:
+            #    diamond_info_started = True
+            #else:
+            #    diamond_info_started = False
+            #    xbmcgui.Window(10000).clearProperty('diamond_info_time')
+            diamond_info_started = True
+        else:
+            diamond_info_started = False
+            xbmcgui.Window(10000).clearProperty('diamond_info_time')
         xbmc.log(str(diamond_info_started)+'diamond_info_started===>diamond_info_started', level=xbmc.LOGINFO)
         xbmc.log(str('onPlayBackStarted')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
         trakt_scrobble = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_scrobble'))
@@ -545,6 +550,7 @@ class PlayerMonitor(xbmc.Player):
             try: imdb_id = response['show']['ids']['imdb']
             except: pass
 
+        xbmc.log(str(diamond_info_started)+'diamond_info_started===>diamond_info_started', level=xbmc.LOGINFO)
         try:
             watched = 0
             percentage = 0

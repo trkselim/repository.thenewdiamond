@@ -141,4 +141,10 @@ def get_episode_window(window_type):
 				for item in manage_list[selection][1].split('||'):
 					xbmc.executebuiltin(item)
 
+		@ch.click(446)
+		def return_button(self):
+			from resources.lib.process import reopen_window
+			self.close()
+			reopen_window()
+
 	return DialogEpisodeInfo

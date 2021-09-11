@@ -1416,6 +1416,7 @@ def refresh_recently_added():
                         xbmc.log(str((str(kodi_response) + ' === '+ str(thumb_path)))+'===>OPEN_INFO', level=xbmc.LOGINFO)
             except:
                 pass
+            del BeautifulSoup
 
     ##PLOTS
 
@@ -1564,6 +1565,7 @@ def refresh_recently_added():
                         xbmc.log(str(kodi_response)+'===>OPEN_INFO', level=xbmc.LOGINFO)
             except:
                 pass
+            del BeautifulSoup
 
     ##AIR_DATES
     sql_result = cur.execute("SELECT distinct idepisode,strFilename,episode.c18,episode.c12,episode.c13,episode.c05,tvshow.c00 from files,episode,art,tvshow where episode.idshow = tvshow.idshow and episode.idfile = files.idfile and type ='thumb' and episode.c05 = '1969-12-31' and idepisode=media_id    order by dateadded desc limit 30").fetchall()

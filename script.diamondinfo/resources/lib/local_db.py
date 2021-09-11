@@ -39,7 +39,7 @@ def get_db_tvshows(filter_str=''):
 
 def handle_db_movies(movie):
 	trailer = 'plugin://'+str(addon_ID())+'?info=playtrailer&&dbid=%s' % movie['movieid']
-	path = 'plugin://'+str(addon_ID())+'?info='+str(addon_ID_short())+'&&dbid=%s' % movie['movieid']
+	path = 'plugin://'+str(addon_ID())+'?info='+str(addon_ID_short())+'&name=%s&dbid=%s' % (movie.get('label', ''), movie['movieid'])
 	if (movie['resume']['position'] and movie['resume']['total']) > 0:
 		resume = 'true'
 		played = '%s' % int((float(movie['resume']['position']) / float(movie['resume']['total'])) *100)
@@ -92,7 +92,7 @@ def handle_db_movies(movie):
 	return dict((k, v) for k, v in db_movie.items() if v)
 
 def handle_db_tvshows(tvshow):
-	path = 'plugin://'+str(addon_ID())+'?info=extendedtvinfo&&dbid=%s' % tvshow['tvshowid']
+	path = 'plugin://'+str(addon_ID())+'?info=extendedtvinfo&name=%s&dbid=%s' % (tvshow.get('label', ''), tvshow['tvshowid'])
 	db_tvshow = {
 		'mediatype': 'tvshow',
 		'fanart': tvshow['art'].get('fanart', ''),

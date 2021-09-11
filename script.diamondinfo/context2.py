@@ -24,7 +24,6 @@ if __name__ == '__main__':
 		tmdb_type = 'tv'
 	language = xbmcaddon.Addon().getSetting('LanguageID')
 	try:
-		TheMovieDB.get_tmdb_data()
 		response = TheMovieDB.get_tmdb_data('search/%s?query=%s&language=en-US&include_adult=%s&' % (tmdb_type, title, xbmcaddon.Addon().getSetting('include_adults')), 30)
 		#url = 'https://api.themoviedb.org/3/search/'+str(tmdb_type)+'?api_key='+str(API_key)+'&language='+str(language)+'&page=1&query='+str(title)+'&include_adult=false&first_air_date_year='+str(year)
 		#response = requests.get(url).json()
