@@ -593,10 +593,6 @@ def resolve_url(handle):
 def reopen_window():
 	while xbmc.Player().isPlaying():
 		xbmc.sleep(500)
-	#window_id = xbmcgui.getCurrentWindowDialogId()
-	#window = xbmcgui.Window(self.window_id)
-	#xbmc.log(str(window_id)+'window_id===>PHIL', level=xbmc.LOGINFO)
-	#xbmc.log(str(window)+'window===>PHIL', level=xbmc.LOGINFO)
 	return wm.open_video_list(search_str='', mode='reopen_window')
 
 def auto_clean_cache(days=None):

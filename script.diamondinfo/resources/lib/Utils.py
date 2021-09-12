@@ -19,6 +19,10 @@ DIAMONDPLAYER_MOVIE_FOLDER = basedir_movies_path()
 window_stack_enable = xbmcaddon.Addon().getSetting('window_stack_enable')
 
 def show_busy():
+	window_id = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"GUI.GetProperties","params":{"properties":["currentwindow", "currentcontrol"]},"id":1}')
+	window_id = json.loads(window_id)
+	if not window_id['result']['currentwindow']['id'] == 10025 and not window_id['result']['currentwindow']['id'] > 13000:
+		return
 	if xbmc.Player().isPlaying():
 		return
 	if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
@@ -415,9 +419,10 @@ def create_listitems(data=None, preload_images=0, enable_clearlogo=True):
 	itemlist = []
 	threads = []
 	image_requests = []
+	phil_count = 0
 	for (count, result) in enumerate(data):
 		listitem = xbmcgui.ListItem('%s' % str(count))
-
+		phil_count = phil_count+1
 		try: 
 			tmdb_id = result['id']
 			media_type = result['media_type']

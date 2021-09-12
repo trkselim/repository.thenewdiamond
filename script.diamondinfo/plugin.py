@@ -26,7 +26,7 @@ class Main:
 			else:
 				xbmcplugin.setContent(self.handle, 'addons')
 			try:
-				Utils.pass_list_to_skin(name=info, data=listitems, prefix=self.params.get('prefix', ''), handle=self.handle, limit=len(listitems))
+				Utils.pass_list_to_skin(name=info, data=listitems, prefix=self.params.get('prefix', ''), handle=self.handle, limit=self.params.get('limit', ''))
 			except:
 				Utils.hide_busy()
 				return

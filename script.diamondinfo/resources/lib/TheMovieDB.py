@@ -885,7 +885,7 @@ def get_imdb_list(list_str=None):
 	for i in str(movies).split(', <'):
 		imdb_id = str('tt' + i.split(':')[1].split('[http]')[0])
 		movie_title = str(i.split(':_')[1].split('_>')[0])
-		response = get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 0.3)
+		response = get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 13)
 		try:
 			response['movie_results'][0]['media_type'] = 'movie'
 			if listitems == None:
@@ -910,7 +910,7 @@ def get_trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort
 	listitems = None
 	for i in movies:
 		imdb_id = i['ids']['imdb']
-		response = get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 0.3)
+		response = get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 13)
 		result_type = False
 		try:
 			response['movie_results'][0]['media_type'] = 'movie'
@@ -958,7 +958,7 @@ def get_trakt(trakt_type=None,info=None):
 				imdb_id = i['show']['ids']['imdb']
 		except:
 			imdb_id = i['ids']['imdb']
-		response = get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 0.3)
+		response = get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 13)
 		result_type = False
 		try:
 			response['movie_results'][0]['media_type'] = 'movie'
@@ -974,7 +974,7 @@ def get_trakt(trakt_type=None,info=None):
 			listitems = handle_tmdb_multi_search(response[result_type])
 		elif result_type != False:
 			listitems += handle_tmdb_multi_search(response[result_type])
-	Utils.show_busy()
+	#Utils.show_busy()
 	return listitems
 
 

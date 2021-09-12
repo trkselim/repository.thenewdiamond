@@ -836,7 +836,7 @@ def get_tmdb_window(window_type):
                     if x + 1 <= page * 20 and x + 1 > (page - 1) *  20:
                         imdb_id = str('tt' + i.split(':')[1].split('[http]')[0])
                         movie_title = str(i.split(':_')[1].split('_>')[0])
-                        response = TheMovieDB.get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 0.3)
+                        response = TheMovieDB.get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 13)
                         try:
                             response['movie_results'][0]['media_type'] = 'movie'
                             if listitems == None:
@@ -885,7 +885,7 @@ def get_tmdb_window(window_type):
                                 imdb_id = i['show']['ids']['imdb']
                         except:
                             imdb_id = i['ids']['imdb']
-                        response = TheMovieDB.get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 0.3)
+                        response = TheMovieDB.get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 13)
                         result_type = False
                         try:
                             response['movie_results'][0]['media_type'] = 'movie'

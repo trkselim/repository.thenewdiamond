@@ -38,7 +38,7 @@ if __name__ == '__main__':
 		#url = 'https://api.themoviedb.org/3/search/'+str(tmdb_type)+'?api_key='+str(API_key)+'&language='+str(language)+'&page=1&query='+str(title)+'&include_adult=false'
 		#response = requests.get(url).json()
 		tmdb_id = response['results'][0]['id']
-	xbmc.log(str(tmdb_id)+'===>PHIL', level=xbmc.LOGINFO)
+
 	if type == 'movie':
 		xbmc.executebuiltin('%s%s,tmdb_id=%s)' % (base, type, tmdb_id))
 	elif type == 'tvshow':

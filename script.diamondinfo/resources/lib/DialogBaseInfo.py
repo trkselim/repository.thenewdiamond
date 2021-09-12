@@ -114,8 +114,8 @@ class DialogBaseInfo(object):
 		if Utils.window_stack_enable == 'false' and window_stack_enable2:
 			#window_id = xbmcgui.getCurrentWindowDialogId()
 			#window = xbmcgui.Window(self.window_id)
-			#xbmc.log(str(window_id)+'window_id===>PHIL', level=xbmc.LOGINFO)
-			#xbmc.log(str(window)+'window===>PHIL', level=xbmc.LOGINFO)
+			#xbmc.log(str(window_id)+'window_id===>OPEN_INFO', level=xbmc.LOGINFO)
+			#xbmc.log(str(window)+'window===>OPEN_INFO', level=xbmc.LOGINFO)
 			self.close()
 			return wm.open_video_list(search_str='', mode='reopen_window')
 
