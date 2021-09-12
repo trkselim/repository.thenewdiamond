@@ -783,6 +783,7 @@ def get_tmdb_window(window_type):
                 fetch_data_dict['self.search_str'] = self.search_str
                 fetch_data_dict['self.filter_label'] = self.filter_label
                 fetch_data_dict['self.page'] = self.page
+                
             elif self.mode == 'person':
                 self.filter_label = 'Results for:  ' + self.search_str['person']
                 listitems = self.search_str['cast_crew']
@@ -953,6 +954,7 @@ def get_tmdb_window(window_type):
                 }
             fetch_data_dict_file.write(str(fetch_data_dict))
             fetch_data_dict_file.close()
+            Utils.hide_busy()
             return info
     Utils.hide_busy()
     return DialogVideoList

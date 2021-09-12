@@ -294,6 +294,34 @@ def search_company(company_name):
 	else:
 		return ''
 
+def get_movie_info(movie_label):
+	#movies = movie_label.split(' / ')
+	response = get_tmdb_data('search/movie?query=%s&include_adult=%s&' % (Utils.url_quote(movie_label), xbmcaddon.Addon().getSetting('include_adults')), 30)
+	if not response or 'results' not in response:
+		return False
+	if len(response['results']) > 1:
+		listitem, index = wm.open_selectdialog(listitems=handle_tmdb_movies(response['results']))
+		#xbmc.log(str(index)+'===>PHIL', level=xbmc.LOGINFO)
+		#xbmc.log(str(listitem)+'===>PHIL', level=xbmc.LOGINFO)
+		if index >= 0:
+			return listitem
+	elif response['results']:
+		return response['results'][0]
+	return False
+
+def get_tvshow_info(tvshow_label):
+	#tvshow = tvshow_label.split(' / ')
+	response = get_tmdb_data('search/tv?query=%s&include_adult=%s&' % (Utils.url_quote(tvshow_label), xbmcaddon.Addon().getSetting('include_adults')), 30)
+	if not response or 'results' not in response:
+		return False
+	if len(response['results']) > 1:
+		listitem, index = wm.open_selectdialog(listitems=handle_tmdb_tvshows(response['results']))
+		if index >= 0:
+			return listitem
+	elif response['results']:
+		return response['results'][0]
+	return False
+
 def get_person_info(person_label):
 	persons = person_label.split(' / ')
 	response = get_tmdb_data('search/person?query=%s&include_adult=%s&' % (Utils.url_quote(persons[0]), xbmcaddon.Addon().getSetting('include_adults')), 30)
