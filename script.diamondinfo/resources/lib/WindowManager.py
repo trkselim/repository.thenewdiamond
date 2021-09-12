@@ -44,6 +44,8 @@ class WindowManager(object):
 		from resources.lib.library import addon_ID
 		from resources.lib.TheMovieDB import get_movie_tmdb_id, play_movie_trailer
 		from resources.lib.DialogVideoInfo import get_movie_window
+		if not 'tt' in str(imdb_id):
+			imdb_id=None
 		if not movie_id:
 			movie_id = get_movie_tmdb_id(imdb_id=imdb_id, dbid=dbid, name=name)
 		movieclass = get_movie_window(DialogXML)
@@ -72,7 +74,7 @@ class WindowManager(object):
 			pass
 		elif tvdb_id:
 			tmdb_id = get_show_tmdb_id(tvdb_id)
-		elif imdb_id:
+		elif imdb_id and 'tt' in str(imdb_id):
 			tmdb_id = get_show_tmdb_id(tvdb_id=imdb_id, source='imdb_id')
 		elif dbid:
 			tvdb_id = get_imdb_id_from_db(media_type='tvshow', dbid=dbid)

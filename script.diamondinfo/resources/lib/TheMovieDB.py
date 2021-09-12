@@ -299,11 +299,14 @@ def get_movie_info(movie_label):
 	response = get_tmdb_data('search/movie?query=%s&include_adult=%s&' % (Utils.url_quote(movie_label), xbmcaddon.Addon().getSetting('include_adults')), 30)
 	if not response or 'results' not in response:
 		return False
+	for i in range(len(response['results'])-1, 0, -1):
+		if response['results'][i]['title'] != movie_label:
+			del response['results'][i]
 	if len(response['results']) > 1:
 		listitem, index = wm.open_selectdialog(listitems=handle_tmdb_movies(response['results']))
-		#xbmc.log(str(index)+'===>PHIL', level=xbmc.LOGINFO)
-		#xbmc.log(str(listitem)+'===>PHIL', level=xbmc.LOGINFO)
-		if index >= 0:
+		if int(index) == -1:
+			return False
+		elif index >= 0:
 			return listitem
 	elif response['results']:
 		return response['results'][0]
@@ -314,9 +317,14 @@ def get_tvshow_info(tvshow_label):
 	response = get_tmdb_data('search/tv?query=%s&include_adult=%s&' % (Utils.url_quote(tvshow_label), xbmcaddon.Addon().getSetting('include_adults')), 30)
 	if not response or 'results' not in response:
 		return False
+	for i in range(len(response['results'])-1, 0, -1):
+		if response['results'][i]['original_name'] != tvshow_label:
+			del response['results'][i]
 	if len(response['results']) > 1:
-		listitem, index = wm.open_selectdialog(listitems=handle_tmdb_tvshows(response['results']))
-		if index >= 0:
+		listitem, index = wm.open_selectdialog(listitems=handle_tmdb_tvshows(response['results']))#
+		if int(index) == -1:
+			return False
+		elif index >= 0:
 			return listitem
 	elif response['results']:
 		return response['results'][0]
@@ -475,7 +483,7 @@ def get_movie_tmdb_id(imdb_id=None, name=None, dbid=None):
 		Utils.notify('Could not find TMDb-id 4')
 		return None
 
-def get_show_tmdb_id(tvdb_id=None, db=None, imdb_id=None):
+def get_show_tmdb_id(tvdb_id=None, db=None, imdb_id=None, source=None):
 	if tvdb_id:
 		id = tvdb_id
 		db = 'tvdb_id'

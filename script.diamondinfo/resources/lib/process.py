@@ -9,7 +9,7 @@ from resources.lib.library import icon_path
 def start_info_actions(infos, params):
 	addonID = addon_ID()
 	addonID_short = addon_ID_short()
-
+	
 	if 'imdbid' in params and 'imdb_id' not in params:
 		params['imdb_id'] = params['imdbid']
 	for info in infos:
@@ -432,10 +432,14 @@ def start_info_actions(infos, params):
 				#import xbmcaddon
 				#response = get_tmdb_data('search/%s?query=%s&language=en-US&include_adult=%s&' % ('movie', params.get('name'), xbmcaddon.Addon().getSetting('include_adults')), 30)
 				#params['id'] = response['results'][0]['id']
-				if not params.get('id') and (not params.get('imdb_id') or not 'tt' in str(params.get('imdb_id'))):
+				if not params.get('id') and not params.get('dbid') and (not params.get('imdb_id') or not 'tt' in str(params.get('imdb_id'))):
 					movie = get_movie_info(movie_label=params.get('name'))
 					if movie and movie.get('id'):
 						params['id'] = movie.get('id')
+					elif not movie:
+						xbmcgui.Window(10000).clearProperty('infodialogs.active')
+						Utils.hide_busy()
+						return
 			wm.open_movie_info(movie_id=params.get('id'), dbid=params.get('dbid'), imdb_id=params.get('imdb_id'), name=params.get('name'))
 			xbmcgui.Window(10000).clearProperty('infodialogs.active')
 
@@ -453,10 +457,14 @@ def start_info_actions(infos, params):
 				import xbmcaddon
 				#response = get_tmdb_data('search/%s?query=%s&language=en-US&include_adult=%s&' % ('tv', params.get('name'), xbmcaddon.Addon().getSetting('include_adults')), 30)
 				#params['id'] = response['results'][0]['id']
-				if not params.get('id') and not params.get('tvdb_id') and (not params.get('imdb_id') or not 'tt' in str(params.get('imdb_id'))):
+				if not params.get('id') and not params.get('dbid') and not params.get('tvdb_id') and (not params.get('imdb_id') or not 'tt' in str(params.get('imdb_id'))):
 					tvshow = get_tvshow_info(tvshow_label=params.get('name'))
 					if tvshow and tvshow.get('id'):
 						params['id'] = tvshow.get('id')
+					elif not tvshow:
+						xbmcgui.Window(10000).clearProperty('infodialogs.active')
+						Utils.hide_busy()
+						return
 			wm.open_tvshow_info(tmdb_id=params.get('id'), tvdb_id=params.get('tvdb_id'), dbid=params.get('dbid'), imdb_id=params.get('imdb_id'), name=params.get('name'))
 			xbmcgui.Window(10000).clearProperty('infodialogs.active')
 
