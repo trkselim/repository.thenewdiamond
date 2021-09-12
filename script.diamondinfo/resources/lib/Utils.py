@@ -403,8 +403,10 @@ def set_window_props(name, data, prefix='', debug=False):
 				log('%s%s.%i.%s --> ' % (prefix, name, count + 1, str(key)) + value)
 	xbmcgui.Window(10000).setProperty('%s%s.Count' % (prefix, name), str(len(data)))
 
-def create_listitems(data=None, preload_images=0):
+def create_listitems(data=None, preload_images=0, enable_clearlogo=True):
 	#fanart_api = fanart_api_key()
+	#xbmc.log(str(enable_clearlogo)+'===>PHIL', level=xbmc.LOGINFO)
+	#xbmc.log(str('create_listitems')+'===>PHIL', level=xbmc.LOGINFO)
 	INT_INFOLABELS = ['year', 'episode', 'season', 'tracknumber', 'playcount', 'overlay']
 	FLOAT_INFOLABELS = ['rating']
 	STRING_INFOLABELS = ['mediatype', 'genre', 'director', 'mpaa', 'plot', 'plotoutline', 'title', 'originaltitle', 'sorttitle', 'duration', 'studio', 'tagline', 'writer', 'tvshowtitle', 'premiered', 'status', 'code', 'aired', 'credits', 'lastplayed', 'album', 'votes', 'trailer', 'dateadded', 'IMDBNumber']
@@ -422,8 +424,11 @@ def create_listitems(data=None, preload_images=0):
 		except: 
 			tmdb_id = 0
 			media_type = 0
-			result['media_type'] = result['mediatype']
-		if not 'info=library' in str(sys.argv) and not 'script=False' in str(sys.argv):
+			try: result['media_type'] = result['mediatype']
+			except: pass
+
+		#if enable_clearlogo and not 'info=library' in str(sys.argv) and not 'script=False' in str(sys.argv):
+		if enable_clearlogo:
 			if result['media_type'] == 'tv' and tmdb_id != 0:
 				from resources.lib.TheMovieDB import get_tvshow_ids
 				imdb_id = fetch(get_tvshow_ids(tmdb_id), 'imdb_id')
@@ -433,13 +438,12 @@ def create_listitems(data=None, preload_images=0):
 				imdb_id = get_imdb_id_from_movie_id(tmdb_id)
 				result['IMDBNumber'] = imdb_id
 
-			if not 'logo\':' in str(result.items()) and tmdb_id != 0 and (media_type != 0 and (media_type == 'tv' or media_type == 'movie')):
+			if enable_clearlogo and not 'logo\':' in str(result.items()) and tmdb_id != 0 and (media_type != 0 and (media_type == 'tv' or media_type == 'movie')):
 				from resources.lib.TheMovieDB import get_fanart_clearlogo
-				try: clearlogo = TheMovieDB.get_fanart_clearlogo(tmdb_id=tmdb_id,media_type=media_type)
+				try: clearlogo = get_fanart_clearlogo(tmdb_id=tmdb_id,media_type=media_type)
 				except: clearlogo = ''
 				result['clearlogo'] = clearlogo
 				result['logo'] = clearlogo
-
 
 		for (key, value) in result.items():
 			if not value:

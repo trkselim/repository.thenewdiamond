@@ -37,6 +37,8 @@ def get_episode_window(window_type):
 				if not data:
 					return None
 				self.info, self.data = data
+				self.info['ImageFilter'], self.info['ImageColor'] = ImageTools.filter_image(input_img=self.info.get('thumb', ''), radius=25)
+				"""
 				try:
 					filter_thread = ImageTools.FilterImageThread(self.data['images'][0]['thumb'], 25)
 					filter_thread.start()
@@ -49,7 +51,7 @@ def get_episode_window(window_type):
 					#self.info['ImageColor'] = ''
 					try: filter_thread.terminate()
 					except: pass
-				#self.info['ImageFilter'], self.info['ImageColor'] = ImageTools.filter_image(input_img=self.info.get('thumb', ''), radius=25)
+				"""
 				self.listitems = [
 					(1150, self.data['videos']),
 					(1000, self.data['actors'] + self.data['guest_stars']),

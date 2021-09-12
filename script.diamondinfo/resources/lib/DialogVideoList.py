@@ -174,7 +174,6 @@ def get_tmdb_window(window_type):
 
             if xbmcaddon.Addon(addon_ID()).getSetting('context_menu') == 'true':
                 selection = xbmcgui.Dialog().contextmenu([i for i in listitems])
-                xbmc.executebuiltin('SetFocus(1001)')
             else:
                 selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
             selection_text = listitems[selection]
@@ -760,7 +759,7 @@ def get_tmdb_window(window_type):
                     self.search_str = trakt_watched_tv_shows()
             else:
                 reopen_window = False
-            fetch_data_dict_file = open(Path(addonUserDataFolder + '/fetch_data_dict'), "w")
+            fetch_data_dict_file = open(Path(addonUserDataFolder + '/fetch_data_dict'), "w", encoding="utf-8")
             sort_by = self.sort + '.' + self.order
             fetch_data_dict = {}
             fetch_data_dict['self.mode'] = self.mode

@@ -66,7 +66,8 @@ class DialogBaseInfo(object):
 		for container_id, listitems in self.listitems:
 			try:
 				self.getControl(container_id).reset()
-				self.getControl(container_id).addItems(Utils.create_listitems(listitems))
+				#xbmc.log(str('fill_lists')+'===>PHIL', level=xbmc.LOGINFO)
+				self.getControl(container_id).addItems(Utils.create_listitems(listitems,preload_images=0, enable_clearlogo=False))
 			except:
 				Utils.log('Notice: No container with id %i available' % container_id)
 

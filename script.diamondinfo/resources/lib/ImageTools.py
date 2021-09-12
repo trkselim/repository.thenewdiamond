@@ -1,4 +1,4 @@
-import os, urllib.request, urllib.error, threading
+import os, urllib.parse, urllib.request, urllib.error, threading
 try:
 	from PIL import Image, ImageFilter
 except:
@@ -15,6 +15,8 @@ def filter_image(input_img, radius=25):
 	input_img = xbmcvfs.translatePath(input_img.encode('utf-8')).replace('image://', '')
 	if input_img.endswith('/'):
 		input_img = input_img[:-1]
+	if len(urllib.parse.unquote_plus(input_img)) < len(input_img):
+		input_img = urllib.parse.unquote_plus(input_img)
 	cachedthumb = xbmc.getCacheThumbName(input_img)
 	filename = '%s-radius_%i.png' % (cachedthumb, radius)
 	targetfile = os.path.join(Utils.IMAGES_DATA_PATH, filename)

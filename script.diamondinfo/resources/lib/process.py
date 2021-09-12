@@ -203,7 +203,7 @@ def start_info_actions(infos, params):
 			from resources.lib.library import library_source_exists_tv
 			from resources.lib.library import setup_library_tv
 			from resources.lib.library import library_source_exists_movies
-			setup_library_movies
+			from resources.lib.library import setup_library_movies
 			library_tv_sync = str(xbmcaddon.Addon(addon_ID()).getSetting('library_tv_sync'))
 			library_movies_sync = str(xbmcaddon.Addon(addon_ID()).getSetting('library_movies_sync'))
 			library_folder = str(basedir_tv_path())
@@ -273,7 +273,7 @@ def start_info_actions(infos, params):
 				return wm.open_video_list(mode='trakt', listitems=[], search_str=movies, media_type=trakt_type, filter_label=trakt_label)
 
 		elif info == 'imdb_list':
-			from resources.lib import TheMovieDB
+			from resources.lib.TheMovieDB import get_imdb_list
 			list_name = str(params['list_name'])
 			try:
 				list_script = str(params['script'])
@@ -282,7 +282,7 @@ def start_info_actions(infos, params):
 			list_str = str(params['list'])
 			Utils.show_busy()
 			if list_script == 'False':
-				return TheMovieDB.get_imdb_list(list_str)
+				return get_imdb_list(list_str)
 			from imdb import IMDb, IMDbError
 			ia = IMDb()
 			movies = ia.get_movie_list(list_str)
@@ -294,12 +294,13 @@ def start_info_actions(infos, params):
 			return wm.open_video_list(search_str=search_str, mode='search')
 
 		elif info == 'search_person':
-			from resources.lib import TheMovieDB
+			from resources.lib.TheMovieDB import get_person_info
+			from resources.lib.TheMovieDB import get_person
 			search_str = params['person']
 			if params.get('person'):
-				person = TheMovieDB.get_person_info(person_label=params['person'])
+				person = get_person_info(person_label=params['person'])
 				if person and person.get('id'):
-					movies = TheMovieDB.get_person(person['id'])
+					movies = get_person(person['id'])
 					newlist = sorted(movies, key=lambda k: k['Popularity'], reverse=True)
 					movies = {}
 					movies['cast_crew'] = []

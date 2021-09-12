@@ -43,6 +43,8 @@ def get_season_window(window_type):
 				if 'dbid' not in self.info:
 					self.info['poster'] = Utils.get_file(url=self.info.get('poster', ''))
 				#self.info['ImageFilter'], self.info['ImageColor'] = ImageTools.filter_image(input_img=self.info.get('poster', ''), radius=25)
+				self.info['ImageFilter'], self.info['ImageColor'] = ImageTools.filter_image(input_img=self.info.get('thumb', ''), radius=25)
+				"""
 				try:
 					filter_thread = ImageTools.FilterImageThread(self.data['images'][0]['thumb'], 25)
 					filter_thread.start()
@@ -55,6 +57,7 @@ def get_season_window(window_type):
 					#self.info['ImageColor'] = ''
 					try: filter_thread.terminate()
 					except: pass
+				"""
 				self.listitems = [
 					(2000, self.data['episodes']),
 					(1150, self.data['videos']),

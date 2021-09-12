@@ -37,6 +37,7 @@ class VideoPlayer(xbmc.Player):
 				if window and window.window_type == 'dialog':
 					wm.add_to_stack(window)
 					window.close()
+					window = None
 					self.wait_for_video_end()
 					return wm.pop_stack()
 			xbmc.sleep(50)
@@ -54,6 +55,7 @@ class VideoPlayer(xbmc.Player):
 				if window and window.window_type == 'dialog':
 					wm.add_to_stack(window)
 					window.close()
+					window = None
 					self.wait_for_video_end()
 					return wm.pop_stack()
 			xbmc.sleep(50)

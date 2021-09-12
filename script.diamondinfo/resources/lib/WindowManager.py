@@ -15,7 +15,17 @@ class WindowManager(object):
 		self.active_dialog = None
 
 	def add_to_stack(self, window):
-		self.window_stack.append(window)
+		if Utils.window_stack_enable == 'true':
+			self.window_stack.append(window)
+		if Utils.window_stack_enable == 'false':
+			window_stack = []
+			self.window_stack = window_stack
+			self.reopen_window = False
+			self.last_control = None
+			xbmc.log(str('self.active_dialog = None')+'===>PHIL', level=xbmc.LOGINFO)
+			self.active_dialog = None
+			window = None
+			return
 
 	def pop_stack(self):
 		if self.window_stack:
@@ -150,6 +160,7 @@ class WindowManager(object):
 				dialog = ep_class(str(addon_ID())+'-DialogVideoInfo.xml', Utils.ADDON_PATH, tvshow_id=tvshow_id, season=season, episode=episode, dbid=dbid)
 		Utils.hide_busy()
 		self.open_dialog(dialog, prev_window)
+		prev_window = None
 
 	def open_actor_info(self, prev_window=None, actor_id=None, name=None):
 		from resources.lib.DialogActorInfo import get_actor_window
@@ -198,9 +209,9 @@ class WindowManager(object):
 			else:
 				dialog = browser_class(str(addon_ID())+'-VideoList.xml', Utils.ADDON_PATH, listitems=listitems, filters=filters, mode=mode, list_id=list_id, filter_label=filter_label, type=media_type, search_str=search_str)
 		if prev_window:
-			if Utils.window_stack_enable == 'true':
-				self.add_to_stack(prev_window)
+			self.add_to_stack(prev_window)
 			prev_window.close()
+			prev_window = None
 		Utils.hide_busy()
 		dialog.doModal()
 
@@ -226,7 +237,8 @@ class WindowManager(object):
 
 	def open_dialog(self, dialog, prev_window):
 		if dialog.data:
-			self.active_dialog = dialog
+			if Utils.window_stack_enable == 'true':
+				self.active_dialog = dialog
 			if xbmc.getCondVisibility('Window.IsVisible(movieinformation)'):
 				self.reopen_window = True
 				self.last_control = xbmc.getInfoLabel('System.CurrentControlId').decode('utf-8')
@@ -234,9 +246,9 @@ class WindowManager(object):
 			if prev_window:
 				if xbmc.Player().isPlayingVideo() and not xbmc.getCondVisibility('VideoPlayer.IsFullscreen'):
 					xbmc.Player().stop()
-				if Utils.window_stack_enable == 'true':
-					self.add_to_stack(prev_window)
+				self.add_to_stack(prev_window)
 				prev_window.close()
+				prev_window = None
 			dialog.doModal()
 		else:
 			self.active_dialog = None

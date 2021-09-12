@@ -53,7 +53,8 @@ def get_tvshow_window(window_type):
 				self.info, self.data = data
 				if 'dbid' not in self.info:
 					self.info['poster'] = Utils.get_file(self.info.get('poster', ''))
-				#self.info['ImageFilter'], self.info['ImageColor'] = ImageTools.filter_image(input_img=self.info.get('poster', ''), radius=25)
+				self.info['ImageFilter'], self.info['ImageColor'] = ImageTools.filter_image(input_img=self.info.get('thumb', ''), radius=25)
+				"""
 				try:
 					filter_thread = ImageTools.FilterImageThread(self.data['backdrops'][0]['thumb'], 25)
 					filter_thread.start()
@@ -66,6 +67,7 @@ def get_tvshow_window(window_type):
 					#self.info['ImageColor'] = ''
 					try: filter_thread.terminate()
 					except: pass
+				"""
 				self.listitems = [
 					(250, self.data['seasons']),
 					(150, self.data['similar']),

@@ -136,7 +136,8 @@ class DialogBaseList(object):
 		self.total_items = data.get('total_results', '')
 		self.next_page_token = data.get('next_page_token', '')
 		self.prev_page_token = data.get('prev_page_token', '')
-		self.listitems = Utils.create_listitems(self.listitems)
+		#xbmc.log(str('update_content')+'===>PHIL', level=xbmc.LOGINFO)
+		self.listitems = Utils.create_listitems(self.listitems,preload_images=0, enable_clearlogo=False)
 
 	def update_ui(self):
 		if not self.listitems and self.getFocusId() == 500:
