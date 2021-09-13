@@ -726,7 +726,7 @@ def trakt_next_episode_rewatch(tmdb_id_num=None):
     else:
         xbmcgui.Dialog().notification(heading='Trakt Next Episode Rewatch', message='Next Episode Not aired yet', icon=icon_path(),time=1000,sound=False)
 
-def trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_order=None):
+def trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_order=None, limit=0):
     #import requests
     #import json
     #headers = trak_auth()
@@ -739,6 +739,7 @@ def trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_ord
         reverse_order = True
     response = sorted(response, key=lambda k: k[sort_by], reverse=reverse_order)
     movies = []
+    x = 0
     for i in response:
         try: 
             tmdb_id = i['movie']
@@ -748,6 +749,9 @@ def trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_ord
             tmdb_id['type'] = 'show'
         if tmdb_id not in movies:
             movies.append(tmdb_id)
+        if x + 1 == int(limit) and limit != 0:
+            break
+        x = x + 1
     return movies
 
 def get_trakt_data(url='', cache_days=14, folder='Trakt'):

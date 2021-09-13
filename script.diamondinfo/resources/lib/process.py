@@ -234,6 +234,7 @@ def start_info_actions(infos, params):
 			#kodi-send --action='RunPlugin(plugin://'+str(addon_ID())+'/?info=trakt_coll&trakt_type=movie&script=True)'
 			#kodi-send --action='RunPlugin(plugin://'+str(addon_ID())+'/?info=trakt_coll&trakt_type=tv&script=True)'
 			trakt_type = str(params['trakt_type'])
+			limit = params.get('limit', 0)
 			Utils.show_busy()
 			try:
 				trakt_script = str(params['script'])
@@ -241,7 +242,7 @@ def start_info_actions(infos, params):
 				trakt_script = 'True'
 			if trakt_script == 'False' and (info == 'trakt_watched' or info == 'trakt_coll' or info == 'trakt_trend' or info == 'trakt_popular'):
 				from resources.lib import TheMovieDB
-				return TheMovieDB.get_trakt(trakt_type=trakt_type,info=info)
+				return TheMovieDB.get_trakt(trakt_type=trakt_type,info=info,limit=limit)
 			else:
 				if info == 'trakt_watched' and trakt_type == 'movie':
 					from resources.lib.library import trakt_watched_movies
@@ -280,19 +281,21 @@ def start_info_actions(infos, params):
 
 				elif info == 'trakt_list':
 					from resources.lib.library import trakt_lists
+					from resources.lib.TheMovieDB import get_trakt_lists
 					trakt_type = str(params['trakt_type'])
 					trakt_label = str(params['trakt_list_name'])
 					trakt_user_id = str(params['user_id'])
 					takt_list_slug = str(params['list_slug'])
 					trakt_sort_by = str(params['trakt_sort_by'])
 					trakt_sort_order = str(params['trakt_sort_order'])
-					movies = trakt_lists(list_name=trakt_label,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
 					if trakt_script == 'False':
-						return TheMovieDB.get_trakt_lists(list_name=trakt_label,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
+						return get_trakt_lists(list_name=trakt_label,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order,limit=limit)
+					movies = trakt_lists(list_name=trakt_label,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order,limit=limit)
 				return wm.open_video_list(mode='trakt', listitems=[], search_str=movies, media_type=trakt_type, filter_label=trakt_label)
 
 		elif info == 'imdb_list':
 			from resources.lib.TheMovieDB import get_imdb_list
+			limit = params.get('limit', 0)
 			list_name = str(params['list_name'])
 			try:
 				list_script = str(params['script'])
@@ -301,7 +304,7 @@ def start_info_actions(infos, params):
 			list_str = str(params['list'])
 			Utils.show_busy()
 			if list_script == 'False':
-				return get_imdb_list(list_str)
+				return get_imdb_list(list_str,limit=limit)
 			from imdb import IMDb, IMDbError
 			ia = IMDb()
 			movies = ia.get_movie_list(list_str)

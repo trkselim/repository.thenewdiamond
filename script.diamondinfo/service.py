@@ -7,6 +7,7 @@ import re
 import requests
 from resources.lib import library
 from resources.lib import Utils
+from resources.lib.library import addon_ID_short
 
 ServiceStop = ''
 
@@ -222,6 +223,13 @@ class PlayerMonitor(xbmc.Player):
     def onPlayBackEnded(self):
         xbmc.log(str('onPlayBackEnded')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
         reopen_window_bool = str(xbmcaddon.Addon(library.addon_ID()).getSetting('reopen_window_bool'))
+
+        var_test = addon_ID_short()+'_running'
+        if diamond_info_started == True:
+            xbmcgui.Window(10000).setProperty(var_test, 'True')
+        else:
+            xbmcgui.Window(10000).clearProperty(var_test)
+
         if reopen_window_bool == 'true' and diamond_info_started:
             from resources.lib.process import reopen_window
             reopen_window()
@@ -233,11 +241,18 @@ class PlayerMonitor(xbmc.Player):
         trakt_scrobble = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_scrobble'))
         reopen_window_bool = str(xbmcaddon.Addon(library.addon_ID()).getSetting('reopen_window_bool'))
 
+        var_test = addon_ID_short()+'_running'
+        if diamond_info_started == True:
+            xbmcgui.Window(10000).setProperty(var_test, 'True')
+        else:
+            xbmcgui.Window(10000).clearProperty(var_test)
+
         if trakt_scrobble == 'false':
             if reopen_window_bool == 'true' and diamond_info_started:
                 from resources.lib.process import reopen_window
                 reopen_window()
             return
+
 
         xbmc.log(str('onPlayBackStopped')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
         global global_movie_flag
@@ -334,6 +349,12 @@ class PlayerMonitor(xbmc.Player):
         xbmc.log(str(diamond_info_started)+'diamond_info_started===>diamond_info_started', level=xbmc.LOGINFO)
         xbmc.log(str('onPlayBackStarted')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
         trakt_scrobble = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_scrobble'))
+
+        var_test = addon_ID_short()+'_running'
+        if diamond_info_started == True:
+            xbmcgui.Window(10000).setProperty(var_test, 'True')
+        else:
+            xbmcgui.Window(10000).clearProperty(var_test)
 
         if trakt_scrobble == 'false':
             return

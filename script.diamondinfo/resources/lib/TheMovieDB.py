@@ -876,12 +876,13 @@ def get_set_movies(set_id):
 	else:
 		return [], {}
 		
-def get_imdb_list(list_str=None):
+def get_imdb_list(list_str=None, limit=0):
 	list_str=list_str
 	from imdb import IMDb, IMDbError
 	ia = IMDb()
 	movies = ia.get_movie_list(list_str)
 	listitems = None
+	x = 0
 	for i in str(movies).split(', <'):
 		imdb_id = str('tt' + i.split(':')[1].split('[http]')[0])
 		movie_title = str(i.split(':_')[1].split('_>')[0])
@@ -901,13 +902,16 @@ def get_imdb_list(list_str=None):
 					listitems += handle_tmdb_multi_search(response['tv_results'])
 			except:
 				continue
-		#break
+		if x + 1 == int(limit) and limit != 0:
+			break
+		x = x + 1
 	return listitems
 
-def get_trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_order=None):
+def get_trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_order=None,limit=0):
 	from resources.lib.library import trakt_lists
 	movies = trakt_lists(list_name,user_id,list_slug,sort_by,sort_order)
 	listitems = None
+	x = 0
 	for i in movies:
 		imdb_id = i['ids']['imdb']
 		response = get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 13)
@@ -926,10 +930,13 @@ def get_trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort
 			listitems = handle_tmdb_multi_search(response[result_type])
 		elif result_type != False:
 			listitems += handle_tmdb_multi_search(response[result_type])
+		if x + 1 == int(limit) and limit != 0:
+			break
+		x = x + 1
 	Utils.show_busy()
 	return listitems
 
-def get_trakt(trakt_type=None,info=None):
+def get_trakt(trakt_type=None,info=None,limit=0):
 	if trakt_type == 'movie':
 		if info == 'trakt_watched':
 			from resources.lib.library import trakt_watched_movies
@@ -962,6 +969,7 @@ def get_trakt(trakt_type=None,info=None):
 			movies = trakt_popular_shows()
 
 	listitems = None
+	x = 0
 	for i in movies:
 		try:
 			try:
@@ -987,6 +995,9 @@ def get_trakt(trakt_type=None,info=None):
 		elif result_type != False:
 			listitems += handle_tmdb_multi_search(response[result_type])
 	#Utils.show_busy()
+		if x + 1 == int(limit) and limit != 0:
+			break
+		x = x + 1
 	return listitems
 
 
