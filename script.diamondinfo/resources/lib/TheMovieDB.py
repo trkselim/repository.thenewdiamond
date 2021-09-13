@@ -930,24 +930,36 @@ def get_trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort
 	return listitems
 
 def get_trakt(trakt_type=None,info=None):
-	from resources.lib.library import trakt_watched_movies
-	from resources.lib.library import trakt_collection_movies
-	from resources.lib.library import trakt_watched_tv_shows
-	from resources.lib.library import trakt_collection_shows
 	if trakt_type == 'movie':
 		if info == 'trakt_watched':
+			from resources.lib.library import trakt_watched_movies
 			movies = trakt_watched_movies()
 			#self.type = 'movie'
 		if info == 'trakt_coll':
+			from resources.lib.library import trakt_collection_movies
 			movies = trakt_collection_movies()
 			#self.type = 'movie'
+		if info == 'trakt_trend':
+			from resources.lib.library import trakt_trending_movies
+			movies = trakt_trending_movies()
+		if info == 'trakt_popular':
+			from resources.lib.library import trakt_popular_movies
+			movies = trakt_popular_movies()
 	else:
 		if info == 'trakt_watched':
+			from resources.lib.library import trakt_watched_tv_shows
 			movies = trakt_watched_tv_shows()
 			#self.type = 'tv'
 		if info == 'trakt_coll':
+			from resources.lib.library import trakt_collection_shows
 			movies = trakt_collection_shows()
 			#self.type = 'tv'
+		if info == 'trakt_trend':
+			from resources.lib.library import trakt_trending_shows
+			movies = trakt_trending_shows()
+		if info == 'trakt_popular':
+			from resources.lib.library import trakt_popular_shows
+			movies = trakt_popular_shows()
 
 	listitems = None
 	for i in movies:

@@ -727,12 +727,12 @@ def trakt_next_episode_rewatch(tmdb_id_num=None):
         xbmcgui.Dialog().notification(heading='Trakt Next Episode Rewatch', message='Next Episode Not aired yet', icon=icon_path(),time=1000,sound=False)
 
 def trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_order=None):
-    import requests
-    import json
-
-    headers = trak_auth()
+    #import requests
+    #import json
+    #headers = trak_auth()
     url = 'https://api.trakt.tv/users/'+str(user_id)+'/lists/'+str(list_slug)+'/items'
-    response = requests.get(url, headers=headers).json()
+    #response = requests.get(url, headers=headers).json()
+    response = get_trakt_data(url, 1)
     if sort_order == 'asc':
         reverse_order = False
     if sort_order == 'desc':
@@ -749,27 +749,31 @@ def trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_ord
         if tmdb_id not in movies:
             movies.append(tmdb_id)
     return movies
-    
+
+def get_trakt_data(url='', cache_days=14, folder='Trakt'):
+    from resources.lib.Utils import get_JSON_response
+    headers = trak_auth()
+    return get_JSON_response(url, cache_days, folder,headers=headers)
 
 def trakt_watched_movies():
-    import requests
-    import json
-
-    headers = trak_auth()
+    #import requests
+    #import json
+    #headers = trak_auth()
     url = 'https://api.trakt.tv/sync/watched/movies'
-    response = requests.get(url, headers=headers).json()
+    #response = requests.get(url, headers=headers).json()
+    response = get_trakt_data(url, 0)
     reverse_order = True
     response = sorted(response, key=lambda k: k['last_updated_at'], reverse=reverse_order)
 
     return response
 
 def trakt_watched_tv_shows():
-    import requests
-    import json
-
-    headers = trak_auth()
+    #import requests
+    #import json
+    #headers = trak_auth()
     url = 'https://api.trakt.tv/sync/watched/shows?extended=noseasons'
-    response = requests.get(url, headers=headers).json()
+    #response = requests.get(url, headers=headers).json()
+    response = get_trakt_data(url, 0)
     reverse_order = True
     response = sorted(response, key=lambda k: k['last_updated_at'], reverse=reverse_order)
 
@@ -781,7 +785,8 @@ def trakt_collection_movies():
 
     headers = trak_auth()
     url = 'https://api.trakt.tv/sync/collection/movies'
-    response = requests.get(url, headers=headers).json()
+    #response = requests.get(url, headers=headers).json()
+    response = get_trakt_data(url, 0.125)
     reverse_order = True
     #response = sorted(response, key=lambda k: k['collected_at'], reverse=reverse_order)
 
@@ -797,7 +802,8 @@ def trakt_collection_shows():
 
     headers = trak_auth()
     url = 'https://api.trakt.tv/sync/collection/shows'
-    response = requests.get(url, headers=headers).json()
+    #response = requests.get(url, headers=headers).json()
+    response = get_trakt_data(url, 0.125)
     reverse_order = True
     #response = sorted(response, key=lambda k: k['collected_at'], reverse=reverse_order)
 
@@ -805,6 +811,72 @@ def trakt_collection_shows():
     for i in response:
         new_list.append(i['show'])
     response = sorted(new_list , key=lambda k: k['title'], reverse=False)
+    return response
+
+def trakt_trending_movies():
+    import requests
+    import json
+
+    headers = trak_auth()
+    url = 'https://api.trakt.tv/movies/trending?limit=300'
+    #response = requests.get(url, headers=headers).json()
+    response = get_trakt_data(url, 1)
+    #reverse_order = True
+    #response = sorted(response, key=lambda k: k['collected_at'], reverse=reverse_order)
+
+    #new_list = []
+    #for i in response:
+    #    new_list.append(i['show'])
+    #response = sorted(new_list , key=lambda k: k['title'], reverse=False)
+    return response
+
+def trakt_trending_shows():
+    import requests
+    import json
+
+    headers = trak_auth()
+    url = 'https://api.trakt.tv/shows/trending?limit=300'
+    #response = requests.get(url, headers=headers).json()
+    response = get_trakt_data(url, 1)
+    #reverse_order = True
+    #response = sorted(response, key=lambda k: k['collected_at'], reverse=reverse_order)
+
+    #new_list = []
+    #for i in response:
+    #    new_list.append(i['show'])
+    #response = sorted(new_list , key=lambda k: k['title'], reverse=False)
+    return response
+
+def trakt_popular_movies():
+    #import requests
+    #import json
+    #headers = trak_auth()
+    url = 'https://api.trakt.tv/movies/popular?limit=300'
+    #response = requests.get(url, headers=headers).json()
+    response = get_trakt_data(url, 1)
+    #reverse_order = True
+    #response = sorted(response, key=lambda k: k['collected_at'], reverse=reverse_order)
+
+    #new_list = []
+    #for i in response:
+    #    new_list.append(i['show'])
+    #response = sorted(new_list , key=lambda k: k['title'], reverse=False)
+    return response
+
+def trakt_popular_shows():
+    #import requests
+    #import json
+    #headers = trak_auth()
+    url = 'https://api.trakt.tv/shows/popular?limit=300'
+    #response = requests.get(url, headers=headers).json()
+    response = get_trakt_data(url, 1)
+    #reverse_order = True
+    #response = sorted(response, key=lambda k: k['collected_at'], reverse=reverse_order)
+
+    #new_list = []
+    #for i in response:
+    #    new_list.append(i['show'])
+    #response = sorted(new_list , key=lambda k: k['title'], reverse=False)
     return response
 
 

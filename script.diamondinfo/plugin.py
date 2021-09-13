@@ -73,6 +73,10 @@ class Main:
 				('trakt_watched', 'Trakt Watched TV'),
 				('trakt_coll', 'Trakt Collection Movies'),
 				('trakt_coll', 'Trakt Collection TV'),
+				('trakt_trend', 'Trakt Trending Shows'),
+				('trakt_trend', 'Trakt Trending Movies'),
+				('trakt_popular', 'Trakt Popular Shows'),
+				('trakt_popular', 'Trakt Popular Movies'),
 			]
 
 			NoFolder_items2.append(('search_menu', 'Search...'))
@@ -134,9 +138,9 @@ class Main:
 				thumb_path  = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/thumb.png'
 				fanart_path = 'special://home/addons/'+str(addon_ID())+'/resources/skins/Default/media/tmdb/fanart.jpg'
 				script = 'False'
-				if value == 'Trakt Watched Movies' or value == 'Trakt Collection Movies':
+				if value == 'Trakt Watched Movies' or value == 'Trakt Collection Movies' or value == 'Trakt Trending Movies' or value == 'Trakt Popular Movies':
 					trakt_type = 'movie'
-				elif value == 'Trakt Watched TV' or value == 'Trakt Collection TV':
+				elif value == 'Trakt Watched TV' or value == 'Trakt Collection TV' or value == 'Trakt Trending Shows' or value == 'Trakt Popular Shows':
 					trakt_type = 'tv'
 				elif key == 'trakt_list':
 					trakt_type = 'movie'

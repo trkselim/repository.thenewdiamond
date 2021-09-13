@@ -34,6 +34,8 @@ class VideoPlayer(xbmc.Player):
 		if Utils.window_stack_enable == 'false':
 			super(VideoPlayer, self).play(item=url, listitem=listitem, windowed=False, startpos=-1)
 			window.close()
+			from resources.lib.library import addon_ID_short
+			xbmcgui.Window(10000).setProperty(str(addon_ID_short())+'_running', 'True')
 			return
 		super(VideoPlayer, self).play(item=url, listitem=listitem, windowed=False, startpos=-1)
 		for i in range(600):
@@ -56,6 +58,8 @@ class VideoPlayer(xbmc.Player):
 		if Utils.window_stack_enable == 'false':
 			super(VideoPlayer, self).play(item=url, listitem=listitem, windowed=False, startpos=-1)
 			window.close()
+			from resources.lib.library import addon_ID_short
+			xbmcgui.Window(10000).setProperty(str(addon_ID_short())+'_running', 'True')
 			return
 		Utils.get_kodi_json(method='Player.Open', params='{"item": %s}' % item)
 		for i in range(600):

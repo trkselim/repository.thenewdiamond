@@ -20,6 +20,10 @@ from resources.lib.library import trakt_watched_tv_shows
 from resources.lib.library import trakt_watched_movies
 from resources.lib.library import trakt_collection_shows
 from resources.lib.library import trakt_collection_movies
+from resources.lib.library import trakt_trending_movies
+from resources.lib.library import trakt_trending_shows
+from resources.lib.library import trakt_popular_movies
+from resources.lib.library import trakt_popular_shows
 from resources.lib.library import trakt_lists
 
 ch = OnClickHandler()
@@ -587,6 +591,10 @@ def get_tmdb_window(window_type):
             listitems += ['Trakt Watched Movies']
             listitems += ['Trakt Collection Shows']
             listitems += ['Trakt Collection Movies']
+            listitems += ['Trakt Trending Shows']
+            listitems += ['Trakt Trending Movies']
+            listitems += ['Trakt Popular Shows']
+            listitems += ['Trakt Popular Movies']
 
             for i in trakt_data['trakt_list']:
                 if str(i['name']) != '':
@@ -617,6 +625,18 @@ def get_tmdb_window(window_type):
                 self.type = 'movie'
             elif listitems[selection] == 'Trakt Collection Shows':
                 self.search_str = trakt_collection_shows()
+                self.type = 'tv'
+            elif listitems[selection] == 'Trakt Trending Shows':
+                self.search_str = trakt_trending_shows()
+                self.type = 'tv'
+            elif listitems[selection] == 'Trakt Trending Movies':
+                self.search_str = trakt_trending_movies()
+                self.type = 'tv'
+            elif listitems[selection] == 'Trakt Popular Shows':
+                self.search_str = trakt_popular_shows()
+                self.type = 'tv'
+            elif listitems[selection] == 'Trakt Popular Movies':
+                self.search_str = trakt_popular_movies()
                 self.type = 'tv'
             else:
                 for i in trakt_data['trakt_list']:

@@ -228,13 +228,7 @@ def start_info_actions(infos, params):
 		elif info == 'auto_library':
 			auto_library()
 
-		elif info == 'trakt_watched' or info == 'trakt_coll' or info == 'trakt_list':
-			from resources.lib import TheMovieDB
-			from resources.lib.library import trakt_watched_tv_shows
-			from resources.lib.library import trakt_watched_movies
-			from resources.lib.library import trakt_collection_shows
-			from resources.lib.library import trakt_collection_movies
-			from resources.lib.library import trakt_lists
+		elif info == 'trakt_watched' or info == 'trakt_coll' or info == 'trakt_list' or info == 'trakt_trend' or info == 'trakt_popular':
 			#kodi-send --action='RunPlugin(plugin://'+str(addon_ID())+'/?info=trakt_watched&trakt_type=movie&script=True)'
 			#kodi-send --action='RunPlugin(plugin://'+str(addon_ID())+'/?info=trakt_watched&trakt_type=tv&script=True)'
 			#kodi-send --action='RunPlugin(plugin://'+str(addon_ID())+'/?info=trakt_coll&trakt_type=movie&script=True)'
@@ -245,22 +239,47 @@ def start_info_actions(infos, params):
 				trakt_script = str(params['script'])
 			except:
 				trakt_script = 'True'
-			if trakt_script == 'False' and (info == 'trakt_watched' or info == 'trakt_coll'):
+			if trakt_script == 'False' and (info == 'trakt_watched' or info == 'trakt_coll' or info == 'trakt_trend' or info == 'trakt_popular'):
+				from resources.lib import TheMovieDB
 				return TheMovieDB.get_trakt(trakt_type=trakt_type,info=info)
 			else:
 				if info == 'trakt_watched' and trakt_type == 'movie':
+					from resources.lib.library import trakt_watched_movies
 					movies = trakt_watched_movies()
 					trakt_label = 'Trakt Watched Movies'
 				elif info == 'trakt_watched' and trakt_type == 'tv':
+					from resources.lib.library import trakt_watched_tv_shows
 					movies = trakt_watched_tv_shows()
 					trakt_label = 'Trakt Watched Shows'
 				elif info == 'trakt_coll' and trakt_type == 'movie':
+					from resources.lib.library import trakt_collection_movies
 					movies = trakt_collection_movies()
 					trakt_label = 'Trakt Collection Movies'
 				elif info == 'trakt_coll' and trakt_type == 'tv':
+					from resources.lib.library import trakt_collection_shows
 					movies = trakt_collection_shows()
 					trakt_label = 'Trakt Collection Shows'
+
+				elif info == 'trakt_trend' and trakt_type == 'tv':
+					from resources.lib.library import trakt_trending_shows
+					movies = trakt_trending_shows()
+					trakt_label = 'Trakt Trending Shows'
+				elif info == 'trakt_trend' and trakt_type == 'movie':
+					from resources.lib.library import trakt_trending_movies
+					movies = trakt_trending_movies()
+					trakt_label = 'Trakt Trending Movies'
+
+				elif info == 'trakt_popular' and trakt_type == 'tv':
+					from resources.lib.library import trakt_popular_shows
+					movies = trakt_popular_shows()
+					trakt_label = 'Trakt Trending Shows'
+				elif info == 'trakt_popular' and trakt_type == 'movie':
+					from resources.lib.library import trakt_popular_movies
+					movies = trakt_popular_movies()
+					trakt_label = 'Trakt Trending Movies'
+
 				elif info == 'trakt_list':
+					from resources.lib.library import trakt_lists
 					trakt_type = str(params['trakt_type'])
 					trakt_label = str(params['trakt_list_name'])
 					trakt_user_id = str(params['user_id'])
