@@ -272,6 +272,21 @@ def get_set_name_from_db(dbid):
 			return json_response['result']['setdetails'].get('label', '')
 	return ''
 
+def get_info_from_db(media_type, dbid):
+	if not dbid:
+		return None
+	if media_type == 'movie':
+		params = '{"properties": ["imdbnumber", "title", "originaltitle", "year"], "movieid": %s}' % dbid
+		json_response = Utils.get_kodi_json(method='VideoLibrary.GetMovieDetails', params=params)
+		if 'result' in json_response and 'moviedetails' in json_response['result']:
+			return json_response['result']['moviedetails']
+	elif media_type == 'tvshow':
+		params = '{"properties": ["imdbnumber", "title", "originaltitle", "year"], "tvshowid": %s}' % dbid
+		json_response = Utils.get_kodi_json(method='VideoLibrary.GetTVShowDetails', params=params)
+		if 'result' in json_response and 'tvshowdetails' in json_response['result']:
+			return json_response['result']['tvshowdetails']
+	return None
+
 def get_imdb_id_from_db(media_type, dbid):
 	if not dbid:
 		return None

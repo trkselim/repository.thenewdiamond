@@ -455,7 +455,7 @@ def start_info_actions(infos, params):
 				#response = get_tmdb_data('search/%s?query=%s&language=en-US&include_adult=%s&' % ('movie', params.get('name'), xbmcaddon.Addon().getSetting('include_adults')), 30)
 				#params['id'] = response['results'][0]['id']
 				if not params.get('id') and not params.get('dbid') and (not params.get('imdb_id') or not 'tt' in str(params.get('imdb_id'))):
-					movie = get_movie_info(movie_label=params.get('name'))
+					movie = get_movie_info(movie_label=params.get('name'), year=params.get('year'))
 					if movie and movie.get('id'):
 						params['id'] = movie.get('id')
 					elif not movie:
@@ -480,7 +480,7 @@ def start_info_actions(infos, params):
 				#response = get_tmdb_data('search/%s?query=%s&language=en-US&include_adult=%s&' % ('tv', params.get('name'), xbmcaddon.Addon().getSetting('include_adults')), 30)
 				#params['id'] = response['results'][0]['id']
 				if not params.get('id') and not params.get('dbid') and not params.get('tvdb_id') and (not params.get('imdb_id') or not 'tt' in str(params.get('imdb_id'))):
-					tvshow = get_tvshow_info(tvshow_label=params.get('name'))
+					tvshow = get_tvshow_info(tvshow_label=params.get('name'), year=params.get('year'))
 					if tvshow and tvshow.get('id'):
 						params['id'] = tvshow.get('id')
 					elif not tvshow:

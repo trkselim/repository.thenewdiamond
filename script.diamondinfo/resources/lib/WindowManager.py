@@ -67,9 +67,10 @@ class WindowManager(object):
 		Utils.show_busy()
 		from resources.lib.library import addon_ID
 		dbid = int(dbid) if dbid and int(dbid) > 0 else None
-		from resources.lib.TheMovieDB import get_show_tmdb_id, search_media, play_tv_trailer
+		from resources.lib.TheMovieDB import get_show_tmdb_id, search_media, play_tv_trailer, get_tvshow_info
 		from resources.lib.DialogTVShowInfo import get_tvshow_window
 		from resources.lib.local_db import get_imdb_id_from_db
+		from resources.lib.local_db import get_info_from_db
 		if tmdb_id:
 			pass
 		elif tvdb_id:
@@ -78,19 +79,35 @@ class WindowManager(object):
 			tmdb_id = get_show_tmdb_id(tvdb_id=imdb_id, source='imdb_id')
 		elif dbid:
 			tvdb_id = get_imdb_id_from_db(media_type='tvshow', dbid=dbid)
+			tv_info = get_info_from_db(media_type='tvshow', dbid=dbid)
+			try: year = str(tv_info['year'])
+			except: year = ''
 			if tvdb_id:
 				try:
 					tmdb_id = get_show_tmdb_id(tvdb_id)
 				except IndexError:
 					if name:
-						tmdb_id = search_media(media_name=name, year='', media_type='tv')
+						if year != '':
+							tvshow = get_tvshow_info(tvshow_label=name, year=year)
+							if tvshow and tvshow.get('id'):
+								tmdb_id = tvshow.get('id')
+							else:
+								tmdb_id = search_media(media_name=name, year='', media_type='tv')
 					else:
 						name = xbmc.getInfoLabel('listitem.TvShowTitle')
 						if str(name) != '':
 							name = xbmc.getInfoLabel('listitem.Label')
-						tmdb_id = search_media(media_name=name, year='', media_type='tv')
+						tvshow = get_tvshow_info(tvshow_label=name, year=year)
+						if tvshow and tvshow.get('id'):
+							tmdb_id = tvshow.get('id')
+						else:
+							tmdb_id = search_media(media_name=name, year='', media_type='tv')
 		elif name:
-			tmdb_id = search_media(media_name=name, year='', media_type='tv')
+			tvshow = get_tvshow_info(tvshow_label=name, year=year)
+			if tvshow and tvshow.get('id'):
+				tmdb_id = tvshow.get('id')
+			else:
+				tmdb_id = search_media(media_name=name, year='', media_type='tv')
 		tvshow_class = get_tvshow_window(DialogXML)
 		if Utils.NETFLIX_VIEW == 'true' or Utils.NETFLIX_VIEW2 == 'true':
 			dialog = tvshow_class(str(addon_ID())+'-DialogVideoInfo-Netflix.xml', Utils.ADDON_PATH, tmdb_id=tmdb_id, dbid=dbid)
