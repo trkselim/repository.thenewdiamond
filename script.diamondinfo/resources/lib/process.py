@@ -204,6 +204,7 @@ def start_info_actions(infos, params):
 			from resources.lib.library import setup_library_tv
 			from resources.lib.library import library_source_exists_movies
 			from resources.lib.library import setup_library_movies
+			from resources.lib.library import icon_path
 			library_tv_sync = str(xbmcaddon.Addon(addon_ID()).getSetting('library_tv_sync'))
 			library_movies_sync = str(xbmcaddon.Addon(addon_ID()).getSetting('library_movies_sync'))
 			library_folder = str(basedir_tv_path())

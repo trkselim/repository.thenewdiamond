@@ -132,22 +132,23 @@ def show_settings_menu():
 def setup_library_tv():
     from resources.lib import AddSource
     
-    library_root_folder = xbmcaddon.Addon(addon_ID()).getSetting('library_folder')
+    library_root_folder = str(xbmcaddon.Addon(addon_ID()).getSetting('library_folder'))
     if library_root_folder == '':
         addon = xbmcaddon.Addon()
         addon_path = addon.getAddonInfo('path')
         addonID = addon.getAddonInfo('id')
         addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
         library_root_folder = addonUserDataFolder
+        library_root_folder = str(library_root_folder)
     
     if str(library_root_folder)[-1] != '/':
         library_root_folder += '/'
-        library_root_folder = Path(library_root_folder)
+        library_root_folder = str(Path(library_root_folder))
     
     library_folder = str(basedir_tv_path())
     if str(library_folder)[-1] != '/':
         library_folder += '/'
-        library_folder = Path(library_folder)
+        library_folder = str(Path(library_folder))
 
     if not xbmcvfs.exists(library_root_folder):
         xbmcvfs.mkdir(library_root_folder)
@@ -174,15 +175,16 @@ def setup_library_movies():
         addonID = addon.getAddonInfo('id')
         addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
         library_root_folder = addonUserDataFolder
+        library_root_folder = str(library_root_folder)
 
     if str(library_root_folder)[-1] != '/':
         library_root_folder += '/'
-        library_root_folder = Path(library_root_folder)
+        library_root_folder = str(Path(library_root_folder))
     
     library_folder = str(basedir_movies_path())
     if str(library_folder)[-1] != '/':
         library_folder += '/'
-        library_folder = Path(library_folder)
+        library_folder = str(Path(library_folder))
 
     if not xbmcvfs.exists(library_root_folder):
         xbmcvfs.mkdir(library_root_folder)
@@ -211,9 +213,9 @@ def setup_xml_filenames():
         xbmc.sleep(500)
         xbmcaddon.Addon(addon_ID()).setSetting('netflix_view', 'true') 
     else:
-        xbmcaddon.Addon(addon_ID()).setSetting('netflix_view', 'false') 
-        xbmc.sleep(500)
         xbmcaddon.Addon(addon_ID()).setSetting('netflix_view', 'true') 
+        xbmc.sleep(500)
+        xbmcaddon.Addon(addon_ID()).setSetting('netflix_view', 'false') 
     dir_path = Path(str(main_file_path()) + '/resources/skins/Default/1080i/')
     for dirpath, dnames, fnames in os.walk(dir_path):
         for f in fnames:
