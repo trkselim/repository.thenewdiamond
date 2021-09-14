@@ -422,22 +422,18 @@ def create_listitems(data=None, preload_images=0, enable_clearlogo=True):
 	image_requests = []
 	for (count, result) in enumerate(data):
 		listitem = xbmcgui.ListItem('%s' % str(count))
-		try: 
-			tmdb_id = result['id']
-			media_type = result['media_type']
-		except: 
-			tmdb_id = 0
-			media_type = 0
-			try: result['media_type'] = result['mediatype']
-			except: pass
+		try: tmdb_id = result['id']
+		except: tmdb_id = 0
+		try: media_type = result['media_type']
+		except: media_type = 0
 
 		#if enable_clearlogo and not 'info=library' in str(sys.argv) and not 'script=False' in str(sys.argv):
 		if enable_clearlogo:
-			if result['media_type'] == 'tv' and tmdb_id != 0:
+			if media_type == 'tv' and tmdb_id != 0:
 				from resources.lib.TheMovieDB import get_tvshow_ids
 				imdb_id = fetch(get_tvshow_ids(tmdb_id), 'imdb_id')
 				result['IMDBNumber'] = imdb_id
-			elif result['media_type'] == 'movie' and tmdb_id != 0:
+			elif media_type == 'movie' and tmdb_id != 0:
 				from resources.lib.TheMovieDB import get_imdb_id_from_movie_id
 				imdb_id = get_imdb_id_from_movie_id(tmdb_id)
 				result['IMDBNumber'] = imdb_id

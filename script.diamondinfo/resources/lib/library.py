@@ -730,7 +730,10 @@ def trakt_lists(list_name=None,user_id=None,list_slug=None,sort_by=None,sort_ord
     #import requests
     #import json
     #headers = trak_auth()
-    url = 'https://api.trakt.tv/users/'+str(user_id)+'/lists/'+str(list_slug)+'/items'
+    if list_slug.lower() == 'watchlist':
+        url = 'https://api.trakt.tv/users/'+str(user_id)+'/watchlist'
+    else:
+        url = 'https://api.trakt.tv/users/'+str(user_id)+'/lists/'+str(list_slug)+'/items'
     #response = requests.get(url, headers=headers).json()
     response = get_trakt_data(url, 1)
     if sort_order == 'asc':
