@@ -203,11 +203,11 @@ def get_tmdb_window(window_type):
 
             if selection_text == 'Remove from library' or selection_text == 'Add to library':
                 if self.listitem.getProperty('TVShowTitle'):
-                    TVLibrary = basedir_tv_path
+                    TVLibrary = basedir_tv_path()
                     if self.listitem.getProperty('dbid'):
                         Utils.get_kodi_json(method='VideoLibrary.RemoveTVShow', params='{"tvshowid": %s}' % dbid)
-                        if os.path.exists(xbmcvfs.translatePath('%s%s/' % (TVLibrary, tvdb_id))):
-                            shutil.rmtree(xbmcvfs.translatePath('%s%s/' % (TVLibrary, tvdb_id)))
+                        if os.path.exists(xbmcvfs.translatePath('%s/%s/' % (TVLibrary, tvdb_id))):
+                            shutil.rmtree(xbmcvfs.translatePath('%s/%s/' % (TVLibrary, tvdb_id)))
                             
                             trakt_add_tv(item_id,'Remove')
                             Utils.after_add(type='tv')
@@ -224,9 +224,9 @@ def get_tmdb_window(window_type):
                     if self.listitem.getProperty('dbid'):
                         if xbmcgui.Dialog().yesno(str(addon_ID()), 'Remove [B]%s[/B] from library?' % self.listitem.getProperty('title')):
                             Utils.get_kodi_json(method='VideoLibrary.RemoveMovie', params='{"movieid": %s}' % dbid)
-                            MovieLibrary = basedir_movies_path
-                            if os.path.exists(xbmcvfs.translatePath('%s%s/' % (MovieLibrary, imdb_id))):
-                                shutil.rmtree(xbmcvfs.translatePath('%s%s/' % (MovieLibrary, imdb_id)))
+                            MovieLibrary = basedir_movies_path()
+                            if os.path.exists(xbmcvfs.translatePath('%s/%s/' % (MovieLibrary, imdb_id))):
+                                shutil.rmtree(xbmcvfs.translatePath('%s/%s/' % (MovieLibrary, imdb_id)))
                                 
                                 trakt_add_movie(item_id,'Remove')
                                 Utils.after_add(type='movie')

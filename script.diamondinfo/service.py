@@ -848,6 +848,10 @@ class ServiceMonitor(object):
     def run(self):
         xbmc.log(str('run_diamond_info_service_started')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
         ServiceStarted = 'True'
+        auto_plugin_route = xbmcaddon.Addon().getSetting('auto_plugin_route')
+        auto_plugin_route_enable = xbmcaddon.Addon().getSetting('auto_plugin_route_enable')
+        if auto_plugin_route_enable == 'true':
+            xbmc.executebuiltin('RunPlugin(%s)' % auto_plugin_route)
         library.auto_setup_xml_filenames()
         self.cron_job.start()
         self.player_monitor = PlayerMonitor()
