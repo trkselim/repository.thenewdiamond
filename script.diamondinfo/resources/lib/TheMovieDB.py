@@ -56,8 +56,9 @@ def handle_tmdb_movies(results=[], local_first=True, sortkey='year'):
             genres = ''
         tmdb_id = str(Utils.fetch(movie, 'id'))
         artwork = get_image_urls(poster=movie.get('poster_path'), fanart=movie.get('backdrop_path'))
+        year = Utils.get_year(Utils.fetch(movie, 'release_date'))
         trailer = 'plugin://'+str(addon_ID())+'?info=playtrailer&&id=%s' % str(tmdb_id)
-        path = 'plugin://'+str(addon_ID())+'?info='+str(addon_ID_short())+'&&id=%s' % str(tmdb_id)
+        path = 'plugin://'+str(addon_ID())+'?info='+str(addon_ID_short())+'&&id=%s&year=%s' % (str(tmdb_id), str(year))
         listitem = {
             'title': Utils.fetch(movie, 'title'),
             'Label': Utils.fetch(movie, 'title'),
@@ -77,7 +78,7 @@ def handle_tmdb_movies(results=[], local_first=True, sortkey='year'):
             'department': Utils.fetch(movie, 'department'),
             'Votes': Utils.fetch(movie, 'vote_count'),
             'User_Rating': Utils.fetch(movie, 'rating'),
-            'year': Utils.get_year(Utils.fetch(movie, 'release_date')),
+            'year': year,
             'genre': genres,
             'Premiered': Utils.fetch(movie, 'release_date')
             }

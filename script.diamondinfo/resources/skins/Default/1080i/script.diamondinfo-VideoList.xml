@@ -194,6 +194,31 @@
 							<texture flipx="true">flags/local.png</texture>
 							<visible>!String.IsEmpty(ListItem.Property(DBID))</visible>
 						</control>
+
+					<control type="textbox">
+						<posx>75</posx>
+						<width>228</width>
+						<height>67</height>
+						<posy>30</posy>
+						<textcolor>FFFFFFFF</textcolor>
+						<align>center</align>
+						<font>font12</font>
+						<label>$INFO[ListItem.Property(UnWatchedEpisodes)]</label>
+						<visible>Integer.IsGreater(ListItem.Property(UnWatchedEpisodes),0) + !String.IsEmpty(ListItem.TVShowTitle)</visible>
+					</control>
+
+					<control type="textbox">
+						<posx>75</posx>
+						<width>228</width>
+						<height>67</height>
+						<posy>30</posy>
+						<textcolor>FFFFFFFF</textcolor>
+						<align>center</align>
+						<font>font20</font>
+						<label>*</label>
+						<visible>Integer.IsGreater(ListItem.Property(PlayCount),0) + [String.IsEqual(ListItem.DBTYPE,movie)|String.IsEqual(ListItem.DBTYPE,tvshow)]</visible>
+					</control>
+
 						<control type="textbox">
 							<posx>0</posx>
 							<width>228</width>
@@ -249,6 +274,46 @@
 							<visible>!String.IsEmpty(ListItem.Property(DBID))</visible>
 						</control>
 					</control>
+
+					<control type="textbox">
+						<posx>175</posx>
+						<width>228</width>
+						<height>67</height>
+						<posy>135</posy>
+						<textcolor>FFFFFFFF</textcolor>
+						<align>center</align>
+						<font>font20</font>
+						<label>*</label>
+						<visible>Integer.IsGreater(ListItem.Property(PlayCount),0) + [String.IsEqual(ListItem.DBTYPE,movie)|String.IsEqual(ListItem.DBTYPE,tvshow)]</visible>
+						<!---animation type="Focus" reversible="false">
+							<effect type="slide" start="0,0" end="0,50" time="250" tween="back" reversible="false"/>
+						</animation>
+						<animation type="UnFocus" reversible="false">
+							<effect type="slide"  start="0,50" end="0" time="180" tween="cubic" reversible="false"/>
+							<effect type="fade" start="100" end="62" time="250"/>
+						</animation--->
+					</control>
+
+					<control type="textbox">
+						<posx>175</posx>
+						<width>228</width>
+						<height>67</height>
+						<posy>135</posy>
+						<textcolor>FFFFFFFF</textcolor>
+						<align>center</align>
+						<font>font12</font>
+						<label>$INFO[ListItem.Property(UnWatchedEpisodes)]</label>
+						<visible>Integer.IsGreater(ListItem.Property(UnWatchedEpisodes),0) + !String.IsEmpty(ListItem.TVShowTitle)</visible>
+						<!---animation type="Focus" reversible="false">
+							<effect type="slide" start="0,0" end="0,50" time="250" tween="back" reversible="false"/>
+						</animation>
+						<animation type="UnFocus" reversible="false">
+							<effect type="slide"  start="0,50" end="0" time="180" tween="cubic" reversible="false"/>
+							<effect type="fade" start="100" end="62" time="250"/>
+						</animation--->
+					</control>
+
+
 					<control type="textbox">
 						<posx>80</posx>
 						<width>228</width>

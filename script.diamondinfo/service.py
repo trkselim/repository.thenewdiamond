@@ -27,6 +27,8 @@ class PlayerMonitor(xbmc.Player):
     def __init__(self):
         xbmc.Player.__init__(self)
         self.player = xbmc.Player()
+        self.trakt_tv = None
+        self.trakt_movies = None
         #self.playerstring = None
         #self.property_prefix = 'Player'
         #self.reset_properties()
@@ -231,8 +233,10 @@ class PlayerMonitor(xbmc.Player):
             xbmcgui.Window(10000).clearProperty(var_test)
 
         if reopen_window_bool == 'true' and diamond_info_started:
-            from resources.lib.process import reopen_window
-            reopen_window()
+            #from resources.lib.process import reopen_window
+            #reopen_window()
+            from resources.lib.WindowManager import wm
+            return wm.open_video_list(search_str='', mode='reopen_window',trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
         #self.set_watched()
         #self.reset_properties()
         #return wm.pop_stack()
@@ -249,8 +253,10 @@ class PlayerMonitor(xbmc.Player):
 
         if trakt_scrobble == 'false':
             if reopen_window_bool == 'true' and diamond_info_started:
-                from resources.lib.process import reopen_window
-                reopen_window()
+                #from resources.lib.process import reopen_window
+                #reopen_window()
+                from resources.lib.WindowManager import wm
+                return wm.open_video_list(search_str='', mode='reopen_window',trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
             return
 
 
@@ -290,13 +296,17 @@ class PlayerMonitor(xbmc.Player):
                 xbmc.log(str(json_object)+'=episode resume set, '+str(dbID)+'=dbID', level=xbmc.LOGFATAL)
         except:
             if reopen_window_bool == 'true' and diamond_info_started:
-                from resources.lib.process import reopen_window
-                reopen_window()
+                #from resources.lib.process import reopen_window
+                #reopen_window()
+                from resources.lib.WindowManager import wm
+                return wm.open_video_list(search_str='', mode='reopen_window',trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
             return
 
         if reopen_window_bool == 'true' and diamond_info_started:
-            from resources.lib.process import reopen_window
-            reopen_window()
+            #from resources.lib.process import reopen_window
+            #reopen_window()
+            from resources.lib.WindowManager import wm
+            return wm.open_video_list(search_str='', mode='reopen_window',trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
         #self.set_watched()
         #self.reset_properties()
 
@@ -620,6 +630,10 @@ class PlayerMonitor(xbmc.Player):
                         elif year != '' and movie_title != '':
                             try: self.trakt_scrobble_title(movie_title, year, percentage)
                             except: pass
+                        library.trakt_watched_movies_full()
+                        xbmc.log(str('library.trakt_watched_movies_full')+'===>PHIL', level=xbmc.LOGINFO)
+                        #self.trakt_tv = trakt_watched_get(mode='tv')
+                        #self.trakt_movies = trakt_watched_get(mode='movie')
                         if int(movie_id) > 0:
                             json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","id":1,"method":"VideoLibrary.GetMovieDetails","params":{"movieid":'+str(movie_id)+', "properties": ["playcount"]}}')
                             json_object  = json.loads(json_result)
@@ -697,6 +711,10 @@ class PlayerMonitor(xbmc.Player):
                             json_object  = json.loads(json_result)
                             xbmc.log(str(json_object)+'_LASTPLAYED='+str(dt_string)+'=episode marked watched, '+str(dbID)+'=dbID', level=xbmc.LOGFATAL)
 
+                        library.trakt_watched_tv_shows_full()
+                        xbmc.log(str('library.trakt_watched_tv_shows_full')+'===>PHIL', level=xbmc.LOGINFO)
+                        #self.trakt_tv = trakt_watched_get(mode='tv')
+                        #self.trakt_movies = trakt_watched_get(mode='movie')
                         if trakt_watched != 'true':
                             trakt_watched = 'true'
                             if tmdb_id != '':

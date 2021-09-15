@@ -18,6 +18,7 @@
 		<setting label="Trakt/Kodi Scrobbling with Scene filename parsing" type="lsep"/>
 		<setting label="Enable Trakt/Kodi Scrobbling with PTN" type="bool" id="trakt_scrobble" default="false"/>
 		<setting label="Reopen Last UI Screen After Playback Ends" type="bool" id="reopen_window_bool" default="false"/>
+		<setting label="Trakt Watched Stats (TESTING may effect performance)" type="bool" id="trakt_watched_stats" default="false"/>
 		<setting label="Use Context Menus in UI?" type="bool" id="context_menu" default="false"/>
 		<setting label="Use Window Stack?" type="bool" id="window_stack_enable" default="true"/>
 		<setting label="Maintenance" type="lsep"/>

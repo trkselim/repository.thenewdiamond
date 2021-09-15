@@ -408,7 +408,13 @@ def set_window_props(name, data, prefix='', debug=False):
 				log('%s%s.%i.%s --> ' % (prefix, name, count + 1, str(key)) + value)
 	xbmcgui.Window(10000).setProperty('%s%s.Count' % (prefix, name), str(len(data)))
 
-def create_listitems(data=None, preload_images=0, enable_clearlogo=True):
+def create_listitems(data=None, preload_images=0, enable_clearlogo=True, info=None, trakt_tv=None, trakt_movies=None):
+	from resources.lib.TheMovieDB import extended_season_info
+	from pathlib import Path
+	addon = xbmcaddon.Addon()
+	addon_path = addon.getAddonInfo('path')
+	addonID = addon.getAddonInfo('id')
+	addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
 	#fanart_api = fanart_api_key()
 	#xbmc.log(str(enable_clearlogo)+'===>PHIL', level=xbmc.LOGINFO)
 	#xbmc.log(str('create_listitems')+'===>PHIL', level=xbmc.LOGINFO)
@@ -420,30 +426,134 @@ def create_listitems(data=None, preload_images=0, enable_clearlogo=True):
 	itemlist = []
 	threads = []
 	image_requests = []
+
+	try: show_id = info['tmdb_id']
+	except: show_id = 0
+	import sqlite3, ast
+	movie_con = sqlite3.connect(str(Path(addonUserDataFolder + '/trakt_movies_watched.db')))
+	tv_con = sqlite3.connect(str(Path(addonUserDataFolder + '/trakt_tv_watched.db')))
+	movie_cur = movie_con.cursor()
+	tv_cur = tv_con.cursor()
+	trakt_tv = True
+	trakt_movies = True
 	for (count, result) in enumerate(data):
 		listitem = xbmcgui.ListItem('%s' % str(count))
 		try: tmdb_id = result['id']
 		except: tmdb_id = 0
 		try: media_type = result['media_type']
 		except: media_type = 0
+		try: mediatype = result['mediatype']
+		except: mediatype = 0
 
+		#xbmc.log(str(result)+'===>PHIL', level=xbmc.LOGINFO)
 		#if enable_clearlogo and not 'info=library' in str(sys.argv) and not 'script=False' in str(sys.argv):
 		if enable_clearlogo:
 			if media_type == 'tv' and tmdb_id != 0:
 				from resources.lib.TheMovieDB import get_tvshow_ids
 				imdb_id = fetch(get_tvshow_ids(tmdb_id), 'imdb_id')
 				result['IMDBNumber'] = imdb_id
+
+
 			elif media_type == 'movie' and tmdb_id != 0:
 				from resources.lib.TheMovieDB import get_imdb_id_from_movie_id
 				imdb_id = get_imdb_id_from_movie_id(tmdb_id)
 				result['IMDBNumber'] = imdb_id
 
-			if enable_clearlogo and not 'logo\':' in str(result.items()) and tmdb_id != 0 and (media_type != 0 and (media_type == 'tv' or media_type == 'movie')):
-				from resources.lib.TheMovieDB import get_fanart_clearlogo
-				try: clearlogo = get_fanart_clearlogo(tmdb_id=tmdb_id,media_type=media_type)
-				except: clearlogo = ''
-				result['clearlogo'] = clearlogo
-				result['logo'] = clearlogo
+		if mediatype == 'movie' and tmdb_id != 0 and trakt_movies:
+			try: 
+				sql_result = movie_cur.execute("select * from trakt where tmdb_id =" + str(result['id'])).fetchall()
+				#trakt_item = trakt_movies[int(result['id'])]
+				trakt_item = ast.literal_eval(sql_result[0][1].replace('\'\'','"'))
+				playcount = trakt_item['plays']
+				trakt_tmdb_id = trakt_item['movie']['ids']['tmdb']
+				last_watched = trakt_item['last_watched_at'].split('T')[0]
+				result['playcount'] = int(playcount)
+				result['lastplayed'] = str(last_watched)
+			except:
+				pass
+		if mediatype == 'tvshow' and tmdb_id != 0 and trakt_tv:
+			try:
+				#trakt_item = trakt_tv[int(result['id'])]
+				sql_result = tv_cur.execute("select * from trakt where tmdb_id =" + str(result['id'])).fetchall()
+				trakt_item = ast.literal_eval(sql_result[0][1].replace('\'\'','"'))
+				aired_episodes = trakt_item['show']['aired_episodes']
+				trakt_tmdb_id = trakt_item['show']['ids']['tmdb']
+				last_watched = trakt_item['last_watched_at'].split('T')[0]
+				x = 0
+				for j in trakt_item['seasons']:
+					for k in j['episodes']:
+						if int(k['plays']) >= 1:
+							x = x + 1
+				played_episodes = x
+				unwatched_episodes = int(aired_episodes) - int(played_episodes)
+				if int(aired_episodes) == int(played_episodes):
+					playcount = 1
+					result['lastplayed'] = str(last_watched)
+					result['playcount'] = int(playcount)
+				listitem.setProperty('UnWatchedEpisodes', str(unwatched_episodes))
+				listitem.setProperty('WatchedEpisodes', str(played_episodes))
+				listitem.setProperty('TotalEpisodes', str(aired_episodes))
+			except:
+				pass
+
+		if mediatype == 'season' and trakt_tv:
+			from datetime import datetime
+			if int(result['season']) > 0:
+				data = extended_season_info(tvshow_id=int(show_id), season_number=int(result['season']))
+				ep_count2 = 0
+				played_count = 0
+				ep_count = 0
+				for eps in data[1]['episodes']:
+					try: datetime_object = datetime.strptime(eps['release_date'], '%Y-%m-%d')
+					except: continue
+					if datetime_object <= datetime.now():
+						ep_count2 = ep_count2 + 1
+			try:
+				#trakt_item = trakt_tv[int(show_id)]
+				sql_result = tv_cur.execute("select * from trakt where tmdb_id =" + str(int(show_id))).fetchall()
+				trakt_item = ast.literal_eval(sql_result[0][1].replace('\'\'','"'))
+				for j in trakt_item['seasons']:
+					if int(result['season']) == j['number']:
+						played_count = 0
+						ep_count = 0
+						for k in j['episodes']:
+							if int(k['plays']) >= 1:
+								played_count = played_count + 1
+							last_watched = k['last_watched_at'].split('T')[0]
+							ep_count = ep_count + 1
+				result['lastplayed'] = str(last_watched)
+				if ep_count2 > ep_count:
+					ep_count = ep_count2
+				if int(ep_count) == int(played_count):
+					result['playcount'] = 1
+				unwatched_episodes = ep_count - played_count
+				listitem.setProperty('UnWatchedEpisodes', str(unwatched_episodes))
+				listitem.setProperty('WatchedEpisodes', str(played_count))
+				listitem.setProperty('TotalEpisodes', str(ep_count))
+			except:
+				pass
+
+				
+		if mediatype == 'episode' and trakt_tv:
+			try:
+				#trakt_item = trakt_tv[int(show_id)]
+				sql_result = tv_cur.execute("select * from trakt where tmdb_id =" + str(int(show_id))).fetchall()
+				trakt_item = ast.literal_eval(sql_result[0][1].replace('\'\'','"'))
+				for j in trakt_item['seasons']:
+					if int(result['season']) == int(j['number']):
+						for k in j['episodes']:
+							if int(result['episode']) == int(k['number']):
+								result['playcount'] = k['plays']
+								result['lastplayed'] = str(k['last_watched_at'].split('T')[0])
+			except:
+				pass
+
+		if enable_clearlogo and not 'logo\':' in str(result.items()) and tmdb_id != 0 and (media_type != 0 and (media_type == 'tv' or media_type == 'movie')):
+			from resources.lib.TheMovieDB import get_fanart_clearlogo
+			try: clearlogo = get_fanart_clearlogo(tmdb_id=tmdb_id,media_type=media_type)
+			except: clearlogo = ''
+			result['clearlogo'] = clearlogo
+			result['logo'] = clearlogo
 
 		for (key, value) in result.items():
 			if not value:
@@ -499,6 +609,10 @@ def create_listitems(data=None, preload_images=0, enable_clearlogo=True):
 		itemlist.append(listitem)
 	for x in threads:
 		x.join()
+	tv_cur.close()
+	tv_con.close()
+	movie_cur.close()
+	movie_con.close()
 	return itemlist
 
 def clean_text(text):

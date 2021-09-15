@@ -15,6 +15,14 @@ def get_actor_window(window_type):
 	class DialogActorInfo(DialogBaseInfo, window_type):
 
 		def __init__(self, *args, **kwargs):
+			self.trakt_tv = kwargs.get('trakt_tv', False)
+			self.trakt_movies = kwargs.get('trakt_movies', False)
+
+			if self.trakt_tv:
+				xbmc.log(str('trakt_tv=TRUE_TV_INFO')+'===>PHIL', level=xbmc.LOGINFO)
+			if self.trakt_movies:
+				xbmc.log(str('trakt_movies=TRUE_TV_INFO')+'===>PHIL', level=xbmc.LOGINFO)
+
 			super(DialogActorInfo, self).__init__(*args, **kwargs)
 			self.id = kwargs.get('id', False)
 			self.type = 'Actor'
@@ -64,7 +72,7 @@ def get_actor_window(window_type):
 		@ch.click(150)
 		@ch.click(550)
 		def open_movie_info(self):
-			wm.open_movie_info(prev_window=self, movie_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'))
+			wm.open_movie_info(prev_window=self, movie_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'),trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
 
 		@ch.click(250)
 		@ch.click(650)
@@ -75,7 +83,7 @@ def get_actor_window(window_type):
 			else:
 				selection = xbmcgui.Dialog().select(heading='Choose option', list=['Show TV show information', 'Show actor TV show appearances'])
 			if selection == 0:
-				wm.open_tvshow_info(prev_window=self, tmdb_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'))
+				wm.open_tvshow_info(prev_window=self, tmdb_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'),trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
 			if selection == 1:
 				self.open_credit_dialog(credit_id=self.listitem.getProperty('credit_id'))
 

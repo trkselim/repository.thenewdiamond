@@ -16,6 +16,14 @@ def get_episode_window(window_type):
 	class DialogEpisodeInfo(DialogBaseInfo, window_type):
 
 		def __init__(self, *args, **kwargs):
+			self.trakt_tv = kwargs.get('trakt_tv', False)
+			self.trakt_movies = kwargs.get('trakt_movies', False)
+
+			if self.trakt_tv:
+				xbmc.log(str('trakt_tv=TRUE_TV_INFO')+'===>PHIL', level=xbmc.LOGINFO)
+			if self.trakt_movies:
+				xbmc.log(str('trakt_movies=TRUE_TV_INFO')+'===>PHIL', level=xbmc.LOGINFO)
+
 			if Utils.NETFLIX_VIEW == 'true':
 				super(DialogEpisodeInfo, self).__init__(*args, **kwargs)
 				self.type = 'Episode'
@@ -80,7 +88,7 @@ def get_episode_window(window_type):
 		@ch.click(750)
 		@ch.click(1000)
 		def open_actor_info(self):
-			wm.open_actor_info(prev_window=self, actor_id=self.listitem.getProperty('id'))
+			wm.open_actor_info(prev_window=self, actor_id=self.listitem.getProperty('id'),trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
 
 		@ch.action('contextmenu', 750)
 		@ch.action('contextmenu', 1000)
@@ -90,9 +98,9 @@ def get_episode_window(window_type):
 			listitems += ['Search Person']
 			selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
 			if selection == 0:
-				wm.open_tvshow_info(prev_window=self, tmdb_id=self.tvshow_id, dbid=0)
+				wm.open_tvshow_info(prev_window=self, tmdb_id=self.tvshow_id, dbid=0,trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
 			if selection == 1:
-				wm.open_season_info(prev_window=self, tvshow_id=self.tvshow_id, season=self.info['season'], tvshow='')
+				wm.open_season_info(prev_window=self, tvshow_id=self.tvshow_id, season=self.info['season'], tvshow='',trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
 			if selection == 2:
 				self.close()
 				xbmc.executebuiltin('RunScript('+str(addon_ID())+',info=search_person,person=%s)' % self.listitem.getLabel())
@@ -145,8 +153,9 @@ def get_episode_window(window_type):
 
 		@ch.click(446)
 		def return_button(self):
-			from resources.lib.process import reopen_window
+			#from resources.lib.process import reopen_window
 			self.close()
-			reopen_window()
+			#reopen_window()
+			return wm.open_video_list(search_str='', mode='reopen_window',trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
 
 	return DialogEpisodeInfo

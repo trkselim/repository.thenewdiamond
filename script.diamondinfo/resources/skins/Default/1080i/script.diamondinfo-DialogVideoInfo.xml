@@ -770,6 +770,19 @@
 										<aspectratio aligny="center">scale</aspectratio>
 										<fadetime>0</fadetime>
 									</control>
+
+								<control type="textbox">
+									<posx>185</posx>
+									<width>228</width>
+									<height>67</height>
+									<posy>0</posy>
+									<textcolor>FFFFFFFF</textcolor>
+									<align>center</align>
+									<font>font20</font>
+									<label>*</label>
+									<visible>Integer.IsGreater(ListItem.Property(PlayCount),0) + String.IsEqual(ListItem.DBTYPE,episode)</visible>
+								</control>
+
 									<control type="image">
 										<posy>10</posy>
 										<width>320</width>
@@ -819,6 +832,19 @@
 										<aspectratio aligny="center">scale</aspectratio>
 										<fadetime>0</fadetime>
 									</control>
+
+								<control type="textbox">
+									<posx>185</posx>
+									<width>228</width>
+									<height>67</height>
+									<posy>0</posy>
+									<textcolor>FFFFFFFF</textcolor>
+									<align>center</align>
+									<font>font20</font>
+									<label>*</label>
+									<visible>Integer.IsGreater(ListItem.Property(PlayCount),0) + String.IsEqual(ListItem.DBTYPE,episode)</visible>
+								</control>
+
 									<control type="textbox">
 										<posx>0</posx>
 										<width>323</width>
@@ -900,6 +926,31 @@
 											<texture background="true" fallback="DefaultVideo.png">$INFO[ListItem.Thumb]</texture>
 											<aspectratio aligny="center">scale</aspectratio>
 										</control>
+
+									<control type="textbox">
+										<posx>90</posx>
+										<width>228</width>
+										<height>67</height>
+										<posy>0</posy>
+										<textcolor>FFFFFFFF</textcolor>
+										<align>center</align>
+										<font>font12</font>
+										<label>$INFO[ListItem.Property(UnWatchedEpisodes)]</label>
+										<visible>Integer.IsGreater(ListItem.Property(UnWatchedEpisodes),0) + String.IsEqual(ListItem.DBTYPE,season)</visible>
+									</control>
+
+									<control type="textbox">
+										<posx>90</posx>
+										<width>228</width>
+										<height>67</height>
+										<posy>0</posy>
+										<textcolor>FFFFFFFF</textcolor>
+										<align>center</align>
+										<font>font20</font>
+										<label>*</label>
+										<visible>Integer.IsGreater(ListItem.Property(PlayCount),0) + String.IsEqual(ListItem.DBTYPE,season)</visible>
+									</control>
+
 										<control type="image">
 											<width>84</width>
 											<height>84</height>
@@ -987,6 +1038,32 @@
 											<aspectratio aligny="center">scale</aspectratio>
 											<fadetime>0</fadetime>
 										</control>
+
+									<control type="textbox">
+										<posx>90</posx>
+										<width>228</width>
+										<height>67</height>
+										<posy>0</posy>
+										<textcolor>FFFFFFFF</textcolor>
+										<align>center</align>
+										<font>font12</font>
+										<label>$INFO[ListItem.Property(UnWatchedEpisodes)]</label>
+										<visible>Integer.IsGreater(ListItem.Property(UnWatchedEpisodes),0) + String.IsEqual(ListItem.DBTYPE,season)</visible>
+									</control>
+
+									<control type="textbox">
+										<posx>90</posx>
+										<width>228</width>
+										<height>67</height>
+										<posy>0</posy>
+										<textcolor>FFFFFFFF</textcolor>
+										<align>center</align>
+										<font>font20</font>
+										<label>*</label>
+										<visible>Integer.IsGreater(ListItem.Property(PlayCount),0) + String.IsEqual(ListItem.DBTYPE,season)</visible>
+									</control>
+
+
 										<control type="image">
 											<width>84</width>
 											<height>84</height>

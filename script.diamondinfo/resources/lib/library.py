@@ -771,17 +771,166 @@ def get_trakt_data(url='', cache_days=14, folder='Trakt'):
     headers = trak_auth()
     return get_JSON_response(url, cache_days, folder,headers=headers)
 
-def trakt_watched_movies():
+def trakt_watched_movies(cache_days=None):
     #import requests
     #import json
     #headers = trak_auth()
     url = 'https://api.trakt.tv/sync/watched/movies'
     #response = requests.get(url, headers=headers).json()
-    response = get_trakt_data(url, 0)
+    if cache_days:
+        response = get_trakt_data(url, cache_days)
+    else:
+        response = get_trakt_data(url, 1)
     reverse_order = True
     response = sorted(response, key=lambda k: k['last_updated_at'], reverse=reverse_order)
-
     return response
+  
+def trakt_watched_movies_full():
+    import requests
+    import json
+    from pathlib import Path
+    headers = trak_auth()
+    addon = xbmcaddon.Addon()
+    addon_path = addon.getAddonInfo('path')
+    addonID = addon.getAddonInfo('id')
+    addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
+    url = 'https://api.trakt.tv/sync/watched/movies'
+    trakt_watched_stats = xbmcaddon.Addon(addon_ID()).getSetting('trakt_watched_stats')
+    if trakt_watched_stats == 'true':
+        response = requests.get(url, headers=headers).json()
+        #trakt_data = {}
+        #for i in response:
+        #    trakt_data[i['movie']['ids']['tmdb']] = i
+    else:
+        trakt_data = None
+        return None
+    """
+    trakt_movies_watched = open(Path(addonUserDataFolder + '/trakt_movies_watched'), "w", encoding="utf-8")
+    trakt_movies_watched.write(str(trakt_data))
+    trakt_movies_watched.close()
+    trakt_data = None
+    """
+    import os
+    if os.path.exists(Path(addonUserDataFolder + '/trakt_movies_watched.db')):
+        os.remove(Path(addonUserDataFolder + '/trakt_movies_watched.db'))
+
+    import sqlite3
+    con = sqlite3.connect(str(Path(addonUserDataFolder + '/trakt_movies_watched.db')))
+    cur = con.cursor()
+
+    sql_result = cur.execute("""
+    CREATE TABLE trakt (
+        tmdb_id INTEGER PRIMARY KEY,
+        trakt VARCHAR NOT NULL
+    );
+    """).fetchall()
+    con.commit()
+
+    for i in response:
+        sql_result = """
+        INSERT INTO trakt (tmdb_id,trakt)
+        VALUES( %s,%s);
+        """ % (i['movie']['ids']['tmdb'],'"'+str(i).replace('"','\'\'')+'"')
+        sql_result = cur.execute(sql_result).fetchall()
+        con.commit()
+    cur.close()
+    con.close()
+
+def trakt_watched_tv_shows_full():
+    import requests
+    import json
+    from pathlib import Path
+    headers = trak_auth()
+    addon = xbmcaddon.Addon()
+    addon_path = addon.getAddonInfo('path')
+    addonID = addon.getAddonInfo('id')
+    addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
+    url = 'https://api.trakt.tv/sync/watched/shows?extended=full'
+    trakt_watched_stats = xbmcaddon.Addon(addon_ID()).getSetting('trakt_watched_stats')
+    if trakt_watched_stats == 'true':
+        response = requests.get(url, headers=headers).json()
+        #trakt_data = {}
+        #for i in response:
+        #    trakt_data[i['show']['ids']['tmdb']] = i
+    else:
+        trakt_data = None
+        return
+    """
+    trakt_tv_watched = open(Path(addonUserDataFolder + '/trakt_tv_watched'), "w", encoding="utf-8")
+    trakt_tv_watched.write(str(trakt_data))
+    trakt_tv_watched.close()
+    trakt_data = None
+    """
+    import os
+    if os.path.exists(Path(addonUserDataFolder + '/trakt_tv_watched.db')):
+        os.remove(Path(addonUserDataFolder + '/trakt_tv_watched.db'))
+
+    import sqlite3
+    con = sqlite3.connect(str(Path(addonUserDataFolder + '/trakt_tv_watched.db')))
+    cur = con.cursor()
+
+    sql_result = cur.execute("""
+    CREATE TABLE trakt (
+        tmdb_id INTEGER PRIMARY KEY,
+        trakt VARCHAR NOT NULL
+    );
+    """).fetchall()
+    con.commit()
+
+    for i in response:
+        sql_result = """
+        INSERT INTO trakt (tmdb_id,trakt)
+        VALUES( %s,%s);
+        """ % (i['show']['ids']['tmdb'],'"'+str(i).replace('"','\'\'')+'"')
+        sql_result = cur.execute(sql_result).fetchall()
+        con.commit()
+    cur.close()
+    con.close()
+
+
+def trakt_watched_get(mode=None):
+    return None
+    from resources.lib.Utils import show_busy
+    #from resources.lib.Utils import hide_busy
+    show_busy()
+    trakt_watched_stats = xbmcaddon.Addon(addon_ID()).getSetting('trakt_watched_stats')
+    if trakt_watched_stats == 'false':
+        return None
+
+    from pathlib import Path
+    addon = xbmcaddon.Addon()
+    addon_path = addon.getAddonInfo('path')
+    addonID = addon.getAddonInfo('id')
+    addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
+    xbmc.log(str('trakt_watched_get=')+str(mode)+'===>PHIL', level=xbmc.LOGINFO)
+    if mode == 'tv':
+        trakt_data_file = open(Path(addonUserDataFolder + '/trakt_tv_watched'), "r")    
+    else:
+        trakt_data_file = open(Path(addonUserDataFolder + '/trakt_movies_watched'), "r")
+
+    from threading import Thread
+    import threading
+    class TraktWatchedThread(threading.Thread):
+
+        def __init__(self, trakt_data_file=None):
+            threading.Thread.__init__(self)
+            self.trakt_data_file = trakt_data_file
+
+        def run(self):
+            import ast
+            self.trakt_data_file_read = ast.literal_eval(trakt_data_file.read())
+
+    trakt_data_file_thread = TraktWatchedThread(trakt_data_file)
+    trakt_data_file_thread.start()
+
+    trakt_data_file_thread.join()
+    trakt_data_file_read = trakt_data_file_thread.trakt_data_file_read 
+    #trakt_data_file_read = ast.literal_eval(trakt_data_file.read())
+    #hide_busy()
+    return trakt_data_file_read
+
+
+
 
 def trakt_watched_tv_shows():
     #import requests
@@ -792,7 +941,6 @@ def trakt_watched_tv_shows():
     response = get_trakt_data(url, 0)
     reverse_order = True
     response = sorted(response, key=lambda k: k['last_updated_at'], reverse=reverse_order)
-
     return response
     
 def trakt_collection_movies():

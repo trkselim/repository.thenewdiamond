@@ -13,6 +13,7 @@ def start_info_actions(infos, params):
 	if 'imdbid' in params and 'imdb_id' not in params:
 		params['imdb_id'] = params['imdbid']
 	for info in infos:
+		Utils.show_busy()
 		data = [], ''
 		if info == 'libraryallmovies':
 			from resources.lib import local_db
@@ -155,6 +156,11 @@ def start_info_actions(infos, params):
 
 		elif info == 'test_route':
 			from resources.lib import library
+			library.trakt_watched_movies_full()
+			xbmc.log(str('library.trakt_watched_movies_full')+'===>PHIL', level=xbmc.LOGINFO)
+			library.trakt_watched_tv_shows_full()
+			xbmc.log(str('library.trakt_watched_tv_shows_full')+'===>PHIL', level=xbmc.LOGINFO)
+			return
 			#from resources.lib import TheMovieDB
 			#import xbmcvfs, xbmcaddon
 			#title = 'Game of Thrones'
