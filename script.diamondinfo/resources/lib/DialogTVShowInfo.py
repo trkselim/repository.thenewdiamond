@@ -24,15 +24,6 @@ def get_tvshow_window(window_type):
 	class DialogTVShowInfo(DialogBaseInfo, window_type):
 
 		def __init__(self, *args, **kwargs):
-
-			self.trakt_tv = kwargs.get('trakt_tv', False)
-			self.trakt_movies = kwargs.get('trakt_movies', False)
-
-			if self.trakt_tv:
-				xbmc.log(str('trakt_tv=TRUE_TV_INFO')+'===>PHIL', level=xbmc.LOGINFO)
-			if self.trakt_movies:
-				xbmc.log(str('trakt_movies=TRUE_TV_INFO')+'===>PHIL', level=xbmc.LOGINFO)
-
 			if Utils.NETFLIX_VIEW == 'true':
 				super(DialogTVShowInfo, self).__init__(*args, **kwargs)
 				self.type = 'TVShow'
@@ -134,7 +125,7 @@ def get_tvshow_window(window_type):
 			if selection == 0:
 				self.open_credit_dialog(self.listitem.getProperty('credit_id'))
 			if selection == 1:
-				wm.open_actor_info(prev_window=self, actor_id=self.listitem.getProperty('id'),trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+				wm.open_actor_info(prev_window=self, actor_id=self.listitem.getProperty('id'))
 
 		@ch.action('contextmenu', 750)
 		@ch.action('contextmenu', 1000)
@@ -150,11 +141,11 @@ def get_tvshow_window(window_type):
 
 		@ch.click(150)
 		def open_tvshow_dialog(self):
-			wm.open_tvshow_info(prev_window=self, tmdb_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'),trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+			wm.open_tvshow_info(prev_window=self, tmdb_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'))
 
 		@ch.click(250)
 		def open_season_dialog(self):
-			wm.open_season_info(prev_window=self, tvshow_id=self.info['id'], season=self.listitem.getProperty('season'), tvshow=self.info['title'],trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+			wm.open_season_info(prev_window=self, tvshow_id=self.info['id'], season=self.listitem.getProperty('season'), tvshow=self.info['title'])
 
 		@ch.action('contextmenu', 250)
 		def season_context_menu(self):
@@ -177,7 +168,7 @@ def get_tvshow_window(window_type):
 					'typelabel': 'Studios',
 					'label': self.listitem.getLabel()#.decode('utf-8')
 				}]
-			wm.open_video_list(prev_window=self, filters=filters,trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+			wm.open_video_list(prev_window=self, filters=filters)
 
 		@ch.click(850)
 		def open_genre_info(self):
@@ -188,7 +179,7 @@ def get_tvshow_window(window_type):
 					'typelabel': 'Genres',
 					'label': self.listitem.getLabel()#.decode('utf-8')
 				}]
-			wm.open_video_list(prev_window=self, filters=filters, media_type='tv',trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+			wm.open_video_list(prev_window=self, filters=filters, media_type='tv')
 
 		@ch.click(1450)
 		def open_network_info(self):
@@ -199,7 +190,7 @@ def get_tvshow_window(window_type):
 					'typelabel': 'Networks',
 					'label': self.listitem.getLabel()#.decode('utf-8')
 				}]
-			wm.open_video_list(prev_window=self, filters=filters, media_type='tv',trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+			wm.open_video_list(prev_window=self, filters=filters, media_type='tv')
 
 		@ch.click(445)
 		def show_manage_dialog(self):
@@ -222,7 +213,7 @@ def get_tvshow_window(window_type):
 		def return_button(self):
 			#from resources.lib.process import reopen_window
 			self.close()
-			return wm.open_video_list(search_str='', mode='reopen_window',trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+			return wm.open_video_list(search_str='', mode='reopen_window')
 
 		@ch.click(6002)
 		def open_list(self):
@@ -230,7 +221,7 @@ def get_tvshow_window(window_type):
 
 		@ch.click(6006)
 		def open_rated_items(self):
-			wm.open_video_list(prev_window=self, mode='rating', media_type='tv',trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+			wm.open_video_list(prev_window=self, mode='rating', media_type='tv')
 
 		@ch.click(9)
 		@ch.action('contextmenu', 9)

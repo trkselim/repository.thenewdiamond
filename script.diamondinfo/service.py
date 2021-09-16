@@ -27,8 +27,6 @@ class PlayerMonitor(xbmc.Player):
     def __init__(self):
         xbmc.Player.__init__(self)
         self.player = xbmc.Player()
-        self.trakt_tv = None
-        self.trakt_movies = None
         #self.playerstring = None
         #self.property_prefix = 'Player'
         #self.reset_properties()
@@ -236,7 +234,7 @@ class PlayerMonitor(xbmc.Player):
             #from resources.lib.process import reopen_window
             #reopen_window()
             from resources.lib.WindowManager import wm
-            return wm.open_video_list(search_str='', mode='reopen_window',trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+            return wm.open_video_list(search_str='', mode='reopen_window')
         #self.set_watched()
         #self.reset_properties()
         #return wm.pop_stack()
@@ -256,7 +254,7 @@ class PlayerMonitor(xbmc.Player):
                 #from resources.lib.process import reopen_window
                 #reopen_window()
                 from resources.lib.WindowManager import wm
-                return wm.open_video_list(search_str='', mode='reopen_window',trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+                return wm.open_video_list(search_str='', mode='reopen_window')
             return
 
 
@@ -299,14 +297,14 @@ class PlayerMonitor(xbmc.Player):
                 #from resources.lib.process import reopen_window
                 #reopen_window()
                 from resources.lib.WindowManager import wm
-                return wm.open_video_list(search_str='', mode='reopen_window',trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+                return wm.open_video_list(search_str='', mode='reopen_window')
             return
 
         if reopen_window_bool == 'true' and diamond_info_started:
             #from resources.lib.process import reopen_window
             #reopen_window()
             from resources.lib.WindowManager import wm
-            return wm.open_video_list(search_str='', mode='reopen_window',trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+            return wm.open_video_list(search_str='', mode='reopen_window')
         #self.set_watched()
         #self.reset_properties()
 
@@ -632,8 +630,6 @@ class PlayerMonitor(xbmc.Player):
                             except: pass
                         library.trakt_watched_movies_full()
                         xbmc.log(str('library.trakt_watched_movies_full')+'===>PHIL', level=xbmc.LOGINFO)
-                        #self.trakt_tv = trakt_watched_get(mode='tv')
-                        #self.trakt_movies = trakt_watched_get(mode='movie')
                         if int(movie_id) > 0:
                             json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","id":1,"method":"VideoLibrary.GetMovieDetails","params":{"movieid":'+str(movie_id)+', "properties": ["playcount"]}}')
                             json_object  = json.loads(json_result)
@@ -713,8 +709,6 @@ class PlayerMonitor(xbmc.Player):
 
                         library.trakt_watched_tv_shows_full()
                         xbmc.log(str('library.trakt_watched_tv_shows_full')+'===>PHIL', level=xbmc.LOGINFO)
-                        #self.trakt_tv = trakt_watched_get(mode='tv')
-                        #self.trakt_movies = trakt_watched_get(mode='movie')
                         if trakt_watched != 'true':
                             trakt_watched = 'true'
                             if tmdb_id != '':

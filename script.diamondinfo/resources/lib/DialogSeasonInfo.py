@@ -16,14 +16,6 @@ def get_season_window(window_type):
 	class DialogSeasonInfo(DialogBaseInfo, window_type):
 
 		def __init__(self, *args, **kwargs):
-			self.trakt_tv = kwargs.get('trakt_tv', False)
-			self.trakt_movies = kwargs.get('trakt_movies', False)
-
-			if self.trakt_tv:
-				xbmc.log(str('trakt_tv=TRUE_TV_INFO')+'===>PHIL', level=xbmc.LOGINFO)
-			if self.trakt_movies:
-				xbmc.log(str('trakt_movies=TRUE_TV_INFO')+'===>PHIL', level=xbmc.LOGINFO)
-
 			if Utils.NETFLIX_VIEW == 'true':
 				super(DialogSeasonInfo, self).__init__(*args, **kwargs)
 				self.type = 'Season'
@@ -101,7 +93,7 @@ def get_season_window(window_type):
 		@ch.click(750)
 		@ch.click(1000)
 		def open_actor_info(self):
-			wm.open_actor_info(prev_window=self, actor_id=self.listitem.getProperty('id'),trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+			wm.open_actor_info(prev_window=self, actor_id=self.listitem.getProperty('id'))
 
 		@ch.action('contextmenu', 750)
 		@ch.action('contextmenu', 1000)
@@ -112,14 +104,14 @@ def get_season_window(window_type):
 			else:
 				selection = xbmcgui.Dialog().select(heading='Choose option', list=listitems)
 			if selection == 0:
-				wm.open_tvshow_info(prev_window=self, tmdb_id=self.tvshow_id, dbid=0,trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+				wm.open_tvshow_info(prev_window=self, tmdb_id=self.tvshow_id, dbid=0)
 			if selection == 1:
 				self.close()
 				xbmc.executebuiltin('RunScript('+str(addon_ID())+',info=search_person,person=%s)' % self.listitem.getLabel())
 
 		@ch.click(2000)
 		def open_episode_info(self):
-			wm.open_episode_info(prev_window=self, tvshow=self.info['TVShowTitle'], tvshow_id=self.tvshow_id, season=self.listitem.getProperty('season'), episode=self.listitem.getProperty('episode'),trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+			wm.open_episode_info(prev_window=self, tvshow=self.info['TVShowTitle'], tvshow_id=self.tvshow_id, season=self.listitem.getProperty('season'), episode=self.listitem.getProperty('episode'))
 
 		@ch.action('contextmenu', 2000)
 		def context_menu(self):
@@ -143,7 +135,7 @@ def get_season_window(window_type):
 				url = 'plugin://plugin.video.themoviedb.helper?info=play&amp;tmdb_id=%s&amp;type=episode&amp;season=%s&amp;episode=%s' % (self.tvshow_id, self.listitem.getProperty('season'), episode_id)
 				PLAYER.play_from_button(url, listitem=None, window=self)
 			if selection == 1:
-				wm.open_tvshow_info(prev_window=self, tmdb_id=self.tvshow_id, dbid=0,trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+				wm.open_tvshow_info(prev_window=self, tmdb_id=self.tvshow_id, dbid=0)
 
 		@ch.action('play', 2000)
 		@ch.action('playpause', 2000)
@@ -185,7 +177,7 @@ def get_season_window(window_type):
 			#from resources.lib.process import reopen_window
 			self.close()
 			#reopen_window()
-			return wm.open_video_list(search_str='', mode='reopen_window',trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+			return wm.open_video_list(search_str='', mode='reopen_window')
 
 		@ch.click(132)
 		def open_text(self):

@@ -408,7 +408,7 @@ def set_window_props(name, data, prefix='', debug=False):
 				log('%s%s.%i.%s --> ' % (prefix, name, count + 1, str(key)) + value)
 	xbmcgui.Window(10000).setProperty('%s%s.Count' % (prefix, name), str(len(data)))
 
-def create_listitems(data=None, preload_images=0, enable_clearlogo=True, info=None, trakt_tv=None, trakt_movies=None):
+def create_listitems(data=None, preload_images=0, enable_clearlogo=True, info=None):
 	from resources.lib.TheMovieDB import extended_season_info
 	from pathlib import Path
 	addon = xbmcaddon.Addon()
@@ -429,13 +429,19 @@ def create_listitems(data=None, preload_images=0, enable_clearlogo=True, info=No
 
 	try: show_id = info['tmdb_id']
 	except: show_id = 0
-	import sqlite3, ast
-	movie_con = sqlite3.connect(str(Path(addonUserDataFolder + '/trakt_movies_watched.db')))
-	tv_con = sqlite3.connect(str(Path(addonUserDataFolder + '/trakt_tv_watched.db')))
-	movie_cur = movie_con.cursor()
-	tv_cur = tv_con.cursor()
-	trakt_tv = True
-	trakt_movies = True
+	trakt_watched_stats = xbmcaddon.Addon(addon_ID()).getSetting('trakt_watched_stats')
+	if trakt_watched_stats == 'true:'
+		import sqlite3, ast
+		movie_con = sqlite3.connect(str(Path(addonUserDataFolder + '/trakt_movies_watched.db')))
+		tv_con = sqlite3.connect(str(Path(addonUserDataFolder + '/trakt_tv_watched.db')))
+		movie_cur = movie_con.cursor()
+		tv_cur = tv_con.cursor()
+		trakt_tv = True
+		trakt_movies = True
+	else:
+		trakt_tv = False
+		trakt_movies = False
+
 	for (count, result) in enumerate(data):
 		listitem = xbmcgui.ListItem('%s' % str(count))
 		try: tmdb_id = result['id']
@@ -462,7 +468,6 @@ def create_listitems(data=None, preload_images=0, enable_clearlogo=True, info=No
 		if mediatype == 'movie' and tmdb_id != 0 and trakt_movies:
 			try: 
 				sql_result = movie_cur.execute("select * from trakt where tmdb_id =" + str(result['id'])).fetchall()
-				#trakt_item = trakt_movies[int(result['id'])]
 				trakt_item = ast.literal_eval(sql_result[0][1].replace('\'\'','"'))
 				playcount = trakt_item['plays']
 				trakt_tmdb_id = trakt_item['movie']['ids']['tmdb']
@@ -473,7 +478,6 @@ def create_listitems(data=None, preload_images=0, enable_clearlogo=True, info=No
 				pass
 		if mediatype == 'tvshow' and tmdb_id != 0 and trakt_tv:
 			try:
-				#trakt_item = trakt_tv[int(result['id'])]
 				sql_result = tv_cur.execute("select * from trakt where tmdb_id =" + str(result['id'])).fetchall()
 				trakt_item = ast.literal_eval(sql_result[0][1].replace('\'\'','"'))
 				aired_episodes = trakt_item['show']['aired_episodes']
@@ -497,21 +501,22 @@ def create_listitems(data=None, preload_images=0, enable_clearlogo=True, info=No
 				pass
 
 		if mediatype == 'season' and trakt_tv:
-			from datetime import datetime
-			if int(result['season']) > 0:
-				data = extended_season_info(tvshow_id=int(show_id), season_number=int(result['season']))
-				ep_count2 = 0
-				played_count = 0
-				ep_count = 0
-				for eps in data[1]['episodes']:
-					try: datetime_object = datetime.strptime(eps['release_date'], '%Y-%m-%d')
-					except: continue
-					if datetime_object <= datetime.now():
-						ep_count2 = ep_count2 + 1
 			try:
-				#trakt_item = trakt_tv[int(show_id)]
 				sql_result = tv_cur.execute("select * from trakt where tmdb_id =" + str(int(show_id))).fetchall()
 				trakt_item = ast.literal_eval(sql_result[0][1].replace('\'\'','"'))
+
+				from datetime import datetime
+				if int(result['season']) > 0:
+					data = extended_season_info(tvshow_id=int(show_id), season_number=int(result['season']))
+					ep_count2 = 0
+					played_count = 0
+					ep_count = 0
+					for eps in data[1]['episodes']:
+						try: datetime_object = datetime.strptime(eps['release_date'], '%Y-%m-%d')
+						except: continue
+						if datetime_object <= datetime.now():
+							ep_count2 = ep_count2 + 1
+
 				for j in trakt_item['seasons']:
 					if int(result['season']) == j['number']:
 						played_count = 0
@@ -536,7 +541,6 @@ def create_listitems(data=None, preload_images=0, enable_clearlogo=True, info=No
 				
 		if mediatype == 'episode' and trakt_tv:
 			try:
-				#trakt_item = trakt_tv[int(show_id)]
 				sql_result = tv_cur.execute("select * from trakt where tmdb_id =" + str(int(show_id))).fetchall()
 				trakt_item = ast.literal_eval(sql_result[0][1].replace('\'\'','"'))
 				for j in trakt_item['seasons']:
@@ -609,10 +613,12 @@ def create_listitems(data=None, preload_images=0, enable_clearlogo=True, info=No
 		itemlist.append(listitem)
 	for x in threads:
 		x.join()
-	tv_cur.close()
-	tv_con.close()
-	movie_cur.close()
-	movie_con.close()
+	if trakt_tv:
+		tv_cur.close()
+		tv_con.close()
+	if trakt_movies:
+		movie_cur.close()
+		movie_con.close()
 	return itemlist
 
 def clean_text(text):

@@ -18,14 +18,6 @@ def get_movie_window(window_type):
 	class DialogVideoInfo(DialogBaseInfo, window_type):
 
 		def __init__(self, *args, **kwargs):
-			self.trakt_tv = kwargs.get('trakt_tv', False)
-			self.trakt_movies = kwargs.get('trakt_movies', False)
-
-			if self.trakt_tv:
-				xbmc.log(str('trakt_tv=TRUE_TV_INFO')+'===>PHIL', level=xbmc.LOGINFO)
-			if self.trakt_movies:
-				xbmc.log(str('trakt_movies=TRUE_TV_INFO')+'===>PHIL', level=xbmc.LOGINFO)
-
 			if Utils.NETFLIX_VIEW == 'true':
 				super(DialogVideoInfo, self).__init__(*args, **kwargs)
 				self.type = 'Movie'
@@ -103,7 +95,7 @@ def get_movie_window(window_type):
 		@ch.click(1000)
 		@ch.click(750)
 		def open_actor_info(self):
-			wm.open_actor_info(prev_window=self, actor_id=self.listitem.getProperty('id'),trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+			wm.open_actor_info(prev_window=self, actor_id=self.listitem.getProperty('id'))
 
 		@ch.action('contextmenu', 750)
 		@ch.action('contextmenu', 1000)
@@ -161,7 +153,7 @@ def get_movie_window(window_type):
 		@ch.click(150)
 		@ch.click(250)
 		def open_movie_info(self):
-			wm.open_movie_info(prev_window=self, movie_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'),trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+			wm.open_movie_info(prev_window=self, movie_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'))
 
 		@ch.click(550)
 		def open_company_list(self):
@@ -172,7 +164,7 @@ def get_movie_window(window_type):
 					'typelabel': 'Studios',
 					'label': self.listitem.getLabel()
 				}]
-			wm.open_video_list(prev_window=self, filters=filters,trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+			wm.open_video_list(prev_window=self, filters=filters)
 
 		@ch.click(1050)
 		def show_review(self):
@@ -189,7 +181,7 @@ def get_movie_window(window_type):
 					'typelabel': 'Genres',
 					'label': self.listitem.getLabel()
 				}]
-			wm.open_video_list(prev_window=self, filters=filters,trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+			wm.open_video_list(prev_window=self, filters=filters)
 
 		@ch.click(650)
 		def open_cert_list(self):
@@ -212,7 +204,7 @@ def get_movie_window(window_type):
 					'typelabel': 'Year',
 					'label': self.listitem.getProperty('year')
 				}]
-			wm.open_video_list(prev_window=self, filters=filters,trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+			wm.open_video_list(prev_window=self, filters=filters)
 
 		@ch.click(120)
 		def search_in_meta_by_title(self):
@@ -268,7 +260,7 @@ def get_movie_window(window_type):
 			#from resources.lib.process import reopen_window
 			self.close()
 			#reopen_window()
-			return wm.open_video_list(search_str='', mode='reopen_window',trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+			return wm.open_video_list(search_str='', mode='reopen_window')
 
 		@ch.click(18)
 		def add_movie_to_library(self):

@@ -771,6 +771,7 @@
 										<fadetime>0</fadetime>
 									</control>
 
+									<!--- TRAKT WATCHED STUFF--->
 								<control type="textbox">
 									<posx>185</posx>
 									<width>228</width>
@@ -782,6 +783,7 @@
 									<label>*</label>
 									<visible>Integer.IsGreater(ListItem.Property(PlayCount),0) + String.IsEqual(ListItem.DBTYPE,episode)</visible>
 								</control>
+									<!--- TRAKT WATCHED STUFF--->
 
 									<control type="image">
 										<posy>10</posy>
@@ -833,6 +835,7 @@
 										<fadetime>0</fadetime>
 									</control>
 
+									<!--- TRAKT WATCHED STUFF--->
 								<control type="textbox">
 									<posx>185</posx>
 									<width>228</width>
@@ -844,6 +847,7 @@
 									<label>*</label>
 									<visible>Integer.IsGreater(ListItem.Property(PlayCount),0) + String.IsEqual(ListItem.DBTYPE,episode)</visible>
 								</control>
+									<!--- TRAKT WATCHED STUFF--->
 
 									<control type="textbox">
 										<posx>0</posx>
@@ -927,6 +931,7 @@
 											<aspectratio aligny="center">scale</aspectratio>
 										</control>
 
+									<!--- TRAKT WATCHED STUFF--->
 									<control type="textbox">
 										<posx>90</posx>
 										<width>228</width>
@@ -938,7 +943,7 @@
 										<label>$INFO[ListItem.Property(UnWatchedEpisodes)]</label>
 										<visible>Integer.IsGreater(ListItem.Property(UnWatchedEpisodes),0) + String.IsEqual(ListItem.DBTYPE,season)</visible>
 									</control>
-
+									<!--- TRAKT WATCHED STUFF--->
 									<control type="textbox">
 										<posx>90</posx>
 										<width>228</width>
@@ -950,6 +955,7 @@
 										<label>*</label>
 										<visible>Integer.IsGreater(ListItem.Property(PlayCount),0) + String.IsEqual(ListItem.DBTYPE,season)</visible>
 									</control>
+									<!--- TRAKT WATCHED STUFF--->
 
 										<control type="image">
 											<width>84</width>
@@ -1039,6 +1045,7 @@
 											<fadetime>0</fadetime>
 										</control>
 
+									<!--- TRAKT WATCHED STUFF--->
 									<control type="textbox">
 										<posx>90</posx>
 										<width>228</width>
@@ -1050,7 +1057,7 @@
 										<label>$INFO[ListItem.Property(UnWatchedEpisodes)]</label>
 										<visible>Integer.IsGreater(ListItem.Property(UnWatchedEpisodes),0) + String.IsEqual(ListItem.DBTYPE,season)</visible>
 									</control>
-
+									<!--- TRAKT WATCHED STUFF--->
 									<control type="textbox">
 										<posx>90</posx>
 										<width>228</width>
@@ -1062,7 +1069,7 @@
 										<label>*</label>
 										<visible>Integer.IsGreater(ListItem.Property(PlayCount),0) + String.IsEqual(ListItem.DBTYPE,season)</visible>
 									</control>
-
+									<!--- TRAKT WATCHED STUFF--->
 
 										<control type="image">
 											<width>84</width>

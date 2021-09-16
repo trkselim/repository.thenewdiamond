@@ -5,7 +5,6 @@ from resources.lib import TheMovieDB
 from resources.lib.WindowManager import wm
 from resources.lib.OnClickHandler import OnClickHandler
 from resources.lib.library import addon_ID_short
-from resources.lib.library import trakt_watched_get
 
 ch = OnClickHandler()
 
@@ -21,14 +20,6 @@ class DialogBaseInfo(object):
 		self.data = None
 		self.yt_listitems = []
 		self.info = {}
-		self.trakt_tv = {}
-		self.trakt_movies = {}
-		self.trakt_tv = kwargs.get('trakt_tv', False)
-		self.trakt_movies  = kwargs.get('trakt_movies', False)
-		if self.trakt_tv:
-			xbmc.log(str('trakt_tv=TRUE_BASE_INFO')+'===>PHIL', level=xbmc.LOGINFO)
-		if self.trakt_movies:
-			xbmc.log(str('trakt_movies=TRUE_BASE_INFO')+'===>PHIL', level=xbmc.LOGINFO)
 
 	def onInit(self, *args, **kwargs):
 		super(DialogBaseInfo, self).onInit()
@@ -73,12 +64,6 @@ class DialogBaseInfo(object):
 		self.bouncing = False
 
 	def fill_lists(self):
-		if not self.trakt_movies:
-			if str('\'mediatype\': \'movie\'') in str(self.info):
-				self.trakt_movies = trakt_watched_get(mode='movie')
-		if not self.trakt_tv:
-			if str('\'mediatype\': \'tvshow\'') in str(self.info) or str('\'mediatype\': \'season\'') in str(self.info) or str('\'mediatype\': \'episode\'') in str(self.info):
-				self.trakt_tv = trakt_watched_get(mode='tv')
 		for container_id, listitems in self.listitems:
 			#try:
 			if 1==1:
@@ -134,19 +119,18 @@ class DialogBaseInfo(object):
 			#xbmc.log(str(window_id)+'window_id===>OPEN_INFO', level=xbmc.LOGINFO)
 			#xbmc.log(str(window)+'window===>OPEN_INFO', level=xbmc.LOGINFO)
 			self.close()
-			return wm.open_video_list(search_str='', mode='reopen_window',trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+			return wm.open_video_list(search_str='', mode='reopen_window')
 
 		onback = self.window.getProperty('%i_onback' % self.control_id)
 		if onback:
 			xbmc.executebuiltin(onback)
 		else:
 			self.close()
+			self.close()
 			wm.pop_stack()
 
 	@ch.action('previousmenu', '*')
 	def exit_script(self):
-		self.trakt_tv = {}
-		self.trakt_movies = {}
 		self.close()
 
 	@Utils.run_async

@@ -76,14 +76,6 @@ def get_tmdb_window(window_type):
     class DialogVideoList(DialogBaseList, window_type):
 
         def __init__(self, *args, **kwargs):
-            self.trakt_tv = kwargs.get('trakt_tv', False)
-            self.trakt_movies = kwargs.get('trakt_movies', False)
-
-            if self.trakt_tv:
-                xbmc.log(str('trakt_tv=TRUE_VIDEO_LIST')+'===>PHIL', level=xbmc.LOGINFO)
-            if self.trakt_movies:
-                xbmc.log(str('trakt_movies=TRUE_VIDEO_LIST')+'===>PHIL', level=xbmc.LOGINFO)
-
             super(DialogVideoList, self).__init__(*args, **kwargs)
             self.type = kwargs.get('type', 'movie')
             self.media_type = self.type
@@ -429,11 +421,11 @@ def get_tmdb_window(window_type):
                     #url = 'https://api.themoviedb.org/3/search/tv?api_key='+str(API_key)+'&language='+str(xbmcaddon.Addon().getSetting('LanguageID'))+'&page=1&query='+str(self.listitem.getProperty('title'))+'&include_adult=false&first_air_date_year='+str(self.listitem.getProperty('year'))
                     #response = requests.get(url).json()
                     tmdb_id = response['results'][0]['id']
-                    wm.open_tvshow_info(prev_window=self, tmdb_id=tmdb_id, dbid=self.listitem.getProperty('dbid'),trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+                    wm.open_tvshow_info(prev_window=self, tmdb_id=tmdb_id, dbid=self.listitem.getProperty('dbid'))
                 else:
-                    wm.open_tvshow_info(prev_window=self, tmdb_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'),trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+                    wm.open_tvshow_info(prev_window=self, tmdb_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'))
             elif self.type == 'person':
-                wm.open_actor_info(prev_window=self, actor_id=self.listitem.getProperty('id'),trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+                wm.open_actor_info(prev_window=self, actor_id=self.listitem.getProperty('id'))
             else:
                 if str(self.listitem.getProperty('id')) == '':
                     #import requests, json
@@ -446,9 +438,9 @@ def get_tmdb_window(window_type):
                     #url = 'https://api.themoviedb.org/3/search/movie?api_key='+str(API_key)+'&language='+str(xbmcaddon.Addon().getSetting('LanguageID'))+'&page=1&query='+str(self.listitem.getProperty('title'))+'&include_adult=false&primary_release_year='+str(self.listitem.getProperty('year'))
                     #response = requests.get(url).json()
                     tmdb_id = response['results'][0]['id']
-                    wm.open_movie_info(prev_window=self, movie_id=tmdb_id, dbid=self.listitem.getProperty('dbid'),trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+                    wm.open_movie_info(prev_window=self, movie_id=tmdb_id, dbid=self.listitem.getProperty('dbid'))
                 else:
-                    wm.open_movie_info(prev_window=self, movie_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'),trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+                    wm.open_movie_info(prev_window=self, movie_id=self.listitem.getProperty('id'), dbid=self.listitem.getProperty('dbid'))
 
         @ch.click(5010)
         def set_company_filter(self):
@@ -562,7 +554,6 @@ def get_tmdb_window(window_type):
             self.search_str = ia.get_movie_list(imdb_list[selection])
             self.filter_label = 'Results for:  ' + imdb_list_name[selection]
             self.fetch_data()
-            #Utils.hide_busy()
             self.update()
 
         def reload_trakt(self):
@@ -658,9 +649,7 @@ def get_tmdb_window(window_type):
                         trakt_sort_order = str(i['sort_order'])
                         self.search_str = trakt_lists(list_name=trakt_list_name,user_id=trakt_user_id,list_slug=takt_list_slug,sort_by=trakt_sort_by,sort_order=trakt_sort_order)
             self.filter_label = 'Results for:  ' + listitems[selection]
-            #Utils.show_busy()
             self.fetch_data()
-            #Utils.show_busy()
             self.update()
             Utils.hide_busy()
 
@@ -747,9 +736,7 @@ def get_tmdb_window(window_type):
                 self.media_type = 'tv'
                 self.search_str = TheMovieDB.get_tmdb_shows(tmdb_var)
 
-            #Utils.show_busy()
             self.fetch_data()
-            #Utils.show_busy()
             self.update()
             Utils.hide_busy()
 
@@ -982,7 +969,5 @@ def get_tmdb_window(window_type):
                 }
             fetch_data_dict_file.write(str(fetch_data_dict))
             fetch_data_dict_file.close()
-            #Utils.hide_busy()
             return info
-    #Utils.hide_busy()
     return DialogVideoList

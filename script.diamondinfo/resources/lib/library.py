@@ -798,18 +798,9 @@ def trakt_watched_movies_full():
     trakt_watched_stats = xbmcaddon.Addon(addon_ID()).getSetting('trakt_watched_stats')
     if trakt_watched_stats == 'true':
         response = requests.get(url, headers=headers).json()
-        #trakt_data = {}
-        #for i in response:
-        #    trakt_data[i['movie']['ids']['tmdb']] = i
     else:
         trakt_data = None
         return None
-    """
-    trakt_movies_watched = open(Path(addonUserDataFolder + '/trakt_movies_watched'), "w", encoding="utf-8")
-    trakt_movies_watched.write(str(trakt_data))
-    trakt_movies_watched.close()
-    trakt_data = None
-    """
     import os
     if os.path.exists(Path(addonUserDataFolder + '/trakt_movies_watched.db')):
         os.remove(Path(addonUserDataFolder + '/trakt_movies_watched.db'))
@@ -849,18 +840,9 @@ def trakt_watched_tv_shows_full():
     trakt_watched_stats = xbmcaddon.Addon(addon_ID()).getSetting('trakt_watched_stats')
     if trakt_watched_stats == 'true':
         response = requests.get(url, headers=headers).json()
-        #trakt_data = {}
-        #for i in response:
-        #    trakt_data[i['show']['ids']['tmdb']] = i
     else:
         trakt_data = None
         return
-    """
-    trakt_tv_watched = open(Path(addonUserDataFolder + '/trakt_tv_watched'), "w", encoding="utf-8")
-    trakt_tv_watched.write(str(trakt_data))
-    trakt_tv_watched.close()
-    trakt_data = None
-    """
     import os
     if os.path.exists(Path(addonUserDataFolder + '/trakt_tv_watched.db')):
         os.remove(Path(addonUserDataFolder + '/trakt_tv_watched.db'))
@@ -891,7 +873,6 @@ def trakt_watched_tv_shows_full():
 def trakt_watched_get(mode=None):
     return None
     from resources.lib.Utils import show_busy
-    #from resources.lib.Utils import hide_busy
     show_busy()
     trakt_watched_stats = xbmcaddon.Addon(addon_ID()).getSetting('trakt_watched_stats')
     if trakt_watched_stats == 'false':
@@ -925,8 +906,6 @@ def trakt_watched_get(mode=None):
 
     trakt_data_file_thread.join()
     trakt_data_file_read = trakt_data_file_thread.trakt_data_file_read 
-    #trakt_data_file_read = ast.literal_eval(trakt_data_file.read())
-    #hide_busy()
     return trakt_data_file_read
 
 

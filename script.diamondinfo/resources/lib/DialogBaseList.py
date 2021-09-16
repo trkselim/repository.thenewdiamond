@@ -2,7 +2,6 @@ import xbmc, xbmcgui, xbmcaddon
 from resources.lib import Utils
 from resources.lib.WindowManager import wm
 from resources.lib.OnClickHandler import OnClickHandler
-from resources.lib.library import trakt_watched_get
 
 import urllib
 
@@ -26,15 +25,6 @@ class DialogBaseList(object):
 		self.page_token = ''
 		self.next_page_token = ''
 		self.prev_page_token = ''
-		self.trakt_tv = kwargs.get('trakt_tv', False)
-		self.trakt_movies = kwargs.get('trakt_movies', False)
-
-		if self.trakt_tv:
-			xbmc.log(str('trakt_tv=TRUE_BASE_LIST')+'===>PHIL', level=xbmc.LOGINFO)
-		if self.trakt_movies:
-			xbmc.log(str('trakt_movies=TRUE_BASE_LIST')+'===>PHIL', level=xbmc.LOGINFO)
-
-
 
 	def onInit(self):
 		super(DialogBaseList, self).onInit()
@@ -62,8 +52,6 @@ class DialogBaseList(object):
 
 	@ch.action('previousmenu', '*')
 	def exit_script(self):
-		self.trakt_tv = {}
-		self.trakt_movies = {}
 		self.close()
 
 	@ch.action('left', '*')
@@ -149,20 +137,7 @@ class DialogBaseList(object):
 		self.next_page_token = data.get('next_page_token', '')
 		self.prev_page_token = data.get('prev_page_token', '')
 		#xbmc.log(str('update_content')+'===>PHIL', level=xbmc.LOGINFO)
-
-		
-		if str('\'mediatype\': \'tvshow\'') in str(self.listitems):
-			if not self.trakt_tv:
-				self.trakt_tv = trakt_watched_get(mode='tv')
-		if str('\'mediatype\': \'movie\'') in str(self.listitems):
-			if not self.trakt_movies:
-				self.trakt_movies = trakt_watched_get(mode='movie')
-		if self.trakt_tv:
-			xbmc.log(str('trakt_tv=TRUE_BASE_LIST2')+'===>PHIL', level=xbmc.LOGINFO)
-		if self.trakt_movies:
-			xbmc.log(str('trakt_movies=TRUE_BASE_LIST2')+'===>PHIL', level=xbmc.LOGINFO)
-
-		self.listitems = Utils.create_listitems(self.listitems,preload_images=0, enable_clearlogo=False, info=None, trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies)
+		self.listitems = Utils.create_listitems(self.listitems,preload_images=0, enable_clearlogo=False, info=None)
 
 	def update_ui(self):
 		if not self.listitems and self.getFocusId() == 500:
