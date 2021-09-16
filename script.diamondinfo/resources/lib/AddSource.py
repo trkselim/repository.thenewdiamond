@@ -51,6 +51,7 @@ def add_source(source_name, source_path, source_content, source_thumbnail, type=
 	existing_source = _get_source_attr(xml_file, source_name, 'path', type=type)
 	if existing_source and existing_source != source_path and source_content != '':
 		_remove_source_content(existing_source)
+
 	if _add_source_xml(xml_file, source_name, source_path, source_thumbnail, type=type) and source_content != '':
 		_set_source_content(source_content)
 

@@ -139,30 +139,33 @@ def setup_library_tv():
         addonID = addon.getAddonInfo('id')
         addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
         library_root_folder = addonUserDataFolder
-        library_root_folder = str(library_root_folder)
-    
-    if str(library_root_folder)[-1] != '/':
-        library_root_folder += '/'
         library_root_folder = str(Path(library_root_folder))
     
-    library_folder = str(basedir_tv_path())
-    if str(library_folder)[-1] != '/':
+    if '/' in str(library_root_folder) and str(library_root_folder)[-1] != '/':
+        library_root_folder += '/'
+        library_root_folder = str(library_root_folder)
+    if '\\' in str(library_root_folder) and str(library_root_folder)[-1] != '\\':
+        library_root_folder += '\\'
+        library_root_folder = str(library_root_folder)
+    
+    library_folder = str(Path(basedir_tv_path()))
+    if '/' in str(library_folder) and str(library_folder)[-1] != '/':
         library_folder += '/'
-        library_folder = str(Path(library_folder))
+        library_folder = str(library_folder)
+    if '\\' in str(library_folder) and str(library_folder)[-1] != '\\':
+        library_folder += '\\'
+        library_folder = str(library_folder)
 
     if not xbmcvfs.exists(library_root_folder):
         xbmcvfs.mkdir(library_root_folder)
     if not xbmcvfs.exists(library_folder):
         xbmcvfs.mkdir(library_folder)
-    source_thumbnail = icon_path()
+    source_thumbnail = str(Path(icon_path()))
     source_name = 'Openinfo TVShows'
-    #source_content = "('%s','tvshows','metadata.tvdb.com','',0,0,'<settings version=\"2\"><setting id=\"absolutenumber\" default=\"true\">false</setting><setting id=\"alsoimdb\">true</setting><setting id=\"dvdorder\" default=\"true\">false</setting><setting id=\"fallback\">true</setting><setting id=\"fallbacklanguage\">es</setting><setting id=\"fanart\">true</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TheTVDB</setting><setting id=\"usefallbacklanguage1\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
-    #source_content = "('%s','tvshows','metadata.themoviedb.org','',0,0,'<settings version=\"2\"><setting id=\"absolutenumber\" default=\"true\">false</setting><setting id=\"alsoimdb\">true</setting><setting id=\"dvdorder\" default=\"true\">false</setting><setting id=\"fallback\">true</setting><setting id=\"fallbacklanguage\">es</setting><setting id=\"fanart\">true</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TheTVDB</setting><setting id=\"usefallbacklanguage1\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
-    #source_content = "('%s','tvshows','metadata.tvshows.themoviedb.org.python','',0,0,'<settings version=\"2\"><setting id=\"certprefix\" default=\"true\">Rated </setting><setting id=\"fanart\">true</setting><setting id=\"imdbanyway\">true</setting><setting id=\"keeporiginaltitle\" default=\"true\">false</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TMDb</setting><setting id=\"tmdbcertcountry\" default=\"true\">us</setting><setting id=\"trailer\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
-    source_content = "('%s','tvshows','metadata.tvshows.themoviedb.org.python','7710e2e5cdba5a3981e83b0347eb643d',0,0,'<settings version=\"2\"><setting id=\"language\" default=\"true\">en-US</setting><setting id=\"tmdbcertcountry\" default=\"true\">us</setting><setting id=\"usecertprefix\" default=\"true\">true</setting><setting id=\"certprefix\" default=\"true\">Rated </setting><setting id=\"keeporiginaltitle\" default=\"true\">false</setting><setting id=\"cat_landscape\" default=\"true\">true</setting><setting id=\"studio_country\" default=\"true\">false</setting><setting id=\"enab_trailer\">true</setting><setting id=\"players_opt\" default=\"true\">Tubed</setting><setting id=\"ratings\">Trakt</setting><setting id=\"imdbanyway\">true</setting><setting id=\"traktanyway\">true</setting><setting id=\"tmdbanyway\" default=\"true\">true</setting><setting id=\"enable_fanarttv\" default=\"true\">true</setting><setting id=\"verboselog\" default=\"true\">false</setting></settings>',0,0,NULL,NULL)" % library_folder
+    source_content = """('%s','tvshows','metadata.tvshows.themoviedb.org.python',NULL,0,0,'<settings version="2"><setting id="language" default="true">en-US</setting><setting id="tmdbcertcountry" default="true">us</setting><setting id="usecertprefix" default="true">true</setting><setting id="certprefix" default="true">Rated </setting><setting id="keeporiginaltitle" default="true">false</setting><setting id="cat_landscape" default="true">true</setting><setting id="studio_country" default="true">false</setting><setting id="enab_trailer" default="true">true</setting><setting id="players_opt" default="true">Tubed</setting><setting id="ratings" default="true">TMDb</setting><setting id="imdbanyway" default="true">false</setting><setting id="traktanyway" default="true">false</setting><setting id="tmdbanyway" default="true">true</setting><setting id="enable_fanarttv" default="true">true</setting><setting id="fanarttv_clientkey" default="true" /><setting id="verboselog" default="true">false</setting><setting id="lastUpdated" default="true">0</setting><setting id="originalUrl" default="true" /><setting id="previewUrl" default="true" /></settings>',0,0,NULL,NULL)""" % library_folder
 
     AddSource.add_source(source_name, library_folder, source_content, source_thumbnail)
-    return xbmc.translatePath(library_folder)
+    return xbmcvfs.translatePath(library_folder)
 
 #OPENMETA METHOD => AddSource.py
 def setup_library_movies():
@@ -175,26 +178,32 @@ def setup_library_movies():
         addonID = addon.getAddonInfo('id')
         addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
         library_root_folder = addonUserDataFolder
+        library_root_folder = str(Path(library_root_folder))
+
+    if '/' in str(library_root_folder) and str(library_root_folder)[-1] != '/':
+        library_root_folder += '/'
+        library_root_folder = str(library_root_folder)
+    if '\\' in str(library_root_folder) and str(library_root_folder)[-1] != '\\':
+        library_root_folder += '\\'
         library_root_folder = str(library_root_folder)
 
-    if str(library_root_folder)[-1] != '/':
-        library_root_folder += '/'
-        library_root_folder = str(Path(library_root_folder))
-    
-    library_folder = str(basedir_movies_path())
-    if str(library_folder)[-1] != '/':
+    library_folder = str(Path(basedir_movies_path()))
+    if '/' in str(library_folder) and str(library_folder)[-1] != '/':
         library_folder += '/'
-        library_folder = str(Path(library_folder))
+        library_folder = str(library_folder)
+    if '\\' in str(library_folder) and str(library_folder)[-1] != '\\':
+        library_folder += '\\'
+        library_folder = str(library_folder)
 
     if not xbmcvfs.exists(library_root_folder):
         xbmcvfs.mkdir(library_root_folder)
     if not xbmcvfs.exists(library_folder):
         xbmcvfs.mkdir(library_folder)
-    source_thumbnail = icon_path()
+    source_thumbnail = str(Path(icon_path()))
     source_name = 'Openinfo Movies'
-    source_content = "('%s','movies','metadata.themoviedb.org','',2147483647,1,'<settings version=\"2\"><setting id=\"certprefix\" default=\"true\">Rated </setting><setting id=\"fanart\">true</setting><setting id=\"imdbanyway\">true</setting><setting id=\"keeporiginaltitle\" default=\"true\">false</setting><setting id=\"language\" default=\"true\">en</setting><setting id=\"RatingS\" default=\"true\">TMDb</setting><setting id=\"tmdbcertcountry\" default=\"true\">us</setting><setting id=\"trailer\">true</setting></settings>',0,0,NULL,NULL)" % library_folder
+    source_content = """('%s','movies','metadata.themoviedb.org',NULL,2147483647,0,'<settings version="2"><setting id="keeporiginaltitle" default="true">false</setting><setting id="fanart">true</setting><setting id="landscape">true</setting><setting id="trailer">true</setting><setting id="language" default="true">en-US</setting><setting id="tmdbcertcountry" default="true">us</setting><setting id="certprefix" default="true">Rated </setting><setting id="RatingS" default="true">TMDb</setting><setting id="imdbanyway" default="true">false</setting><setting id="traktanyway" default="true">false</setting><setting id="multiple_studios" default="true">false</setting><setting id="add_tags">true</setting><setting id="lastUpdated" default="true">0</setting><setting id="originalUrl" default="true" /><setting id="previewUrl" default="true" /><setting id="enable_fanarttv_artwork">true</setting><setting id="fanarttv_language" default="true">en</setting><setting id="fanarttv_clientkey" default="true" /></settings>',0,0,NULL,NULL)""" % library_folder
     AddSource.add_source(source_name, library_folder, source_content, source_thumbnail)
-    return xbmc.translatePath(library_folder)
+    return xbmcvfs.translatePath(library_folder)
 
 def auto_setup_xml_filenames():
     from pathlib import Path
