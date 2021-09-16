@@ -199,6 +199,14 @@ def start_info_actions(infos, params):
 			realizer_test = xbmc.getCondVisibility('System.HasAddon(plugin.video.realizer)')
 			xbmc.log(str(realizer_test)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 
+		elif info == 'setup_trakt_watched':
+			Utils.show_busy()
+			from resources.lib import library
+			library.trakt_watched_tv_shows_full()
+			xbmc.log(str('trakt_watched_tv_shows_full')+'===>OPEN_INFO', level=xbmc.LOGINFO)
+			library.trakt_watched_movies_full()
+			xbmc.log(str('trakt_watched_movies_full')+'===>OPEN_INFO', level=xbmc.LOGINFO)
+			Utils.hide_busy()
 
 		elif info == 'setup_sources':
 			import xbmcvfs, xbmcaddon

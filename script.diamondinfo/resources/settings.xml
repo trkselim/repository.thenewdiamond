@@ -19,6 +19,7 @@
 		<setting label="Enable Trakt/Kodi Scrobbling with PTN" type="bool" id="trakt_scrobble" default="false"/>
 		<setting label="Reopen Last UI Screen After Playback Ends" type="bool" id="reopen_window_bool" default="false"/>
 		<setting label="Trakt Watched History indicators on items" type="bool" id="trakt_watched_stats" default="false"/>
+		<setting label="Create/Refresh Trakt Watched Data" type="action" action="RunScript(script.diamondinfo,info=setup_trakt_watched)"/>
 		<setting label="Use Context Menus in UI?" type="bool" id="context_menu" default="false"/>
 		<setting label="Use Window Stack?" type="bool" id="window_stack_enable" default="true"/>
 		<setting label="Maintenance" type="lsep"/>
