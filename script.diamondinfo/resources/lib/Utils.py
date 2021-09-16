@@ -430,7 +430,7 @@ def create_listitems(data=None, preload_images=0, enable_clearlogo=True, info=No
 	try: show_id = info['tmdb_id']
 	except: show_id = 0
 	trakt_watched_stats = xbmcaddon.Addon(addon_ID()).getSetting('trakt_watched_stats')
-	if trakt_watched_stats == 'true:'
+	if trakt_watched_stats == 'true':
 		import sqlite3, ast
 		movie_con = sqlite3.connect(str(Path(addonUserDataFolder + '/trakt_movies_watched.db')))
 		tv_con = sqlite3.connect(str(Path(addonUserDataFolder + '/trakt_tv_watched.db')))

@@ -69,7 +69,7 @@ class DialogBaseInfo(object):
 			if 1==1:
 				self.getControl(container_id).reset()
 				#xbmc.log(str('fill_lists')+'===>PHIL', level=xbmc.LOGINFO)
-				self.getControl(container_id).addItems(Utils.create_listitems(listitems,preload_images=0, enable_clearlogo=False, info=self.info, trakt_tv=self.trakt_tv, trakt_movies=self.trakt_movies))
+				self.getControl(container_id).addItems(Utils.create_listitems(listitems,preload_images=0, enable_clearlogo=False, info=self.info))
 			#except:
 			#	Utils.log('Notice: No container with id %i available' % container_id)
 
