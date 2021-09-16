@@ -156,6 +156,9 @@ def start_info_actions(infos, params):
 
 		elif info == 'test_route':
 			from resources.lib import library
+			response = library.setup_library_movies()
+			xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
+			return
 			#from resources.lib import TheMovieDB
 			#import xbmcvfs, xbmcaddon
 			#title = 'Game of Thrones'
@@ -214,9 +217,9 @@ def start_info_actions(infos, params):
 			library_folder = str(basedir_movies_path())
 			if not xbmcvfs.exists(library_folder):
 				xbmcvfs.mkdir(library_folder)
-			if not library_source_exists_tv() and library_tv_sync == 'true':
+			if not library_source_exists_tv():
 				response = setup_library_tv()
-			if not library_source_exists_movies() and library_movies_sync == 'true':
+			if not library_source_exists_movies():
 				response = setup_library_movies()
 			xbmcgui.Dialog().notification(heading='Setup Sources', message='Sources Setup, Please Reboot to finish setup.', icon=icon_path(),time=2000,sound=False)
 			Utils.hide_busy()
