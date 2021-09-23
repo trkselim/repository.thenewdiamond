@@ -86,7 +86,7 @@ def get_season_window(window_type):
 
 		@ch.click(120)
 		def browse_season(self):
-			url = 'plugin://plugin.video.themoviedb.helper/?info=episodes&amp;season='+str(self.info['season'])+'&amp;tmdb_id='+str(self.info['id'])+'&amp;tmdb_type=tv'
+			url = 'plugin://plugin.video.themoviedb.helper/?info=episodes&amp;season='+str(self.info['season'])+'&amp;tmdb_id='+str(self.info['tmdb_id'])+'&amp;tmdb_type=tv'
 			self.close()
 			xbmc.executebuiltin('ActivateWindow(videos,%s,return)' % url)
 
@@ -178,6 +178,14 @@ def get_season_window(window_type):
 			self.close()
 			#reopen_window()
 			return wm.open_video_list(search_str='', mode='reopen_window')
+
+		@ch.click(447)
+		def refresh_button(self):
+			from resources.lib.library import trakt_refresh_all
+			Utils.show_busy()
+			trakt_refresh_all()
+			Utils.hide_busy()
+			return
 
 		@ch.click(132)
 		def open_text(self):

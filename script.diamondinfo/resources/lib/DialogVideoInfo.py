@@ -262,6 +262,14 @@ def get_movie_window(window_type):
 			#reopen_window()
 			return wm.open_video_list(search_str='', mode='reopen_window')
 
+		@ch.click(447)
+		def refresh_button(self):
+			from resources.lib.library import trakt_refresh_all
+			Utils.show_busy()
+			trakt_refresh_all()
+			Utils.hide_busy()
+			return
+
 		@ch.click(18)
 		def add_movie_to_library(self):
 			if xbmcgui.Dialog().yesno(str(addon_ID_short()), 'Add [B]%s[/B] to library?' % self.info['title']):

@@ -215,6 +215,14 @@ def get_tvshow_window(window_type):
 			self.close()
 			return wm.open_video_list(search_str='', mode='reopen_window')
 
+		@ch.click(447)
+		def refresh_button(self):
+			from resources.lib.library import trakt_refresh_all
+			Utils.show_busy()
+			trakt_refresh_all()
+			Utils.hide_busy()
+			return
+
 		@ch.click(6002)
 		def open_list(self):
 			index = xbmcgui.Dialog().select(heading='Choose list', list=['Starred TV shows', 'Rated TV shows'])
