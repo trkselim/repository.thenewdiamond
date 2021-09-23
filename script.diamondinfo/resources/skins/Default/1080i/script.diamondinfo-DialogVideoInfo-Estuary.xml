@@ -379,6 +379,29 @@
 								<visible>!Skin.HasSetting(kioskmode)</visible>
 							</control>
 
+							<control type="radiobutton" id="447">
+								<width>280</width>
+								<height>140</height>
+								<textoffsetx>0</textoffsetx>
+								<align>center</align>
+								<texturefocus border="40" colordiffuse="$INFO[Window(home).Property(ImageColor)]">common/roundedbutton-focus.png</texturefocus>
+								<texturenofocus border="40" colordiffuse="$INFO[Window(home).Property(ImageColor)]">common/roundedbutton-nofocus.png</texturenofocus>
+								<font>font13</font>
+								<textcolor>FF999999</textcolor>
+								<focusedcolor>FFFFFFFF</focusedcolor>
+								<aligny>bottom</aligny>
+								<textoffsety>77</textoffsety>
+								<radioposx>118</radioposx>
+								<radioposy>30</radioposy>
+								<radiowidth>44</radiowidth>
+								<radioheight>44</radioheight>
+								<textureradioonfocus colordiffuse="FFFFFFFF">icons/refresh.png</textureradioonfocus>
+								<textureradioofffocus colordiffuse="FFFFFFFF">icons/refresh.png</textureradioofffocus>
+								<textureradiooffnofocus colordiffuse="FF999999">icons/refresh.png</textureradiooffnofocus>
+								<textureradioonnofocus colordiffuse="FF999999">icons/refresh.png</textureradioonnofocus>
+								<label>Refresh Trakt</label>
+								<visible>!Skin.HasSetting(kioskmode)</visible>
+							</control>
 
 						</control>
 					</control>

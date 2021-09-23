@@ -570,6 +570,27 @@
 					<radioheight>32</radioheight>
 				</control>
 
+				<control type="radiobutton" id="447">
+					<label>Return</label>
+					<texturefocus colordiffuse="FFFF0000">netflix/button.png</texturefocus>
+					<texturenofocus colordiffuse="FF999999">netflix/button_border.png</texturenofocus>
+					<width>156</width>
+					<height>56</height>
+					<align>right</align>
+					<aligny>center</aligny>
+					<font>font10</font>
+					<textcolor>FF999999</textcolor>
+					<focusedcolor>FFFFFFFF</focusedcolor>
+					<textureradioonfocus colordiffuse="FFFFFFFF">netflix/refresh2.png</textureradioonfocus>
+					<textureradioofffocus colordiffuse="FFFFFFFF">netflix/refresh2.png</textureradioofffocus>
+					<textureradiooffnofocus colordiffuse="FFFFFFFF">netflix/refresh2.png</textureradiooffnofocus>
+					<textureradioonnofocus colordiffuse="FFFFFFFF">netflix/refresh2.png</textureradioonnofocus>
+					<textoffsetx>10</textoffsetx>
+					<radioposx>10</radioposx>
+					<radiowidth>32</radiowidth>
+					<radioheight>32</radioheight>
+				</control>
+
 			</control>
 			<control type="group">
 				<visible>String.IsEqual(Window.Property(type),movie) | String.IsEqual(Window.Property(type),tvshow)</visible>
