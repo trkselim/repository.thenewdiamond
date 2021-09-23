@@ -269,12 +269,15 @@ def setup_xml_filenames():
         pass
 
 def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api):
-    import requests
-    import json
+    #import requests
+    #import json
+    from resources.lib.TheMovieDB import get_fanart_data
+    from resources.lib.TheMovieDB import get_tmdb_data
     show_file_path = str(show_file_path)
 
     try: 
-        response = requests.get('http://webservice.fanart.tv/v3/movies/'+str(tmdb_id)+'?api_key='+str(fanart_api)).json()
+        #response = requests.get('http://webservice.fanart.tv/v3/movies/'+str(tmdb_id)+'?api_key='+str(fanart_api)).json()
+        response = get_fanart_data(tmdb_id=tmdb_id,media_type='movie')
     except: 
         response = ''
         
@@ -333,7 +336,9 @@ def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api)
     #TMDB_ID - poster, fanart, season posters
     #tvposter, showbackground, seasonposters
     if not d1.__contains__('moviebackground') or not d1.__contains__('movieposter'):
-        response = requests.get('https://api.themoviedb.org/3/tv/'+str(tmdb_id)+'?api_key=' + str(tmdb_api))
+        #response = requests.get('https://api.themoviedb.org/3/tv/'+str(tmdb_id)+'?api_key=' + str(tmdb_api))
+        url = 'movie/'+str(tmdb_id) + '?'
+        response = get_tmdb_data(url=url)
 
         if not d1.__contains__('moviebackground'):
             try: 
@@ -377,12 +382,15 @@ def get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api)
             get_file(d1['movieposter'].replace(' ', '%20'), Path(show_file_path + '/poster.jpg'))
 
 def get_art_fanart_tv(tvdb_id, fanart_api, show_file_path, art_path,tmdb_id,tmdb_api):
-    import requests
-    import json
+    #import requests
+    #import json
+    from resources.lib.TheMovieDB import get_fanart_data
+    from resources.lib.TheMovieDB import get_tmdb_data
     d1 = {}
     show_file_path = str(show_file_path)
     try: 
-        response = requests.get('http://webservice.fanart.tv/v3/tv/'+str(tvdb_id)+'?api_key='+str(fanart_api)).json()
+        #response = requests.get('http://webservice.fanart.tv/v3/tv/'+str(tvdb_id)+'?api_key='+str(fanart_api)).json()
+        response = get_fanart_data(tmdb_id=tvdb_id,media_type='tv_tvdb')
     except: 
         response = ''
 
@@ -473,7 +481,9 @@ def get_art_fanart_tv(tvdb_id, fanart_api, show_file_path, art_path,tmdb_id,tmdb
     #TMDB_ID - poster, fanart, season posters
     #tvposter, showbackground, seasonposters
     if not d1.__contains__('showbackground') or not d1.__contains__('tvposter') or not d1.__contains__('seasonposters'):
-        response = requests.get('https://api.themoviedb.org/3/tv/'+str(tmdb_id)+'?api_key=' + str(tmdb_api))
+        #response = requests.get('https://api.themoviedb.org/3/tv/'+str(tmdb_id)+'?api_key=' + str(tmdb_api))
+        url = 'tv/'+str(tmdb_id) + '?'
+        response = get_tmdb_data(url=url)
 
         if not d1.__contains__('showbackground'):
             try: 
@@ -610,14 +620,15 @@ def next_episode_show(tmdb_id_num=None,dbid_num=None):
 
 
 def trakt_next_episode_normal(tmdb_id_num=None):
-    import requests
-    import json
+    #import requests
+    #import json
 
     tmdb_id=tmdb_id_num
-    headers = trak_auth()
+    #headers = trak_auth()
 
     try:
-        response = requests.get('https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=show', headers=headers).json()
+        #response = requests.get('https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=show', headers=headers).json()
+        response = get_trakt_data(url='https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=show', cache_days=0.5)
     except:
         xbmc.executebuiltin('Dialog.Close(busydialog)')
 
@@ -628,7 +639,8 @@ def trakt_next_episode_normal(tmdb_id_num=None):
     i = 0
     while response1 == '' and i < 11:
         try:
-            response1 = requests.get('https://api.trakt.tv/shows/'+str(id)+'/progress/watched',headers=headers).json()
+            #response1 = requests.get('https://api.trakt.tv/shows/'+str(id)+'/progress/watched',headers=headers).json()
+            response1 = get_trakt_data(url='https://api.trakt.tv/shows/'+str(id)+'/progress/watched', cache_days=0.00001)
         except:
             i = i + 1
 
@@ -643,7 +655,8 @@ def trakt_next_episode_normal(tmdb_id_num=None):
     i = 0
     while response2 == '' and i < 22:
         try:
-            response2 = requests.get('https://api.trakt.tv/shows/'+str(id)+'/seasons/'+str(season)+'/episodes/'+str(episode)+'?extended=full', headers=headers).json()
+            #response2 = requests.get('https://api.trakt.tv/shows/'+str(id)+'/seasons/'+str(season)+'/episodes/'+str(episode)+'?extended=full', headers=headers).json()
+            response2 = get_trakt_data(url='https://api.trakt.tv/shows/'+str(id)+'/seasons/'+str(season)+'/episodes/'+str(episode)+'?extended=full', cache_days=0.00001)
         except:
             i = i + 1
 
@@ -664,13 +677,14 @@ def trakt_next_episode_normal(tmdb_id_num=None):
         xbmcgui.Dialog().notification(heading='Trakt Next Episode Normal', message='Next Episode Not aired yet', icon=icon_path(),time=1000,sound=False)
 
 def trakt_next_episode_rewatch(tmdb_id_num=None):
-    import requests
-    import json
+    #import requests
+    #import json
 
     tmdb_id=tmdb_id_num
-    headers = trak_auth()
+    #headers = trak_auth()
 
-    response = requests.get('https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=show', headers=headers).json()
+    #response = requests.get('https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=show', headers=headers).json()
+    response = get_trakt_data(url='https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=show', cache_days=0.5)
     id = response[0]['show']['ids']['trakt']
     title = response[0]['show']['title']
 
@@ -678,7 +692,8 @@ def trakt_next_episode_rewatch(tmdb_id_num=None):
     i = 0
     while response1 == '' and i < 11:
         try:
-            response1 = requests.get('https://api.trakt.tv/shows/'+str(id)+'/progress/watched',headers=headers).json()
+            #response1 = requests.get('https://api.trakt.tv/shows/'+str(id)+'/progress/watched',headers=headers).json()
+            response1 = get_trakt_data('https://api.trakt.tv/shows/'+str(id)+'/progress/watched', cache_days=0.00001)
         except:
             i = i + 1
 
@@ -723,7 +738,8 @@ def trakt_next_episode_rewatch(tmdb_id_num=None):
     i = 0
     while response2 == '' and i < 22:
         try:
-            response2 = requests.get('https://api.trakt.tv/shows/'+str(id)+'/seasons/'+str(season)+'/episodes/'+str(episode)+'?extended=full', headers=headers).json()
+            #response2 = requests.get('https://api.trakt.tv/shows/'+str(id)+'/seasons/'+str(season)+'/episodes/'+str(episode)+'?extended=full', headers=headers).json()
+            response2 = get_trakt_data('https://api.trakt.tv/shows/'+str(id)+'/seasons/'+str(season)+'/episodes/'+str(episode)+'?extended=full', cache_days=0.00001)
         except:
             i = i + 1
 
@@ -861,7 +877,8 @@ def trakt_watched_tv_shows_full():
     url = 'https://api.trakt.tv/sync/watched/shows?extended=full'
     trakt_watched_stats = xbmcaddon.Addon(addon_ID()).getSetting('trakt_watched_stats')
     if trakt_watched_stats == 'true':
-        response = requests.get(url, headers=headers).json()
+        #response = requests.get(url, headers=headers).json()
+        response = get_trakt_data(url=url, cache_days=0.000001)
     else:
         trakt_data = None
         return
@@ -1066,13 +1083,15 @@ def trakt_popular_shows(cache_days=None):
 def trakt_add_movie(tmdb_id_num=None,mode=None):
     import requests
     import json
+    trakt_kodi_mode = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_kodi_mode'))
 
     from resources.lib import Utils
     Utils.show_busy()
     headers = trak_auth()
 
     url = 'https://api.trakt.tv/search/tmdb/'+str(tmdb_id_num)+'?type=movie'
-    response = requests.get(url, headers=headers).json()
+    #response = requests.get(url, headers=headers).json()
+    response = get_trakt_data(url=url, cache_days=1)
     movie_trakt = response[0]['movie']['ids']['trakt']
     movie_trakt_slug = response[0]['movie']['ids']['slug']
     movie_title = response[0]['movie']['title']
@@ -1109,14 +1128,18 @@ def trakt_add_movie(tmdb_id_num=None,mode=None):
     if mode == 'Add':
         response_collect = requests.post('https://api.trakt.tv/sync/collection', data=values, headers=headers)
         xbmc.log(str(movie_title + 'added: ' + str(response_collect.json()['added']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
-        library_auto_movie(single_item=single_item)
-        #xbmc.executebuiltin('UpdateLibrary(video, {})'.format(movie_path))
-        xbmc.executebuiltin('UpdateLibrary(video)')
+        if trakt_kodi_mode != 'Trakt Only':
+            library_auto_movie(single_item=single_item)
+            #xbmc.executebuiltin('UpdateLibrary(video, {})'.format(movie_path))
+            xbmc.executebuiltin('UpdateLibrary(video)')
     if mode == 'Remove':
         response_collect = requests.post('https://api.trakt.tv/sync/collection/remove', data=values, headers=headers)
         xbmc.log(str(movie_title + 'removed: ' + str(response_collect.json()['deleted']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
-        delete_folder_contents(movie_path, True)
-        xbmc.executebuiltin('CleanLibrary(video)')
+        if trakt_kodi_mode != 'Trakt Only':
+            delete_folder_contents(movie_path, True)
+            from resources.lib.AddSource import _remove_source_content
+            _remove_source_content(str('Movies%'+str(tmdb_id)))
+            xbmc.executebuiltin('CleanLibrary(video)')
     Utils.hide_busy()
 
 def trakt_add_tv(tmdb_id_num=None,mode=None):
@@ -1125,9 +1148,11 @@ def trakt_add_tv(tmdb_id_num=None,mode=None):
     from resources.lib import Utils
     Utils.show_busy()
     headers = trak_auth()
+    trakt_kodi_mode = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_kodi_mode'))
 
     url = 'https://api.trakt.tv/search/tmdb/'+str(tmdb_id_num)+'?type=show'
-    response = requests.get(url, headers=headers).json()
+    #response = requests.get(url, headers=headers).json()
+    response = get_trakt_data(url=url, cache_days=1)
     show_trakt = response[0]['show']['ids']['trakt']
     show_trakt_slug = response[0]['show']['ids']['slug']
     show_title = response[0]['show']['title']
@@ -1164,15 +1189,19 @@ def trakt_add_tv(tmdb_id_num=None,mode=None):
     if mode == 'Add':
         response_collect = requests.post('https://api.trakt.tv/sync/collection', data=values, headers=headers)
         xbmc.log(str(show_title + ' episodes added: ' + str(response_collect.json()['added']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
-        library_auto_tv(single_item=single_item)
-        #refresh_recently_added()
-        #xbmc.executebuiltin('UpdateLibrary(video, {})'.format(show_path))
-        xbmc.executebuiltin('UpdateLibrary(video)')
+        if trakt_kodi_mode != 'Trakt Only':
+            library_auto_tv(single_item=single_item)
+            #refresh_recently_added()
+            #xbmc.executebuiltin('UpdateLibrary(video, {})'.format(show_path))
+            xbmc.executebuiltin('UpdateLibrary(video)')
     if mode == 'Remove':
         response_collect = requests.post('https://api.trakt.tv/sync/collection/remove', data=values, headers=headers)
         xbmc.log(str(show_title + ' episodes removed: ' + str(response_collect.json()['deleted']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
-        delete_folder_contents(show_path, True)
-        xbmc.executebuiltin('CleanLibrary(video)')
+        if trakt_kodi_mode != 'Trakt Only':
+            delete_folder_contents(show_path, True)
+            from resources.lib.AddSource import _remove_source_content
+            _remove_source_content(str('TVShows%'+str(show_tvdb)))
+            xbmc.executebuiltin('CleanLibrary(video)')
     Utils.hide_busy()
 
 def trakt_add_tv_season(tmdb_id_num=None,season_num=None,mode=None):
@@ -1182,10 +1211,12 @@ def trakt_add_tv_season(tmdb_id_num=None,season_num=None,mode=None):
     Utils.show_busy()
     headers = trak_auth()
 
+    trakt_kodi_mode = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_kodi_mode'))
     season = season_num
 
     url = 'https://api.trakt.tv/search/tmdb/'+str(tmdb_id_num)+'?type=show'
-    response = requests.get(url, headers=headers).json()
+    #response = requests.get(url, headers=headers).json()
+    response = get_trakt_data(url=url, cache_days=1)
     show_trakt = response[0]['show']['ids']['trakt']
     show_trakt_slug = response[0]['show']['ids']['slug']
     show_title = response[0]['show']['title']
@@ -1197,7 +1228,8 @@ def trakt_add_tv_season(tmdb_id_num=None,season_num=None,mode=None):
     show_path = Path(str(basedir_tv_path()) + '/' + str(show_tvdb))
 
     url = 'https://api.trakt.tv/shows/'+str(show_trakt)+'/seasons'
-    response = requests.get(url, headers=headers).json()
+    #response = requests.get(url, headers=headers).json()
+    response = get_trakt_data(url=url, cache_days=1)
     for i in response:
         if int(i['number']) == int(season):
             season_trakt = i['ids']['trakt']
@@ -1239,15 +1271,19 @@ def trakt_add_tv_season(tmdb_id_num=None,season_num=None,mode=None):
     if mode == 'Add':
         response_collect = requests.post('https://api.trakt.tv/sync/collection', data=values, headers=headers)
         xbmc.log(str(show_title + ' episodes added: ' + str(response_collect.json()['added']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
-        library_auto_tv(single_item=single_item)
-        #refresh_recently_added()
-        #xbmc.executebuiltin('UpdateLibrary(video, {})'.format(show_path))
-        xbmc.executebuiltin('UpdateLibrary(video)')
+        if trakt_kodi_mode != 'Trakt Only':
+            library_auto_tv(single_item=single_item)
+            #refresh_recently_added()
+            #xbmc.executebuiltin('UpdateLibrary(video, {})'.format(show_path))
+            xbmc.executebuiltin('UpdateLibrary(video)')
     if mode == 'Remove':
         response_collect = requests.post('https://api.trakt.tv/sync/collection/remove', data=values, headers=headers)
         xbmc.log(str(show_title + ' episodes removed: ' + str(response_collect.json()['deleted']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
-        delete_folder_contents(show_path, True)
-        xbmc.executebuiltin('CleanLibrary(video)')
+        if trakt_kodi_mode != 'Trakt Only':
+            delete_folder_contents(show_path, True)
+            from resources.lib.AddSource import _remove_source_content
+            _remove_source_content(str('TVShows%'+str(show_tvdb)))
+            xbmc.executebuiltin('CleanLibrary(video)')
     Utils.hide_busy()
 
 def trakt_add_tv_episode(tmdb_id_num=None,season_num=None,episode_num=None,mode=None):
@@ -1257,10 +1293,12 @@ def trakt_add_tv_episode(tmdb_id_num=None,season_num=None,episode_num=None,mode=
     Utils.show_busy()
     headers = trak_auth()
 
+    trakt_kodi_mode = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_kodi_mode'))
     season = season_num
     episode = episode_num
     url = 'https://api.trakt.tv/search/tmdb/'+str(tmdb_id_num)+'?type=show'
-    response = requests.get(url, headers=headers).json()
+    #response = requests.get(url, headers=headers).json()
+    response = get_trakt_data(url=url, cache_days=1)
     show_trakt = response[0]['show']['ids']['trakt']
     show_trakt_slug = response[0]['show']['ids']['slug']
     show_title = response[0]['show']['title']
@@ -1312,15 +1350,19 @@ def trakt_add_tv_episode(tmdb_id_num=None,season_num=None,episode_num=None,mode=
     if mode == 'Add':
         response_collect = requests.post('https://api.trakt.tv/sync/collection', data=values, headers=headers)
         xbmc.log(str(show_title + ' episodes added: ' + str(response_collect.json()['added']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
-        library_auto_tv(single_item=single_item)
-        #refresh_recently_added()
-        #xbmc.executebuiltin('UpdateLibrary(video, {})'.format(show_path))
-        xbmc.executebuiltin('UpdateLibrary(video)')
+        if trakt_kodi_mode != 'Trakt Only':
+            library_auto_tv(single_item=single_item)
+            #refresh_recently_added()
+            #xbmc.executebuiltin('UpdateLibrary(video, {})'.format(show_path))
+            xbmc.executebuiltin('UpdateLibrary(video)')
     if mode == 'Remove':
         response_collect = requests.post('https://api.trakt.tv/sync/collection/remove', data=values, headers=headers)
         xbmc.log(str(show_title + ' episodes removed: ' + str(response_collect.json()['deleted']))+'===>OPEN_INFO', level=xbmc.LOGINFO)
-        delete_folder_contents(show_path, True)
-        xbmc.executebuiltin('CleanLibrary(video)')
+        if trakt_kodi_mode != 'Trakt Only':
+            delete_folder_contents(show_path, True)
+            from resources.lib.AddSource import _remove_source_content
+            _remove_source_content(str('TVShows%'+str(show_tvdb)))
+            xbmc.executebuiltin('CleanLibrary(video)')
     Utils.hide_busy()
 
 def trak_auth():
@@ -1375,7 +1417,8 @@ def trakt_calendar_list():
     basedir_tv = basedir_tv_path()
     file_path = basedir_tv
     
-    response = requests.get('https://api.trakt.tv/users/me/watched/shows?extended=full', headers=headers).json()
+    #response = requests.get('https://api.trakt.tv/users/me/watched/shows?extended=full', headers=headers).json()
+    response = get_trakt_data(url='https://api.trakt.tv/users/me/watched/shows?extended=full', cache_days=1)
 
     show_count = 0
     complete_dict = {}
@@ -1390,7 +1433,8 @@ def trakt_calendar_list():
                     last_watched_at = 'S' + str(s['number']) + 'E' + str(e['number'])
         show_count = show_count + 1
         if count < i['show']['aired_episodes'] and i['show']['aired_episodes'] - count == 1:
-            response2 = requests.get('https://api.trakt.tv/shows/'+str(i['show']['ids']['trakt'])+'/progress/watched?extended=full', headers=headers).json()
+            #response2 = requests.get('https://api.trakt.tv/shows/'+str(i['show']['ids']['trakt'])+'/progress/watched?extended=full', headers=headers).json()
+            response2 = get_trakt_data(url='https://api.trakt.tv/shows/'+str(i['show']['ids']['trakt'])+'/progress/watched?extended=full', cache_days=1)
             air_date = datetime(*(time.strptime(response2['next_episode']['first_aired'], '%Y-%m-%dT%H:%M:%S.%fZ')[0:6])).strftime('%Y-%m-%d')
             today = datetime.today().strftime('%Y-%m-%d')
             day_diff = str(-1* (datetime.today() - datetime(*(time.strptime(response2['next_episode']['first_aired'], '%Y-%m-%dT%H:%M:%S.%fZ')[0:6]))).days)
@@ -1417,8 +1461,11 @@ def trakt_calendar_list():
     x = 0
     response = ''
     while response == '' and x <11:
-        try: response = requests.get('https://api.trakt.tv/calendars/my/shows/'+start_date+'/'+str(days), headers=headers).json()
-        except: x = x + 1
+        try: 
+            #response = requests.get('https://api.trakt.tv/calendars/my/shows/'+start_date+'/'+str(days), headers=headers).json()
+            response = get_trakt_data(url='https://api.trakt.tv/calendars/my/shows/'+start_date+'/'+str(days), cache_days=1)
+        except: 
+            x = x + 1
     calendar_eps = sorted(response, key=lambda i: i['first_aired'], reverse=False)
     add_calendar = 1
 
@@ -1613,7 +1660,8 @@ def refresh_recently_added():
         
         if image_test == True:
             thumb_path = Path(i[2].replace('.strm','-thumb.jpg'))
-            response = requests.get('https://api.trakt.tv/search/tvdb/'+str(tvdb_id), headers=headers).json()
+            #response = requests.get('https://api.trakt.tv/search/tvdb/'+str(tvdb_id), headers=headers).json()
+            response = get_trakt_data(url='https://api.trakt.tv/search/tvdb/'+str(tvdb_id), cache_days=1)
             imdb_id = response[0]['show']['ids']['imdb']
 
             show_season = season
@@ -1760,7 +1808,8 @@ def refresh_recently_added():
                     xbmc.log(str(kodi_response)+'===>OPEN_INFO', level=xbmc.LOGINFO)
                 
         if plot_test == True:
-            response = requests.get('https://api.trakt.tv/search/tvdb/'+str(tvdb_id), headers=headers).json()
+            #response = requests.get('https://api.trakt.tv/search/tvdb/'+str(tvdb_id), headers=headers).json()
+            response = get_trakt_data(url='https://api.trakt.tv/search/tvdb/'+str(tvdb_id), cache_days=1)
             imdb_id = response[0]['show']['ids']['imdb']
 
             show_season = season
@@ -1945,6 +1994,7 @@ def library_auto_tv(single_item=None):
     import json
     import os
 
+    library_auto_sync = xbmcaddon.Addon(addon_ID()).getSetting('library_auto_sync')
     xbmc.log(str('TRAKT_SYNC_TV_library_auto_tv')+'===>OPEN_INFO', level=xbmc.LOGFATAL)
     headers = trak_auth()
     basedir_tv = basedir_tv_path()
@@ -1959,8 +2009,11 @@ def library_auto_tv(single_item=None):
     x = 0
     response = ''
     while response == '' and x <11:
-        try: response = requests.get('https://api.trakt.tv/sync/collection/shows', headers=headers).json()
-        except: x = x + 1
+        try: 
+            #response = requests.get('https://api.trakt.tv/sync/collection/shows', headers=headers).json()
+            response = get_trakt_data(url='https://api.trakt.tv/sync/collection/shows', cache_days=0.00001)
+        except: 
+            x = x + 1
     collection = sorted(response, key=lambda i: i['show']['title'], reverse=False)
     for i in collection:
         if single_item:
@@ -2100,8 +2153,11 @@ def library_auto_tv(single_item=None):
     x = 0
     response = ''
     while response == '' and x <11:
-        try: response = requests.get('https://api.trakt.tv/calendars/my/shows/'+start_date+'/'+str(days), headers=headers).json()
-        except: x = x + 1
+        try: 
+            #response = requests.get('https://api.trakt.tv/calendars/my/shows/'+start_date+'/'+str(days), headers=headers).json()
+            response = get_trakt_data(url='https://api.trakt.tv/calendars/my/shows/'+start_date+'/'+str(days), cache_days=1)
+        except: 
+            x = x + 1
     calendar_eps = sorted(response, key=lambda i: i['show']['title'], reverse=False)
 
     for n in calendar_eps:
@@ -2264,8 +2320,11 @@ def library_auto_movie(single_item=None):
     x = 0
     response = ''
     while response == '' and x <11:
-        try: response = requests.get('https://api.trakt.tv/sync/collection/movies', headers=headers).json()
-        except: x = x + 1
+        try: 
+            #response = requests.get('https://api.trakt.tv/sync/collection/movies', headers=headers).json()
+            response = get_trakt_data(url='https://api.trakt.tv/sync/collection/movies', cache_days=0.0001)
+        except: 
+            x = x + 1
     collection = sorted(response, key=lambda i: i['movie']['title'], reverse=False)
 
     for i in collection:

@@ -424,6 +424,9 @@ def get_fanart_data(url='', tmdb_id=None, media_type=None, cache_days=14, folder
         tvdb_id = tvdb_id['tvdb_id']
         url = 'http://webservice.fanart.tv/v3/tv/'+str(tvdb_id)+'?api_key=' + fanart_api
         #response = requests.get(url).json()
+    elif media_type =='tv_tvdb':
+        url = 'http://webservice.fanart.tv/v3/tv/'+str(tmdb_id)+'?api_key=' + fanart_api
+        #response = requests.get(url).json()
     else:
         url = 'http://webservice.fanart.tv/v3/movies/'+str(tmdb_id)+'?api_key=' + fanart_api
         #response = requests.get(url).json()

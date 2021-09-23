@@ -183,6 +183,7 @@ def start_info_actions(infos, params):
 			#library.get_art_fanart_movie(tmdb_id, fanart_api, show_file_path, art_path,tmdb_api)
 		
 			import xbmcvfs, xbmcaddon
+			from resources.lib.library import icon_path
 			xbmc.log(str(library.basedir_movies_path())+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			xbmc.log(str(addon_ID())+'===>OPEN_INFO', level=xbmc.LOGINFO)
 			xbmc.log(str(addon_ID_short())+'===>OPEN_INFO', level=xbmc.LOGINFO)

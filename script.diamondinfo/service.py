@@ -8,6 +8,7 @@ import requests
 from resources.lib import library
 from resources.lib import Utils
 from resources.lib.library import addon_ID_short
+from resources.lib.library import get_trakt_data
 from resources.lib.WindowManager import wm
 import gc
 
@@ -73,7 +74,8 @@ class PlayerMonitor(xbmc.Player):
         #response = requests.get(url).json()
         tmdb_id = response['results'][0]['id']
 
-        response = requests.get('https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=movie', headers=headers).json()
+        #response = requests.get('https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=movie', headers=headers).json()
+        response = get_trakt_data(url='https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=movie', cache_days=7)
         trakt = response[0]['movie']['ids']['trakt']
         slug = response[0]['movie']['ids']['slug']
         imdb = response[0]['movie']['ids']['imdb']
@@ -112,7 +114,8 @@ class PlayerMonitor(xbmc.Player):
     def trakt_scrobble_tmdb(self, tmdb_id, percent):
         #headers = library.trak_auth()
 
-        response = requests.get('https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=movie', headers=headers).json()
+        #response = requests.get('https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=movie', headers=headers).json()
+        response = get_trakt_data(url='https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=movie', cache_days=7)
         trakt = response[0]['movie']['ids']['trakt']
         slug = response[0]['movie']['ids']['slug']
         imdb = response[0]['movie']['ids']['imdb']
@@ -172,14 +175,16 @@ class PlayerMonitor(xbmc.Player):
 
         if 'tmdb_id=' in str(title):
             tmdb_id = str(title).replace('tmdb_id=','')
-            response = requests.get('https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=show', headers=headers).json()
+            #response = requests.get('https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=show', headers=headers).json()
+            response = get_trakt_data(url='https://api.trakt.tv/search/tmdb/'+str(tmdb_id)+'?type=show', cache_days=7)
             tvdb = response[0]['show']['ids']['tvdb']
             imdb = response[0]['show']['ids']['imdb']
             trakt = response[0]['show']['ids']['trakt']
             title = response[0]['show']['title']
             year = response[0]['show']['year']
         else:
-            response = requests.get('https://api.trakt.tv/search/show?query='+str(title), headers=headers).json()
+            #response = requests.get('https://api.trakt.tv/search/show?query='+str(title), headers=headers).json()
+            response = get_trakt_data(url='https://api.trakt.tv/search/show?query='+str(title), cache_days=7)
             #print(response[0])
             trakt = response[0]['show']['ids']['trakt']
             tvdb = response[0]['show']['ids']['tvdb']
@@ -754,6 +759,7 @@ class CronJobMonitor(Thread):
     def run(self):
         self.next_time = 0
         library_auto_sync = str(xbmcaddon.Addon(library.addon_ID()).getSetting('library_auto_sync'))
+        trakt_kodi_mode = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_kodi_mode'))
         if library_auto_sync == 'true':
             library_auto_sync = True
         if library_auto_sync == 'false':
@@ -772,6 +778,9 @@ class CronJobMonitor(Thread):
 
                 from resources.lib import process
                 process.auto_library()
+            elif int(time.time()) > self.next_time and trakt_kodi_mode == 'Trakt Only': 
+                from resources.lib.library import trakt_calendar_list
+                trakt_calendar_list()
 
             self.xbmc_monitor.waitForAbort(self.poll_time)
 

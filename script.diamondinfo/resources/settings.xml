@@ -28,6 +28,7 @@
 		<setting label="TEST ROUTE" type="action" action="RunScript(script.diamondinfo,info=test_route)"/>
 	</category>
     <category label="Trakt Collection Library Options">
+		<setting label="Trakt/Kodi Collection mode" type="select" values="Trakt and Kodi|Trakt Only" id="trakt_kodi_mode" default="Trakt and Kodi"/>
         <setting label="Auto Sync Trakt Collection to library" type="bool" id="library_auto_sync" default="false"/>
 		<setting label="Library Sync Period (hours - default = 8)" type="number" id="library_sync_hours" default="8"/>
 		<setting label="Root folder for ./Movies + ./TVShows STRM files with tmdb.nfo" type="lsep"/>

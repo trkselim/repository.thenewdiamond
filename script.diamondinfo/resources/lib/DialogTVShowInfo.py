@@ -314,8 +314,8 @@ def get_tvshow_window(window_type):
 						if xbmcgui.Dialog().yesno(str(addon_ID_short()), 'Remove [B]%s[/B] from library?' % self.info['title']):
 							Utils.get_kodi_json(method='VideoLibrary.RemoveMovie', params='{"movieid": %s}' % dbid)
 							MovieLibrary = basedir_movies_path()
-							if os.path.exists(xbmcvfs.translatePath('%s%s/' % (MovieLibrary, imdb_id))):
-								shutil.rmtree(xbmcvfs.translatePath('%s%s/' % (MovieLibrary, imdb_id)))
+							if os.path.exists(xbmcvfs.translatePath('%s%s/' % (MovieLibrary, item_id))):
+								shutil.rmtree(xbmcvfs.translatePath('%s%s/' % (MovieLibrary, item_id)))
 								
 								trakt_add_movie(item_id,'Remove')
 								Utils.after_add(type='movie')
