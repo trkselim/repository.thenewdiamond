@@ -795,8 +795,8 @@ def trakt_watched_movies(cache_days=None):
     return response
   
 def trakt_watched_movies_full():
-    import requests
-    import json
+    #import requests
+    #import json
     from pathlib import Path
     headers = trak_auth()
     addon = xbmcaddon.Addon()
@@ -806,7 +806,8 @@ def trakt_watched_movies_full():
     url = 'https://api.trakt.tv/sync/watched/movies'
     trakt_watched_stats = xbmcaddon.Addon(addon_ID()).getSetting('trakt_watched_stats')
     if trakt_watched_stats == 'true':
-        response = requests.get(url, headers=headers).json()
+        #response = requests.get(url, headers=headers).json()
+        response = get_trakt_data(url, 0)
     else:
         trakt_data = None
         return None
@@ -970,7 +971,7 @@ def trakt_trending_movies():
     import json
 
     headers = trak_auth()
-    url = 'https://api.trakt.tv/movies/trending?limit=300'
+    url = 'https://api.trakt.tv/movies/trending?limit=600'
     #response = requests.get(url, headers=headers).json()
     response = get_trakt_data(url, 1)
     #reverse_order = True

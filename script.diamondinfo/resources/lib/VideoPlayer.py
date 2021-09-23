@@ -1,7 +1,7 @@
 import xbmc, xbmcgui
 from resources.lib import Utils
 from resources.lib.WindowManager import wm
-
+import gc
 
 class VideoPlayer(xbmc.Player):
 
@@ -32,8 +32,13 @@ class VideoPlayer(xbmc.Player):
 		import time
 		xbmcgui.Window(10000).setProperty('diamond_info_time', str(int(time.time())))
 		if Utils.window_stack_enable == 'false':
-			super(VideoPlayer, self).play(item=url, listitem=listitem, windowed=False, startpos=-1)
+			#super(VideoPlayer, self).play(item=url, listitem=listitem, windowed=False, startpos=-1)
 			window.close()
+			gc.collect()
+			xbmc.executebuiltin('RunPlugin(%s)' % url)
+			#xbmc.executebuiltin('Dialog.Close(all,true)')
+			#try: self.close()
+			#except: pass
 			return
 		super(VideoPlayer, self).play(item=url, listitem=listitem, windowed=False, startpos=-1)
 		for i in range(600):
@@ -54,8 +59,13 @@ class VideoPlayer(xbmc.Player):
 		else:
 			item = '{"file": "%s"}' % url
 		if Utils.window_stack_enable == 'false':
-			super(VideoPlayer, self).play(item=url, listitem=listitem, windowed=False, startpos=-1)
+			#super(VideoPlayer, self).play(item=url, listitem=listitem, windowed=False, startpos=-1)
 			window.close()
+			gc.collect()
+			xbmc.executebuiltin('RunPlugin(%s)' % url)
+			#xbmc.executebuiltin('Dialog.Close(all,true)')
+			#try: self.close()
+			#except: pass
 			return
 		Utils.get_kodi_json(method='Player.Open', params='{"item": %s}' % item)
 		for i in range(600):

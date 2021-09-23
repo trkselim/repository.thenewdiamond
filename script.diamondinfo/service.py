@@ -8,6 +8,8 @@ import requests
 from resources.lib import library
 from resources.lib import Utils
 from resources.lib.library import addon_ID_short
+from resources.lib.WindowManager import wm
+import gc
 
 ServiceStop = ''
 
@@ -230,11 +232,15 @@ class PlayerMonitor(xbmc.Player):
         else:
             xbmcgui.Window(10000).clearProperty(var_test)
 
-        if reopen_window_bool == 'true' and diamond_info_started:
+        xbmc.sleep(500)
+        gc.collect()
+        if reopen_window_bool == 'true' and diamond_info_started and not xbmc.getCondVisibility('Window.IsActive(10138)'):
             #from resources.lib.process import reopen_window
             #reopen_window()
-            from resources.lib.WindowManager import wm
-            return wm.open_video_list(search_str='', mode='reopen_window')
+            #from resources.lib.WindowManager import wm
+            xbmc.sleep(1500)
+            if not xbmc.getCondVisibility('Window.IsActive(10138)') and xbmc.Player().isPlaying()==0:
+                return wm.open_video_list(search_str='', mode='reopen_window')
         #self.set_watched()
         #self.reset_properties()
         #return wm.pop_stack()
@@ -249,12 +255,16 @@ class PlayerMonitor(xbmc.Player):
         else:
             xbmcgui.Window(10000).clearProperty(var_test)
 
+        xbmc.sleep(500)
+        gc.collect()
         if trakt_scrobble == 'false':
-            if reopen_window_bool == 'true' and diamond_info_started:
+            if reopen_window_bool == 'true' and diamond_info_started and not xbmc.getCondVisibility('Window.IsActive(10138)'):
                 #from resources.lib.process import reopen_window
                 #reopen_window()
-                from resources.lib.WindowManager import wm
-                return wm.open_video_list(search_str='', mode='reopen_window')
+                #from resources.lib.WindowManager import wm
+                xbmc.sleep(1500)
+                if not xbmc.getCondVisibility('Window.IsActive(10138)') and xbmc.Player().isPlaying()==0:
+                    return wm.open_video_list(search_str='', mode='reopen_window')
             return
 
 
@@ -275,6 +285,7 @@ class PlayerMonitor(xbmc.Player):
         except: 
             dbID = None
 
+        xbmc.sleep(500)
         try:
             if global_movie_flag == 'true' and dbID != None and percentage < 85 and percentage > 3 and resume_duration > 300:
                 json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"VideoLibrary.SetMovieDetails","params":{"movieid":'+str(dbID)+', "resume": {"position":'+str(resume_position)+',"total":'+str(resume_duration)+'}},"id":"1"}')
@@ -293,18 +304,22 @@ class PlayerMonitor(xbmc.Player):
                 json_object  = json.loads(json_result)
                 xbmc.log(str(json_object)+'=episode resume set, '+str(dbID)+'=dbID', level=xbmc.LOGFATAL)
         except:
-            if reopen_window_bool == 'true' and diamond_info_started:
+            if reopen_window_bool == 'true' and diamond_info_started and not xbmc.getCondVisibility('Window.IsActive(10138)'):
                 #from resources.lib.process import reopen_window
                 #reopen_window()
-                from resources.lib.WindowManager import wm
-                return wm.open_video_list(search_str='', mode='reopen_window')
+                #from resources.lib.WindowManager import wm
+                xbmc.sleep(1500)
+                if not xbmc.getCondVisibility('Window.IsActive(10138)') and xbmc.Player().isPlaying()==0:
+                    return wm.open_video_list(search_str='', mode='reopen_window')
             return
 
-        if reopen_window_bool == 'true' and diamond_info_started:
+        if reopen_window_bool == 'true' and diamond_info_started and not xbmc.getCondVisibility('Window.IsActive(10138)'):
             #from resources.lib.process import reopen_window
             #reopen_window()
-            from resources.lib.WindowManager import wm
-            return wm.open_video_list(search_str='', mode='reopen_window')
+            #from resources.lib.WindowManager import wm
+            xbmc.sleep(1500)
+            if not xbmc.getCondVisibility('Window.IsActive(10138)') and xbmc.Player().isPlaying()==0:
+                return wm.open_video_list(search_str='', mode='reopen_window')
         #self.set_watched()
         #self.reset_properties()
 
@@ -361,6 +376,7 @@ class PlayerMonitor(xbmc.Player):
         var_test = addon_ID_short()+'_running'
         if diamond_info_started == True:
             xbmcgui.Window(10000).setProperty(var_test, 'True')
+            #xbmc.executebuiltin('Dialog.Close(all,true)')
         else:
             xbmcgui.Window(10000).clearProperty(var_test)
 
@@ -394,7 +410,8 @@ class PlayerMonitor(xbmc.Player):
                 xbmc.sleep(100)
                 count = count + 100
 
-        if player.isPlayingVideo()==0:
+        gc.collect()
+        if player.isPlaying()==0:
             return
         json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"XBMC.GetInfoLabels","params": {"labels":["VideoPlayer.Title", "Player.Filename","Player.Filenameandpath", "VideoPlayer.MovieTitle", "VideoPlayer.TVShowTitle", "VideoPlayer.DBID", "VideoPlayer.DBTYPE", "VideoPlayer.Duration", "VideoPlayer.Season", "VideoPlayer.Episode", "VideoPlayer.DBID", "VideoPlayer.Year", "VideoPlayer.Rating", "VideoPlayer.mpaa", "VideoPlayer.Studio", "VideoPlayer.VideoAspect", "VideoPlayer.Plot", "VideoPlayer.RatingAndVotes", "VideoPlayer.Genre", "VideoPlayer.LastPlayed", "VideoPlayer.IMDBNumber", "ListItem.DBID", "Container.FolderPath", "Container.FolderName", "Container.PluginName", "ListItem.TVShowTitle", "ListItem.FileNameAndPath"]}, "id":1}')
         json_object  = json.loads(json_result)
@@ -617,7 +634,7 @@ class PlayerMonitor(xbmc.Player):
                                 count = count + 100
                     except:
                         watched = 1
-                        return
+                        #return
                     resume_position = player.getTime()
                     percentage = (resume_position / duration) * 100
                     if (percentage > 85) and player.isPlayingVideo()==1 and duration > 300:
@@ -644,9 +661,10 @@ class PlayerMonitor(xbmc.Player):
                             json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"VideoLibrary.SetMovieDetails","params":{"movieid":'+str(movie_id)+',"lastplayed": "'+str(dt_string)+'"},"id":"1"}')
                             json_object  = json.loads(json_result)
                             xbmc.log(str(json_object)+'_LASTPLAYED='+str(dt_string)+'=movie marked watched, '+str(movie_id)+'=dbID', level=xbmc.LOGFATAL)
-                        return
+                        #return
         except:
-            return
+            watched = 1
+            #return
 
         try:
             watched = 0
@@ -681,7 +699,7 @@ class PlayerMonitor(xbmc.Player):
                                 except: pass
                     except:
                         watched = 1
-                        return
+                        #return
                     resume_position = player.getTime()
                     percentage = (resume_position / duration) * 100
                     if player.isPlaying()==1 and percentage > 85 and trakt_watched != 'true':
@@ -717,9 +735,10 @@ class PlayerMonitor(xbmc.Player):
                             else:
                                 try: response = self.trakt_scrobble_tv(tv_title, tv_season, tv_episode, percentage)
                                 except: pass
-                        return
+                        #return
         except:
-            return
+            watched = 1
+            #return
 
  
 class CronJobMonitor(Thread):

@@ -156,9 +156,6 @@ def start_info_actions(infos, params):
 
 		elif info == 'test_route':
 			from resources.lib import library
-			response = library.setup_library_movies()
-			xbmc.log(str(response)+'===>PHIL', level=xbmc.LOGINFO)
-			return
 			#from resources.lib import TheMovieDB
 			#import xbmcvfs, xbmcaddon
 			#title = 'Game of Thrones'
