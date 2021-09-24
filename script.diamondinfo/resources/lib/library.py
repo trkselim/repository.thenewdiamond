@@ -1141,6 +1141,7 @@ def trakt_add_movie(tmdb_id_num=None,mode=None):
             from resources.lib.AddSource import _remove_source_content
             _remove_source_content(str('Movies%'+str(tmdb_id)))
             xbmc.executebuiltin('CleanLibrary(video)')
+    trakt_collection_movies(cache_days=0.00001)
     Utils.hide_busy()
 
 def trakt_add_tv(tmdb_id_num=None,mode=None):
@@ -1204,6 +1205,7 @@ def trakt_add_tv(tmdb_id_num=None,mode=None):
             from resources.lib.AddSource import _remove_source_content
             _remove_source_content(str('TVShows%'+str(show_tvdb)))
             xbmc.executebuiltin('CleanLibrary(video)')
+    trakt_collection_shows(cache_days=0.00001)
     Utils.hide_busy()
 
 def trakt_add_tv_season(tmdb_id_num=None,season_num=None,mode=None):
@@ -1286,6 +1288,7 @@ def trakt_add_tv_season(tmdb_id_num=None,season_num=None,mode=None):
             from resources.lib.AddSource import _remove_source_content
             _remove_source_content(str('TVShows%'+str(show_tvdb)))
             xbmc.executebuiltin('CleanLibrary(video)')
+    trakt_collection_shows(cache_days=0.00001)
     Utils.hide_busy()
 
 def trakt_add_tv_episode(tmdb_id_num=None,season_num=None,episode_num=None,mode=None):
@@ -1365,6 +1368,7 @@ def trakt_add_tv_episode(tmdb_id_num=None,season_num=None,episode_num=None,mode=
             from resources.lib.AddSource import _remove_source_content
             _remove_source_content(str('TVShows%'+str(show_tvdb)))
             xbmc.executebuiltin('CleanLibrary(video)')
+    trakt_collection_shows(cache_days=0.00001)
     Utils.hide_busy()
 
 def trak_auth():
