@@ -1083,7 +1083,8 @@ def trakt_popular_shows(cache_days=None):
 def trakt_add_movie(tmdb_id_num=None,mode=None):
     import requests
     import json
-    trakt_kodi_mode = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_kodi_mode'))
+    from resources.lib.library import addon_ID
+    trakt_kodi_mode = str(xbmcaddon.Addon(addon_ID()).getSetting('trakt_kodi_mode'))
 
     from resources.lib import Utils
     Utils.show_busy()
@@ -1148,7 +1149,8 @@ def trakt_add_tv(tmdb_id_num=None,mode=None):
     from resources.lib import Utils
     Utils.show_busy()
     headers = trak_auth()
-    trakt_kodi_mode = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_kodi_mode'))
+    from resources.lib.library import addon_ID
+    trakt_kodi_mode = str(xbmcaddon.Addon(addon_ID()).getSetting('trakt_kodi_mode'))
 
     url = 'https://api.trakt.tv/search/tmdb/'+str(tmdb_id_num)+'?type=show'
     #response = requests.get(url, headers=headers).json()
@@ -1210,8 +1212,8 @@ def trakt_add_tv_season(tmdb_id_num=None,season_num=None,mode=None):
     from resources.lib import Utils
     Utils.show_busy()
     headers = trak_auth()
-
-    trakt_kodi_mode = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_kodi_mode'))
+    from resources.lib.library import addon_ID
+    trakt_kodi_mode = str(xbmcaddon.Addon(addon_ID()).getSetting('trakt_kodi_mode'))
     season = season_num
 
     url = 'https://api.trakt.tv/search/tmdb/'+str(tmdb_id_num)+'?type=show'
@@ -1292,8 +1294,8 @@ def trakt_add_tv_episode(tmdb_id_num=None,season_num=None,episode_num=None,mode=
     from resources.lib import Utils
     Utils.show_busy()
     headers = trak_auth()
-
-    trakt_kodi_mode = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_kodi_mode'))
+    from resources.lib.library import addon_ID
+    trakt_kodi_mode = str(xbmcaddon.Addon(addon_ID()).getSetting('trakt_kodi_mode'))
     season = season_num
     episode = episode_num
     url = 'https://api.trakt.tv/search/tmdb/'+str(tmdb_id_num)+'?type=show'
