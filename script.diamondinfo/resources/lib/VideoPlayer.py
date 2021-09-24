@@ -36,6 +36,7 @@ class VideoPlayer(xbmc.Player):
 			window.close()
 			gc.collect()
 			xbmc.executebuiltin('RunPlugin(%s)' % url)
+			del window
 			#xbmc.executebuiltin('Dialog.Close(all,true)')
 			#try: self.close()
 			#except: pass
@@ -47,6 +48,7 @@ class VideoPlayer(xbmc.Player):
 					wm.add_to_stack(window)
 					window.close()
 					window = None
+					del window
 					self.wait_for_video_end()
 					return wm.pop_stack()
 			xbmc.sleep(50)
@@ -63,6 +65,7 @@ class VideoPlayer(xbmc.Player):
 			window.close()
 			gc.collect()
 			xbmc.executebuiltin('RunPlugin(%s)' % url)
+			del window
 			#xbmc.executebuiltin('Dialog.Close(all,true)')
 			#try: self.close()
 			#except: pass
@@ -74,6 +77,7 @@ class VideoPlayer(xbmc.Player):
 					wm.add_to_stack(window)
 					window.close()
 					window = None
+					del window
 					self.wait_for_video_end()
 					return wm.pop_stack()
 			xbmc.sleep(50)

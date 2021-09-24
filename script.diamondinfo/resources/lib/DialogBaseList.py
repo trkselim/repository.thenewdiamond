@@ -48,6 +48,9 @@ class DialogBaseList(object):
 			xbmc.executebuiltin(onback)
 		else:
 			self.close()
+			if Utils.window_stack_enable == 'false':
+				del self
+				return
 			wm.pop_stack()
 
 	@ch.action('previousmenu', '*')
@@ -137,7 +140,10 @@ class DialogBaseList(object):
 		self.next_page_token = data.get('next_page_token', '')
 		self.prev_page_token = data.get('prev_page_token', '')
 		#xbmc.log(str('update_content')+'===>PHIL', level=xbmc.LOGINFO)
-		self.listitems = Utils.create_listitems(self.listitems,preload_images=0, enable_clearlogo=False, info=None)
+		if Utils.NETFLIX_VIEW == 'true':
+			self.listitems = Utils.create_listitems(self.listitems,preload_images=0, enable_clearlogo=True, info=None)
+		else:
+			self.listitems = Utils.create_listitems(self.listitems,preload_images=0, enable_clearlogo=False, info=None)
 
 	def update_ui(self):
 		if not self.listitems and self.getFocusId() == 500:

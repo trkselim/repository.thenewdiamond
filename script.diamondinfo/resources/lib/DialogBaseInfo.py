@@ -122,6 +122,7 @@ class DialogBaseInfo(object):
 			#xbmc.log(str(window_id)+'window_id===>OPEN_INFO', level=xbmc.LOGINFO)
 			#xbmc.log(str(window)+'window===>OPEN_INFO', level=xbmc.LOGINFO)
 			self.close()
+			del self
 			return wm.open_video_list(search_str='', mode='reopen_window')
 
 		onback = self.window.getProperty('%i_onback' % self.control_id)

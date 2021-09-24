@@ -26,6 +26,7 @@ class WindowManager(object):
             #xbmc.log(str('self.active_dialog = None')+'===>PHIL', level=xbmc.LOGINFO)
             self.active_dialog = None
             window = None
+            del window
             return
 
     def pop_stack(self):
@@ -225,6 +226,7 @@ class WindowManager(object):
             self.add_to_stack(prev_window)
             prev_window.close()
             prev_window = None
+            del prev_window
         Utils.hide_busy()
         gc.collect()
         dialog.doModal()
@@ -269,6 +271,7 @@ class WindowManager(object):
                 self.add_to_stack(prev_window)
                 prev_window.close()
                 prev_window = None
+                del prev_window
             Utils.hide_busy()
             gc.collect()
             dialog.doModal()
