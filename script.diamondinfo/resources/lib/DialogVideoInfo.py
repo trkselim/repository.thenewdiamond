@@ -270,6 +270,11 @@ def get_movie_window(window_type):
 			Utils.hide_busy()
 			return
 
+		@ch.click(448)
+		def tmdb_trakt_context(self):
+			xbmc.executebuiltin('RunScript(plugin.video.themoviedb.helper,sync_trakt,tmdb_type=movie,tmdb_id='+str(self.info.get('id', ''))+')')
+			return
+
 		@ch.click(18)
 		def add_movie_to_library(self):
 			if xbmcgui.Dialog().yesno(str(addon_ID_short()), 'Add [B]%s[/B] to library?' % self.info['title']):

@@ -187,6 +187,11 @@ def get_season_window(window_type):
 			Utils.hide_busy()
 			return
 
+		@ch.click(448)
+		def tmdb_trakt_context(self):
+			xbmc.executebuiltin('RunScript(plugin.video.themoviedb.helper,sync_trakt,tmdb_type=tv,tmdb_id='+str(self.info['season'])+',season='+str(self.tvshow_id)+')')
+			return
+
 		@ch.click(132)
 		def open_text(self):
 			wm.open_textviewer(header='Overview', text=self.info['Plot'], color='FFFFFFFF')

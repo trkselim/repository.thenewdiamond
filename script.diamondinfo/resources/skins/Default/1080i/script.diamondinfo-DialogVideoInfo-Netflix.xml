@@ -445,6 +445,7 @@
 					<radioheight>32</radioheight>
 				</control>
 				<control type="radiobutton" id="18">
+					<visible>String.IsEmpty(Window.Property(trakt_only))</visible>
 					<visible>String.IsEqual(Window.Property(Type),movie) + String.IsEmpty(Window.Property(movie.DBID))</visible>
 					<label>Library</label>
 					<texturefocus colordiffuse="FFFF0000">netflix/button.png</texturefocus>
@@ -466,6 +467,7 @@
 					<radioheight>32</radioheight>
 				</control>
 				<control type="radiobutton" id="19">
+					<visible>String.IsEmpty(Window.Property(trakt_only))</visible>
 					<visible>String.IsEqual(Window.Property(Type),movie) + !String.IsEmpty(Window.Property(movie.DBID))</visible>
 					<label>Library</label>
 					<texturefocus colordiffuse="FFFF0000">netflix/button.png</texturefocus>
@@ -487,6 +489,7 @@
 					<radioheight>32</radioheight>
 				</control>
 				<control type="radiobutton" id="20">
+					<visible>String.IsEmpty(Window.Property(trakt_only))</visible>
 					<visible>String.IsEqual(Window.Property(Type),tvshow) + String.IsEmpty(Window.Property(movie.DBID))</visible>
 					<label>Library</label>
 					<texturefocus colordiffuse="FFFF0000">netflix/button.png</texturefocus>
@@ -508,6 +511,7 @@
 					<radioheight>32</radioheight>
 				</control>
 				<control type="radiobutton" id="21">
+					<visible>String.IsEmpty(Window.Property(trakt_only))</visible>
 					<visible>String.IsEqual(Window.Property(Type),tvshow) + !String.IsEmpty(Window.Property(movie.DBID))</visible>
 					<label>Library</label>
 					<texturefocus colordiffuse="FFFF0000">netflix/button.png</texturefocus>
@@ -528,6 +532,29 @@
 					<radiowidth>32</radiowidth>
 					<radioheight>32</radioheight>
 				</control>
+
+				<control type="radiobutton" id="448">
+					<visible>!String.IsEmpty(Window.Property(trakt_only))</visible>
+					<label>TMDB_H</label>
+					<texturefocus colordiffuse="FFFF0000">netflix/button.png</texturefocus>
+					<texturenofocus colordiffuse="FF999999">netflix/button_border.png</texturenofocus>
+					<width>156</width>
+					<height>56</height>
+					<align>right</align>
+					<aligny>center</aligny>
+					<font>font10</font>
+					<textcolor>FF999999</textcolor>
+					<focusedcolor>FFFFFFFF</focusedcolor>
+					<textureradioonfocus colordiffuse="FFFFFFFF">icons/trakt.png</textureradioonfocus>
+					<textureradioofffocus colordiffuse="FFFFFFFF">icons/trakt.png</textureradioofffocus>
+					<textureradiooffnofocus colordiffuse="FFFFFFFF">icons/trakt.png</textureradiooffnofocus>
+					<textureradioonnofocus colordiffuse="FFFFFFFF">icons/trakt.png</textureradioonnofocus>
+					<textoffsetx>25</textoffsetx>
+					<radioposx>10</radioposx>
+					<radiowidth>32</radiowidth>
+					<radioheight>32</radioheight>
+				</control>
+
 				<control type="radiobutton" id="445">
 					<label>Settings</label>
 					<texturefocus colordiffuse="FFFF0000">netflix/button.png</texturefocus>
@@ -571,7 +598,7 @@
 				</control>
 
 				<control type="radiobutton" id="447">
-					<label>Return</label>
+					<label>Trakt</label>
 					<texturefocus colordiffuse="FFFF0000">netflix/button.png</texturefocus>
 					<texturenofocus colordiffuse="FF999999">netflix/button_border.png</texturenofocus>
 					<width>156</width>

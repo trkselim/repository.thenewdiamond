@@ -27,7 +27,10 @@ class DialogBaseInfo(object):
 		self.window = xbmcgui.Window(self.window_id)
 		self.window.setProperty('type', self.type)
 		xbmcgui.Window(10000).setProperty('diamondinfo_fanart', self.info.get('fanart', ''))
-
+		if Utils.trakt_kodi_mode == 'Trakt Only':
+			xbmcgui.Window(self.window_id).setProperty('trakt_only', 'true')
+		else:
+			xbmcgui.Window(self.window_id).clearProperty('trakt_only')
 		try: clearlogo = TheMovieDB.get_fanart_clearlogo(tmdb_id=self.info['tmdb_id'],media_type=self.info['media_type'])
 		except: clearlogo = ''
 		xbmcgui.Window(self.window_id).setProperty('movie.logo', str(clearlogo))

@@ -17,6 +17,7 @@ NETFLIX_VIEW2 = xbmcaddon.Addon().getSetting('netflix_info_view')
 DIAMONDPLAYER_TV_FOLDER = basedir_tv_path()
 DIAMONDPLAYER_MOVIE_FOLDER = basedir_movies_path()
 window_stack_enable = xbmcaddon.Addon().getSetting('window_stack_enable')
+trakt_kodi_mode = xbmcaddon.Addon().getSetting('trakt_kodi_mode')
 
 def show_busy():
 	#window_id = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"GUI.GetProperties","params":{"properties":["currentwindow", "currentcontrol"]},"id":1}')

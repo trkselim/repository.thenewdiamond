@@ -223,6 +223,11 @@ def get_tvshow_window(window_type):
 			Utils.hide_busy()
 			return
 
+		@ch.click(448)
+		def tmdb_trakt_context(self):
+			xbmc.executebuiltin('RunScript(plugin.video.themoviedb.helper,sync_trakt,tmdb_type=tv,tmdb_id='+str(self.info['id'])+')')
+			return
+
 		@ch.click(6002)
 		def open_list(self):
 			index = xbmcgui.Dialog().select(heading='Choose list', list=['Starred TV shows', 'Rated TV shows'])

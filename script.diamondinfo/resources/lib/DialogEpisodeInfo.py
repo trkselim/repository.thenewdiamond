@@ -158,4 +158,9 @@ def get_episode_window(window_type):
 			Utils.hide_busy()
 			return
 
+		@ch.click(448)
+		def tmdb_trakt_context(self):
+			xbmc.executebuiltin('RunScript(plugin.video.themoviedb.helper,sync_trakt,tmdb_type=tv,tmdb_id='+str(self.info['season'])+',season='+str(self.tvshow_id)+',episode='+str(self.info['episode'])+')')
+			return
+
 	return DialogEpisodeInfo
