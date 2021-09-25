@@ -1613,7 +1613,34 @@ def refresh_recently_added():
     xbmc.log(str(x)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 
     for i in sql_result:
-        tvdb_id = i[2].split('/')[8]
+        #tvdb_id = i[2].split('/')[8]
+        try:
+            tvdb_id = i[2].split('/')[8]
+        except:
+            try:
+                for i in i[2].split('/'):
+                    if i.isnumeric():
+                        tvdb_id = i
+                        break
+                    else:
+                        tvdb_id = ''
+            except:
+                tvdb_id = ''
+
+        if tvdb_id == '':
+            try:
+                for i in i[2].split('\\'):
+                    if i.isnumeric():
+                        tvdb_id = i
+                        break
+                    else:
+                        tvdb_id = ''
+            except:
+                tvdb_id = ''
+                pass
+        if tvdb_id == '':
+            continue
+
         season = i[3]
         episode = i[4]
         tvdb_url = str('https://api.thetvdb.com/series/' + str(tvdb_id) + '/episodes/query?airedSeason=' + str(season) + '&airedEpisode=' + str(episode))
@@ -1764,7 +1791,34 @@ def refresh_recently_added():
     xbmc.log(str(x)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 
     for i in sql_result:
-        tvdb_id = i[2].split('/')[8]
+        #tvdb_id = i[2].split('/')[8]
+        try:
+            tvdb_id = i[2].split('/')[8]
+        except:
+            try:
+                for i in i[2].split('/'):
+                    if i.isnumeric():
+                        tvdb_id = i
+                        break
+                    else:
+                        tvdb_id = ''
+            except:
+                tvdb_id = ''
+
+        if tvdb_id == '':
+            try:
+                for i in i[2].split('\\'):
+                    if i.isnumeric():
+                        tvdb_id = i
+                        break
+                    else:
+                        tvdb_id = ''
+            except:
+                tvdb_id = ''
+                pass
+        if tvdb_id == '':
+            continue
+
         season = i[3]
         episode = i[4]
         tvdb_url = str('https://api.thetvdb.com/series/' + str(tvdb_id) + '/episodes/query?airedSeason=' + str(season) + '&airedEpisode=' + str(episode))
@@ -1913,7 +1967,34 @@ def refresh_recently_added():
     xbmc.log(str(x)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 
     for i in sql_result:
-        tvdb_id = i[2].split('/')[8]
+        #tvdb_id = i[2].split('/')[8]
+        try:
+            tvdb_id = i[2].split('/')[8]
+        except:
+            try:
+                for i in i[2].split('/'):
+                    if i.isnumeric():
+                        tvdb_id = i
+                        break
+                    else:
+                        tvdb_id = ''
+            except:
+                tvdb_id = ''
+
+        if tvdb_id == '':
+            try:
+                for i in i[2].split('\\'):
+                    if i.isnumeric():
+                        tvdb_id = i
+                        break
+                    else:
+                        tvdb_id = ''
+            except:
+                tvdb_id = ''
+                pass
+        if tvdb_id == '':
+            continue
+
         season = i[3]
         episode = i[4]
         tmdb_query = i[6]
