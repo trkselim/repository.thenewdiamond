@@ -922,7 +922,7 @@ def trakt_watched_get(mode=None):
     addon_path = addon.getAddonInfo('path')
     addonID = addon.getAddonInfo('id')
     addonUserDataFolder = xbmcvfs.translatePath("special://profile/addon_data/"+addonID)
-    xbmc.log(str('trakt_watched_get=')+str(mode)+'===>PHIL', level=xbmc.LOGINFO)
+
     if mode == 'tv':
         trakt_data_file = open(Path(addonUserDataFolder + '/trakt_tv_watched'), "r")    
     else:
@@ -1824,10 +1824,13 @@ def refresh_recently_added():
         tvdb_url = str('https://api.thetvdb.com/series/' + str(tvdb_id) + '/episodes/query?airedSeason=' + str(season) + '&airedEpisode=' + str(episode))
         request = requests.get(tvdb_url).json()
         xbmc.log(str(request)+'===>OPEN_INFO', level=xbmc.LOGINFO)
-        try: 
-            plot = request['data'][0]['overview'].replace('\n','').replace('\r','').encode("utf8")
+        try:
+            plot = request['data'][0]['overview'].replace('\n','').replace('\r','')
         except:
-            plot = ''
+            try: 
+                plot = request['data'][0]['overview'].replace('\n','').replace('\r','').encode("utf8")
+            except:
+                plot = ''
         plot = str('"')+str(plot).replace('"','\'') +str('"')
         if len(plot) > 2:
             xbmc.log(str(i)+'===>OPEN_INFO', level=xbmc.LOGINFO)
@@ -2041,6 +2044,8 @@ def refresh_recently_added():
                     xbmc.log(str(kodi_response)+'===>OPEN_INFO', level=xbmc.LOGINFO)
 
     #FIX SQL BAD BYTES to STRING DECODE
+    update_sql = cur.execute("UPDATE episode SET C01 = replace(c01,'&amp;','&') where C01 like '%&amp;%' ;").fetchall()
+    con.commit()
     update_sql = cur.execute("UPDATE episode SET C01 = replace(c01,'<br />\xa0','') where C01 like '%<%' ;").fetchall()
     con.commit()
     update_sql = cur.execute("UPDATE episode SET C01 = replace(c01,'[CR]\xa0','') where C01 like '%[CR]\xa0%' ;").fetchall()

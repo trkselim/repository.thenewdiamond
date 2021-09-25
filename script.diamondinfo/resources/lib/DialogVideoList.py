@@ -548,10 +548,16 @@ def get_tmdb_window(window_type):
                 return
             self.mode = 'imdb'
             Utils.show_busy()
-            from imdb import IMDb, IMDbError
-            ia = IMDb()
+            if 'ls' in str(imdb_list[selection]):
+                from imdb import IMDb, IMDbError
+                ia = IMDb()
 
-            self.search_str = ia.get_movie_list(imdb_list[selection])
+                self.search_str = ia.get_movie_list(imdb_list[selection])
+            elif 'ur' in str(imdb_list[selection]):
+                from resources.lib.TheMovieDB import get_imdb_watchlist_ids
+                self.search_str = get_imdb_watchlist_ids(imdb_list[selection])
+                self.mode = 'imdb2'
+
             self.filter_label = 'Results for:  ' + imdb_list_name[selection]
             self.fetch_data()
             self.update()
@@ -841,6 +847,51 @@ def get_tmdb_window(window_type):
             elif self.mode == 'list':
                 url = 'list/%s?language=%s&' % (str(self.list_id), xbmcaddon.Addon().getSetting('LanguageID'))
                 fetch_data_dict['self.list_id'] = self.list_id
+            elif self.mode == 'imdb2':
+                movies = self.search_str
+                x = 0
+                page = int(self.page)
+                listitems = None
+                for i in movies:
+                    if x + 1 <= page * 20 and x + 1 > (page - 1) *  20:
+                        imdb_id = i
+                        response = TheMovieDB.get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 13)
+                        try:
+                            response['movie_results'][0]['media_type'] = 'movie'
+                            if listitems == None:
+                                listitems = TheMovieDB.handle_tmdb_multi_search(response['movie_results'])
+                            else:
+                                listitems += TheMovieDB.handle_tmdb_multi_search(response['movie_results'])
+                            x = x + 1
+                        except:
+                            try:
+                                response['tv_results'][0]['media_type'] = 'tv'
+                                if listitems == None:
+                                    listitems = TheMovieDB.handle_tmdb_multi_search(response['tv_results'])
+                                else:
+                                    listitems += TheMovieDB.handle_tmdb_multi_search(response['tv_results'])
+                                x = x + 1
+                            except:
+                                self.search_str.pop(x)
+                                continue
+                    else:
+                        x = x + 1
+
+                #response['total_pages'] = y 
+                response['total_pages'] = int(x/20) + (1 if x % 20 > 0 else 0)
+                response['total_results'] = x
+                info = {
+                    'listitems': listitems,
+                    'results_per_page': response['total_pages'],
+                    'total_results': response['total_results']
+                    }
+
+                fetch_data_dict['self.filter_label'] = self.filter_label
+                fetch_data_dict['self.page'] = self.page
+                fetch_data_dict['self.search_str'] = self.search_str
+                fetch_data_dict_file.write(str(fetch_data_dict))
+                fetch_data_dict_file.close()
+                return info
             elif self.mode == 'imdb':
                 movies = self.search_str
                 x = 0
@@ -866,6 +917,7 @@ def get_tmdb_window(window_type):
                                     listitems = TheMovieDB.handle_tmdb_multi_search(response['tv_results'])
                                 else:
                                     listitems += TheMovieDB.handle_tmdb_multi_search(response['tv_results'])
+                                x = x + 1
                             except:
                                 continue
                     else:

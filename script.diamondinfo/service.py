@@ -232,20 +232,25 @@ class PlayerMonitor(xbmc.Player):
         reopen_window_bool = str(xbmcaddon.Addon(library.addon_ID()).getSetting('reopen_window_bool'))
 
         var_test = addon_ID_short()+'_running'
-        if diamond_info_started == True:
+        if xbmcgui.Window(10000).getProperty('diamond_info_started') == 'True':
             xbmcgui.Window(10000).setProperty(var_test, 'True')
         else:
             xbmcgui.Window(10000).clearProperty(var_test)
 
         xbmc.sleep(500)
         gc.collect()
-        if reopen_window_bool == 'true' and diamond_info_started and not xbmc.getCondVisibility('Window.IsActive(10138)'):
+        if reopen_window_bool == 'true' and xbmcgui.Window(10000).getProperty('diamond_info_started') == 'True' and not xbmc.getCondVisibility('Window.IsActive(10138)'):
             #from resources.lib.process import reopen_window
             #reopen_window()
             #from resources.lib.WindowManager import wm
-            xbmc.sleep(1500)
+            xbmc.sleep(500)
             if not xbmc.getCondVisibility('Window.IsActive(10138)') and xbmc.Player().isPlaying()==0:
-                return wm.open_video_list(search_str='', mode='reopen_window')
+                if xbmcgui.Window(10000).getProperty('diamond_info_started') == 'True':
+                    diamond_info_started = False
+                    xbmcgui.Window(10000).setProperty('diamond_info_started',str(diamond_info_started))
+                    return wm.open_video_list(search_str='', mode='reopen_window')
+                else:
+                    return
         #self.set_watched()
         #self.reset_properties()
         #return wm.pop_stack()
@@ -255,7 +260,7 @@ class PlayerMonitor(xbmc.Player):
         reopen_window_bool = str(xbmcaddon.Addon(library.addon_ID()).getSetting('reopen_window_bool'))
 
         var_test = addon_ID_short()+'_running'
-        if diamond_info_started == True:
+        if xbmcgui.Window(10000).getProperty('diamond_info_started') == 'True':
             xbmcgui.Window(10000).setProperty(var_test, 'True')
         else:
             xbmcgui.Window(10000).clearProperty(var_test)
@@ -263,13 +268,18 @@ class PlayerMonitor(xbmc.Player):
         xbmc.sleep(500)
         gc.collect()
         if trakt_scrobble == 'false':
-            if reopen_window_bool == 'true' and diamond_info_started and not xbmc.getCondVisibility('Window.IsActive(10138)'):
+            if reopen_window_bool == 'true' and xbmcgui.Window(10000).getProperty('diamond_info_started') == 'True' and not xbmc.getCondVisibility('Window.IsActive(10138)'):
                 #from resources.lib.process import reopen_window
                 #reopen_window()
                 #from resources.lib.WindowManager import wm
-                xbmc.sleep(1500)
+                xbmc.sleep(500)
                 if not xbmc.getCondVisibility('Window.IsActive(10138)') and xbmc.Player().isPlaying()==0:
-                    return wm.open_video_list(search_str='', mode='reopen_window')
+                    if xbmcgui.Window(10000).getProperty('diamond_info_started') == 'True':
+                        diamond_info_started = False
+                        xbmcgui.Window(10000).setProperty('diamond_info_started',str(diamond_info_started))
+                        return wm.open_video_list(search_str='', mode='reopen_window')
+                    else:
+                        return
             return
 
 
@@ -309,43 +319,32 @@ class PlayerMonitor(xbmc.Player):
                 json_object  = json.loads(json_result)
                 xbmc.log(str(json_object)+'=episode resume set, '+str(dbID)+'=dbID', level=xbmc.LOGFATAL)
         except:
-            if reopen_window_bool == 'true' and diamond_info_started and not xbmc.getCondVisibility('Window.IsActive(10138)'):
+            if reopen_window_bool == 'true' and xbmcgui.Window(10000).getProperty('diamond_info_started') == 'True' and not xbmc.getCondVisibility('Window.IsActive(10138)'):
                 #from resources.lib.process import reopen_window
                 #reopen_window()
                 #from resources.lib.WindowManager import wm
                 xbmc.sleep(1500)
                 if not xbmc.getCondVisibility('Window.IsActive(10138)') and xbmc.Player().isPlaying()==0:
-                    return wm.open_video_list(search_str='', mode='reopen_window')
+                    if xbmcgui.Window(10000).getProperty('diamond_info_started') == 'True':
+                        diamond_info_started = False
+                        xbmcgui.Window(10000).setProperty('diamond_info_started',str(diamond_info_started))
+                        return wm.open_video_list(search_str='', mode='reopen_window')
+                    else:
+                        return
             return
 
-        if reopen_window_bool == 'true' and diamond_info_started and not xbmc.getCondVisibility('Window.IsActive(10138)'):
+        if reopen_window_bool == 'true' and xbmcgui.Window(10000).getProperty('diamond_info_started') == 'True' and not xbmc.getCondVisibility('Window.IsActive(10138)'):
             #from resources.lib.process import reopen_window
             #reopen_window()
             #from resources.lib.WindowManager import wm
-            xbmc.sleep(1500)
+            xbmc.sleep(500)
             if not xbmc.getCondVisibility('Window.IsActive(10138)') and xbmc.Player().isPlaying()==0:
-                return wm.open_video_list(search_str='', mode='reopen_window')
-        #self.set_watched()
-        #self.reset_properties()
-
-    def reset_properties(self):
-        xbmc.log(str('reset_properties')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
-        #self.clear_properties()
-        #self.properties = set()
-        #self.index_properties = set()
-        #self.total_time = 0
-        #self.current_time = 0
-        #self.dbtype = None
-        #self.imdb_id = None
-        #self.query = None
-        #self.year = None
-        #self.season = None
-        #self.episode = None
-        #self.dbid = None
-        #self.tmdb_id = None
-        #self.details = {}
-        #self.tmdb_type = None
-
+                if xbmcgui.Window(10000).getProperty('diamond_info_started') == 'True':
+                    diamond_info_started = False
+                    xbmcgui.Window(10000).setProperty('diamond_info_started',str(diamond_info_started))
+                    return wm.open_video_list(search_str='', mode='reopen_window')
+                else:
+                    return
 
     def onPlayBackStarted(self):
         from resources import PTN
@@ -353,27 +352,35 @@ class PlayerMonitor(xbmc.Player):
         from resources.lib import TheMovieDB
 
         global diamond_info_started
-        playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
-        playlist_size = playlist.size()
+        #playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+        #playlist_size = playlist.size()
         diamond_info_time = xbmcgui.Window(10000).getProperty('diamond_info_time')
+        json_result = xbmc.executeJSONRPC('{"jsonrpc": "2.0","id": "1","method": "Player.GetProperties","params": {"playerid": 1,"properties": ["position","playlistid"]}}')
+        json_object  = json.loads(json_result)
+        try: playlist_position = int(json_object['result']['position'])
+        except: playlist_position = 0
+
+
         if diamond_info_time == '':
             diamond_info_time = 0
         else:
             diamond_info_time = int(diamond_info_time)
-        if diamond_info_time + 60 > int(time.time()):
+        if diamond_info_time + 90 > int(time.time()):
             diamond_info_started = True
         elif diamond_info_time == 0:
             diamond_info_started = False
-        elif diamond_info_time + 60 < int(time.time()):
-            #if playlist_size > 1:
-            #    diamond_info_started = True
-            #else:
-            #    diamond_info_started = False
-            #    xbmcgui.Window(10000).clearProperty('diamond_info_time')
-            diamond_info_started = True
-        else:
+        elif diamond_info_time + 90 < int(time.time()):
+            if playlist_position >= 1:
+                diamond_info_started = True
+            else:
+                diamond_info_started = False
+                xbmcgui.Window(10000).clearProperty('diamond_info_time')
+            #diamond_info_started = True
+        elif playlist_position == 0:
             diamond_info_started = False
             xbmcgui.Window(10000).clearProperty('diamond_info_time')
+
+        xbmcgui.Window(10000).setProperty('diamond_info_started',str(diamond_info_started))
         xbmc.log(str(diamond_info_started)+'diamond_info_started===>diamond_info_started', level=xbmc.LOGINFO)
         xbmc.log(str('onPlayBackStarted')+'===>___OPEN_INFO', level=xbmc.LOGINFO)
         trakt_scrobble = str(xbmcaddon.Addon(library.addon_ID()).getSetting('trakt_scrobble'))
@@ -610,6 +617,14 @@ class PlayerMonitor(xbmc.Player):
             except: movie_id = 0
 
             while player.isPlaying()==1 and type != 'episode':
+
+                json_result = xbmc.executeJSONRPC('{"jsonrpc": "2.0","id": "1","method": "Player.GetProperties","params": {"playerid": 1,"properties": ["position","playlistid"]}}')
+                json_object  = json.loads(json_result)
+                try: playlist_position2 = int(json_object['result']['position'])
+                except: playlist_position2 = 0
+                if int(playlist_position2) > int(playlist_position):
+                    return
+
                 while player.isPlayingVideo()==1 and watched == 0:
                     try:
                         resume_position = player.getTime()
@@ -651,7 +666,7 @@ class PlayerMonitor(xbmc.Player):
                             try: self.trakt_scrobble_title(movie_title, year, percentage)
                             except: pass
                         library.trakt_watched_movies_full()
-                        xbmc.log(str('library.trakt_watched_movies_full')+'===>PHIL', level=xbmc.LOGINFO)
+                        xbmc.log(str('library.trakt_watched_movies_full')+'===>OPEN_INFO', level=xbmc.LOGINFO)
                         if int(movie_id) > 0:
                             json_result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","id":1,"method":"VideoLibrary.GetMovieDetails","params":{"movieid":'+str(movie_id)+', "properties": ["playcount"]}}')
                             json_object  = json.loads(json_result)
@@ -677,6 +692,12 @@ class PlayerMonitor(xbmc.Player):
             next_scrobble = 15
             trakt_watched = 'false'
             while player.isPlaying()==1 and type == 'episode':
+                json_result = xbmc.executeJSONRPC('{"jsonrpc": "2.0","id": "1","method": "Player.GetProperties","params": {"playerid": 1,"properties": ["position","playlistid"]}}')
+                json_object  = json.loads(json_result)
+                try: playlist_position2 = int(json_object['result']['position'])
+                except: playlist_position2 = 0
+                if int(playlist_position2) > int(playlist_position):
+                    return
                 while player.isPlayingVideo()==1 and watched == 0:
                     try:
                         resume_position = player.getTime()
@@ -731,7 +752,7 @@ class PlayerMonitor(xbmc.Player):
                             xbmc.log(str(json_object)+'_LASTPLAYED='+str(dt_string)+'=episode marked watched, '+str(dbID)+'=dbID', level=xbmc.LOGFATAL)
 
                         library.trakt_watched_tv_shows_full()
-                        xbmc.log(str('library.trakt_watched_tv_shows_full')+'===>PHIL', level=xbmc.LOGINFO)
+                        xbmc.log(str('library.trakt_watched_tv_shows_full')+'===>OPEN_INFO', level=xbmc.LOGINFO)
                         if trakt_watched != 'true':
                             trakt_watched = 'true'
                             if tmdb_id != '':

@@ -32,10 +32,10 @@ class VideoPlayer(xbmc.Player):
 		import time
 		xbmcgui.Window(10000).setProperty('diamond_info_time', str(int(time.time())))
 		if Utils.window_stack_enable == 'false':
-			#super(VideoPlayer, self).play(item=url, listitem=listitem, windowed=False, startpos=-1)
+			super(VideoPlayer, self).play(item=url, listitem=listitem, windowed=False, startpos=-1)
 			window.close()
 			gc.collect()
-			xbmc.executebuiltin('RunPlugin(%s)' % url)
+			#xbmc.executebuiltin('RunPlugin(%s)' % url)
 			del window
 			#xbmc.executebuiltin('Dialog.Close(all,true)')
 			#try: self.close()
@@ -61,10 +61,10 @@ class VideoPlayer(xbmc.Player):
 		else:
 			item = '{"file": "%s"}' % url
 		if Utils.window_stack_enable == 'false':
-			#super(VideoPlayer, self).play(item=url, listitem=listitem, windowed=False, startpos=-1)
+			super(VideoPlayer, self).play(item=url, listitem=listitem, windowed=False, startpos=-1)
 			window.close()
 			gc.collect()
-			xbmc.executebuiltin('RunPlugin(%s)' % url)
+			#xbmc.executebuiltin('RunPlugin(%s)' % url)
 			del window
 			#xbmc.executebuiltin('Dialog.Close(all,true)')
 			#try: self.close()

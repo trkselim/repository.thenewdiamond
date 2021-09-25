@@ -23,7 +23,6 @@ class WindowManager(object):
             self.window_stack = window_stack
             self.reopen_window = False
             self.last_control = None
-            #xbmc.log(str('self.active_dialog = None')+'===>PHIL', level=xbmc.LOGINFO)
             self.active_dialog = None
             window = None
             del window

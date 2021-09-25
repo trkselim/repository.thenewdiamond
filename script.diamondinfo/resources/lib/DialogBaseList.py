@@ -43,14 +43,18 @@ class DialogBaseList(object):
 	@ch.action('parentdir', '*')
 	@ch.action('parentfolder', '*')
 	def previous_menu(self):
+		if Utils.window_stack_enable == 'false':
+			self.close()
+			del self
+			try: del wm
+			except: pass
+			return
 		onback = self.getProperty('%i_onback' % self.control_id)
 		if onback:
 			xbmc.executebuiltin(onback)
 		else:
 			self.close()
-			if Utils.window_stack_enable == 'false':
-				del self
-				return
+			del self
 			wm.pop_stack()
 
 	@ch.action('previousmenu', '*')

@@ -909,7 +909,64 @@ def get_set_movies(set_id):
         return handle_tmdb_movies(response.get('parts', [])), info
     else:
         return [], {}
-        
+
+def get_imdb_watchlist_ids(ur_list_str=None, limit=0):
+    import requests
+    list_str=ur_list_str
+
+    imdb_url = 'https://www.imdb.com/user/'+str(list_str)+'/watchlist'
+    imdb_response = requests.get(imdb_url)
+
+    from bs4 import BeautifulSoup
+
+    html_soup = BeautifulSoup(imdb_response.text, 'html.parser')
+
+    episode_containers = html_soup.find_all('div', class_='article')
+
+    list_container = str(episode_containers[0]).split('{')
+
+    movies = []
+    x = 0
+    for i in list_container:
+        if 'TITLE_TYPE' in str(i):
+            break
+        if 'position' in str(i):
+            i
+            imdb_dict = str(list_container[x + 1]).split('"')
+            for y in imdb_dict:
+                if 'tt' in str(y):
+                    movies.append(y)
+        x = x + 1
+    return movies
+
+def get_imdb_watchlist_items(movies=None, limit=0):
+    listitems = None
+    x = 0
+    for y in movies:
+        imdb_id = y
+        response = get_tmdb_data('find/%s?language=%s&external_source=imdb_id&' % (imdb_id, xbmcaddon.Addon().getSetting('LanguageID')), 13)
+        try:
+            response['movie_results'][0]['media_type'] = 'movie'
+            if listitems == None:
+                listitems = handle_tmdb_multi_search(response['movie_results'])
+            else:
+                listitems += handle_tmdb_multi_search(response['movie_results'])
+        except:
+            try:
+                response['tv_results'][0]['media_type'] = 'tv'
+                if listitems == None:
+                    listitems = handle_tmdb_multi_search(response['tv_results'])
+                else:
+                    listitems += handle_tmdb_multi_search(response['tv_results'])
+            except:
+                continue
+        if x + 1 == int(limit) and limit != 0:
+            break
+        x = x + 1
+
+    return listitems
+
+
 def get_imdb_list(list_str=None, limit=0):
     list_str=list_str
     from imdb import IMDb, IMDbError

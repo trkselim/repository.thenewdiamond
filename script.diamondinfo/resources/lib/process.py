@@ -305,7 +305,6 @@ def start_info_actions(infos, params):
 				return wm.open_video_list(mode='trakt', listitems=[], search_str=movies, media_type=trakt_type, filter_label=trakt_label)
 
 		elif info == 'imdb_list':
-			from resources.lib.TheMovieDB import get_imdb_list
 			limit = params.get('limit', 0)
 			list_name = str(params['list_name'])
 			try:
@@ -314,12 +313,21 @@ def start_info_actions(infos, params):
 				list_script = 'True'
 			list_str = str(params['list'])
 			Utils.show_busy()
-			if list_script == 'False':
-				return get_imdb_list(list_str,limit=limit)
-			from imdb import IMDb, IMDbError
-			ia = IMDb()
-			movies = ia.get_movie_list(list_str)
-			wm.open_video_list(mode='imdb', listitems=[], search_str=movies, filter_label=list_name)
+			if 'ls' in str(list_str):
+				from resources.lib.TheMovieDB import get_imdb_list
+				if list_script == 'False':
+					return get_imdb_list(list_str,limit=limit)
+				from imdb import IMDb, IMDbError
+				ia = IMDb()
+				movies = ia.get_movie_list(list_str)
+				wm.open_video_list(mode='imdb', listitems=[], search_str=movies, filter_label=list_name)
+			elif 'ur' in str(list_str):
+				from resources.lib.TheMovieDB import get_imdb_watchlist_ids
+				movies = get_imdb_watchlist_ids(list_str,limit=limit)
+				if list_script == 'False':
+					from resources.lib.TheMovieDB import get_imdb_watchlist_items
+					return get_imdb_watchlist_items(movies=movies,limit=limit)
+				wm.open_video_list(mode='imdb2', listitems=[], search_str=movies, filter_label=list_name)
 			return
 
 		elif info == 'search_string':
@@ -656,6 +664,8 @@ def auto_clean_cache(days=None):
 				os.remove(os.path.join(root, name))
 
 def auto_library():
+	#xbmc.log(str('auto_library')+'===>OPEN_INFO', level=xbmc.LOGINFO)
+	#return
 	import xbmcaddon
 	from resources.lib.library import library_auto_tv
 	from resources.lib.library import library_auto_movie
