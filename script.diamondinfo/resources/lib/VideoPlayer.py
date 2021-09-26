@@ -30,7 +30,7 @@ class VideoPlayer(xbmc.Player):
 
 	def play(self, url, listitem, window=False):
 		import time
-		xbmcgui.Window(10000).setProperty('diamond_info_time', str(int(time.time())))
+		xbmcgui.Window(10000).setProperty('diamond_info_time', str(int(time.time())+20))
 		if Utils.window_stack_enable == 'false':
 			super(VideoPlayer, self).play(item=url, listitem=listitem, windowed=False, startpos=-1)
 			window.close()
@@ -55,7 +55,7 @@ class VideoPlayer(xbmc.Player):
 
 	def play_from_button(self, url, listitem, window=False, type='', dbid=0):
 		import time
-		xbmcgui.Window(10000).setProperty('diamond_info_time', str(int(time.time())))
+		xbmcgui.Window(10000).setProperty('diamond_info_time', str(int(time.time())+20))
 		if dbid != 0:
 			item = '{"%s": %s}' % (type, dbid)
 		else:
