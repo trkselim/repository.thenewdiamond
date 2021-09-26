@@ -98,7 +98,10 @@ def main():
             if isinstance(action, basestring):
                 pykodi.execute_builtin(action)
             else:
-                action()
+                try:
+                    action()
+                except TypeError:
+                    pykodi.execute_builtin(action)
 
 def notify_count(message, count):
     countmessage = message.format(count)
