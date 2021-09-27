@@ -843,7 +843,7 @@ v0.28.0 (2020-02-08)
   </extension>
 </addon>
 
-  <addon id="script.artwork.downloader" name="Artwork Downloader" version="15.5.0.0" provider-name="Martijn (With @burekas fixes)">
+  <addon id="script.artwork.downloader" name="Artwork Downloader" version="15.5.0.1" provider-name="Martijn (With @burekas fixes)">
   <requires>
     <import addon="xbmc.python"                 version="3.0.0"/>
     <import addon="xbmc.json"                   version="6.0.0"/>

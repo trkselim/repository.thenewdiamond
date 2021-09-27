@@ -15,7 +15,7 @@ http://wiki.xbmc.org/index.php?title=Add-on:Artwork_Downloader
 
 ----------------------------------------------------------------------------------------------
 
-For better using create, activate and set these API keys:
+For better usage of the addon please create, activate and set all of those API keys:
 * Fanart.tv (fanart.tv) - Project Key
 * TMDb (www.themoviedb.org)
 * TheTVDB (thetvdb.com)
