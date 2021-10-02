@@ -29,18 +29,36 @@ class VideoPlayer(xbmc.Player):
 		self.stopped = False
 
 	def play(self, url, listitem, window=False):
-		import time
-		xbmcgui.Window(10000).setProperty('diamond_info_time', str(int(time.time())+20))
+		#import time
+		#xbmcgui.Window(10000).setProperty('diamond_info_time', str(int(time.time())+20))
 		if Utils.window_stack_enable == 'false':
 			super(VideoPlayer, self).play(item=url, listitem=listitem, windowed=False, startpos=-1)
+			from resources.lib.library import addon_ID_short
+			xbmcgui.Window(10000).clearProperty('diamond_info_time')
+			xbmcgui.Window(10000).setProperty(str(addon_ID_short())+'_running', 'True')
 			window.close()
-			gc.collect()
-			#xbmc.executebuiltin('RunPlugin(%s)' % url)
+			xbmcgui.Window(10000).setProperty(str(addon_ID_short())+'_running', 'True')
+			window2 = window
+			window = None
 			del window
-			#xbmc.executebuiltin('Dialog.Close(all,true)')
-			#try: self.close()
-			#except: pass
-			return
+			for i in range(600):
+				if xbmc.getCondVisibility('VideoPlayer.IsFullscreen'):
+					self.wait_for_video_end()
+					wm.open_dialog(window2, None)
+					window2 = None
+					del window2
+					return 
+				xbmc.sleep(50)
+			#xbmc.executebuiltin('ActivateWindow(FullScreenVideo)')
+
+		#	window.close()
+		#	gc.collect()
+		#	#xbmc.executebuiltin('RunPlugin(%s)' % url)
+		#	del window
+		#	#xbmc.executebuiltin('Dialog.Close(all,true)')
+		#	#try: self.close()
+		#	#except: pass
+		#	return
 		super(VideoPlayer, self).play(item=url, listitem=listitem, windowed=False, startpos=-1)
 		for i in range(600):
 			if xbmc.getCondVisibility('VideoPlayer.IsFullscreen'):

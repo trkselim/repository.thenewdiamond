@@ -1185,6 +1185,9 @@ def get_trakt(trakt_type=None,info=None,limit=0):
         if info == 'trakt_popular':
             from resources.lib.library import trakt_popular_shows
             movies = trakt_popular_shows()
+        if info == 'trakt_progress':
+            from resources.lib.library import trakt_watched_tv_shows_progress
+            movies = trakt_watched_tv_shows_progress()
 
     listitems = None
     x = 0

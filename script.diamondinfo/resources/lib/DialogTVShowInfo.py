@@ -27,7 +27,8 @@ def get_tvshow_window(window_type):
 			super(DialogTVShowInfo, self).__init__(*args, **kwargs)
 			self.type = 'TVShow'
 			data = TheMovieDB.extended_tvshow_info(tvshow_id=kwargs.get('tmdb_id', False), dbid=self.dbid)
-			if Utils.imdb_recommendations == 'true':
+			imdb_recommendations = Utils.imdb_recommendations
+			if 'IMDB' in str(imdb_recommendations):
 				imdb_id = data[0]['imdb_id']
 				if 'tt' not in str(imdb_id):
 					imdb_id = Utils.fetch(TheMovieDB.get_tvshow_ids(kwargs.get('tmdb_id', False)), 'imdb_id')
@@ -45,11 +46,25 @@ def get_tvshow_window(window_type):
 				if 'dbid' not in self.info:
 					self.info['poster'] = Utils.get_file(self.info.get('poster', ''))
 
-				if imdb_similar:
+
+				if imdb_recommendations == 'TMDB Only':
+					self.data['similar'] = self.data['similar']
+				elif imdb_recommendations == 'IMDB Only' and imdb_similar:
+					self.data['similar'] = imdb_similar
+				elif imdb_recommendations == 'TMDB then IMDB' and imdb_similar:
 					for i in imdb_similar:
 						if str(i) not in str(self.data['similar']):
 							self.data['similar'].append(i)
-				self.data['similar'] = sorted(self.data['similar'], key=lambda k: k['Popularity'], reverse=True)
+				elif imdb_recommendations == 'IMDB then TMDB' and imdb_similar:
+					for i in self.data['similar']:
+						if str(i) not in str(imdb_similar):
+							imdb_similar.append(i)
+					self.data['similar'] = imdb_similar
+				elif imdb_recommendations == 'IMDB + TMDB Sorted by Popularity' and imdb_similar:
+					for i in imdb_similar:
+						if str(i) not in str(self.data['similar']):
+							self.data['similar'].append(i)
+					self.data['similar'] = sorted(self.data['similar'], key=lambda k: k['Popularity'], reverse=True)
 
 				self.listitems = [
 					(250, self.data['seasons']),
@@ -86,12 +101,24 @@ def get_tvshow_window(window_type):
 					try: filter_thread.terminate()
 					except: pass
 				"""
-
-				if imdb_similar:
+				if imdb_recommendations == 'TMDB Only':
+					self.data['similar'] = self.data['similar']
+				elif imdb_recommendations == 'IMDB Only' and imdb_similar:
+					self.data['similar'] = imdb_similar
+				elif imdb_recommendations == 'TMDB then IMDB' and imdb_similar:
 					for i in imdb_similar:
 						if str(i) not in str(self.data['similar']):
 							self.data['similar'].append(i)
-				self.data['similar'] = sorted(self.data['similar'], key=lambda k: k['Popularity'], reverse=True)
+				elif imdb_recommendations == 'IMDB then TMDB' and imdb_similar:
+					for i in self.data['similar']:
+						if str(i) not in str(imdb_similar):
+							imdb_similar.append(i)
+					self.data['similar'] = imdb_similar
+				elif imdb_recommendations == 'IMDB + TMDB Sorted by Popularity' and imdb_similar:
+					for i in imdb_similar:
+						if str(i) not in str(self.data['similar']):
+							self.data['similar'].append(i)
+					self.data['similar'] = sorted(self.data['similar'], key=lambda k: k['Popularity'], reverse=True)
 
 				self.listitems = [
 					(250, self.data['seasons']),

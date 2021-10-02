@@ -430,6 +430,10 @@ class PlayerMonitor(xbmc.Player):
         timestamp = json_object['result']['VideoPlayer.Duration']
         try: duration = functools.reduce(lambda x, y: x*60+y, [int(i) for i in (timestamp.replace(':',',')).split(',')])
         except: duration = 60
+
+        if 'trailer' in str(json_result).lower() and duration < 300:
+            return
+
         PTN_info = PTN.parse(json_object['result']['Player.Filename'])
         try: PTN_season = PTN_info['season']
         except: PTN_season = ''
