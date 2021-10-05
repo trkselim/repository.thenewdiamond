@@ -673,6 +673,7 @@ def auto_clean_cache(days=None):
 def auto_library():
 	#xbmc.log(str('auto_library')+'===>OPEN_INFO', level=xbmc.LOGINFO)
 	#return
+
 	import xbmcaddon
 	from resources.lib.library import library_auto_tv
 	from resources.lib.library import library_auto_movie
