@@ -249,7 +249,7 @@ v1.1.25
     </extension>
 </addon>
 
-<addon id="script.extendedinfo" name="  [B][COLOR white]Extended Info-Diamond_MOD[/COLOR][/B]" version="3.25" provider-name="fryhenryj">
+<addon id="script.extendedinfo" name="  [B][COLOR white]Extended Info-Diamond_MOD[/COLOR][/B]" version="3.26" provider-name="fryhenryj">
 	<requires>
 		<import addon="xbmc.python" version="3.0.0"/>
 		<import addon="repository.jurialmunkey" version="2.2" optional="true" />
@@ -264,6 +264,7 @@ v1.1.25
 		<import addon="script.module.simplecache" version="1.0.0"/>
 		<import addon="script.module.beautifulsoup4" version="4.6.3+matrix.1"/>
 		<import addon="plugin.video.themoviedb.helper" version="4.4.6"/>
+		<import addon="plugin.program.autocompletion" version="1.20" optional="true" />
 	</requires>
 	<extension point="xbmc.python.pluginsource" library="plugin.py">
 		<provides>video</provides>
@@ -559,7 +560,7 @@ v1.1.25
     </extension>
 </addon>
 
-<addon id="script.diamondinfo" name="  [B][COLOR white]Diamond Info_MOD[/COLOR][/B]" version="3.25" provider-name="fryhenryj">
+<addon id="script.diamondinfo" name="  [B][COLOR white]Diamond Info_MOD[/COLOR][/B]" version="3.26" provider-name="fryhenryj">
 	<requires>
 		<import addon="xbmc.python" version="3.0.0"/>
 		<import addon="repository.jurialmunkey" version="2.2" optional="true" />
@@ -574,6 +575,7 @@ v1.1.25
 		<import addon="script.module.simplecache" version="1.0.0"/>
 		<import addon="script.module.beautifulsoup4" version="4.6.3+matrix.1"/>
 		<import addon="plugin.video.themoviedb.helper" version="4.4.6"/>
+		<import addon="plugin.program.autocompletion" version="1.20" optional="true" />
 	</requires>
 	<extension point="xbmc.python.pluginsource" library="plugin.py">
 		<provides>video</provides>
@@ -781,6 +783,33 @@ v1.0.25 (marcelveldt)
       <icon>icon.png</icon>
     </assets>
   </extension>
+</addon>
+
+<addon id="plugin.program.autocompletion" name="AutoCompletion for virtual keyboard" version="1.20" provider-name="Philipp Temminghoff (phil65)">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0" />
+        <import addon="script.module.simplejson" version="3.3.0"/>
+        <import addon="script.module.autocompletion" version="1.0.0"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="plugin.py" />
+    <extension point="xbmc.python.script"       library="default.py">
+        <provides>executable</provides>
+    </extension>
+
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en">AutoCompletion for the virtual keyboard (needs skin support)</summary>
+        <description lang="en">AutoCompletion for the virtual keyboard (needs skin support)</description>
+        <platform>all</platform>
+        <license>GNU GENERAL PUBLIC LICENSE Version 2.1, February 1999</license>
+        <source>https://github.com/phil65/plugin.program.autocompletion</source>
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+            <screenshot>resources/screenshot-01.jpg</screenshot>
+            <screenshot>resources/screenshot-02.jpg</screenshot>
+            <screenshot>resources/screenshot-03.jpg</screenshot>
+        </assets>
+    </extension>
 </addon>
 
 <addon id="resource.images.studios.white" name="Studio Icons - White" version="0.0.24" provider-name="Team Kodi">
