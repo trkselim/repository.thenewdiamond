@@ -803,7 +803,7 @@ v1.0.25 (marcelveldt)
   </extension>
 </addon>
 
-<addon id="plugin.program.autocompletion" name="AutoCompletion for virtual keyboard" version="2.0.2" provider-name="henryjfry">
+<addon id="plugin.program.autocompletion" name="AutoCompletion for virtual keyboard" version="2.0.3" provider-name="henryjfry">
     <requires>
         <import addon="xbmc.python" version="3.0.0" />
         <import addon="script.module.simplejson" version="3.3.0"/>

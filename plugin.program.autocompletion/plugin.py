@@ -44,16 +44,20 @@ def start_info_actions(infos, params):
             else:
                 xbmc.sleep(250)
                 xbmc.executebuiltin('Dialog.Close(busydialog)')
+            xbmc.sleep(250)
             window.setFocusId(312)
             search_str = str(params.get("id"))
-
+            xbmc.sleep(250)
             #get_kodi_json(method="Input.SendText",
             #              params='{"text":"%s", "done":false}' % params.get("id"))
             kodi_params = str('{"jsonrpc": "2.0", "method": "Input.SendText", "params": {"text": "'+str(search_str)+'", "done": false}, "id": 1}')
 
             response = xbmc.executeJSONRPC(kodi_params)
+            xbmc.sleep(250)
             window.setFocusId(300)
+            xbmc.sleep(250)
             response = xbmc.executeJSONRPC(kodi_params)
+            xbmc.sleep(250)
             return None
             # xbmc.executebuiltin("SendClick(103,32)")
         pass_list_to_skin(data=listitems,
