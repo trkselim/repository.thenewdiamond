@@ -44,7 +44,7 @@ class VideoPlayer(xbmc.Player):
 			Utils.show_busy()
 			xbmc.executebuiltin('RunPlugin(%s)' % url)
 			xbmcgui.Window(10000).setProperty(str(addon_ID_short())+'_running', 'True')
-			#window2 = window
+			window2 = window
 			gc.collect()
 			logpath = xbmcvfs.translatePath('special://logpath') + str('kodi.log')
 			while True:
@@ -64,6 +64,7 @@ class VideoPlayer(xbmc.Player):
 					#xbmc.executebuiltin('ActivateWindow(FullScreenVideo)')
 				if 'CVideoPlayer::CloseFile()' in str(line):
 					break
+				xbmc.sleep(250)
 			params = {'sender': addon_ID_short(),
 							  'message': 'SetFocus',
 							  'data': {'command': 'SetFocus',
@@ -78,6 +79,7 @@ class VideoPlayer(xbmc.Player):
 										  })
 			result = xbmc.executeJSONRPC(command)
 			#return window2.doModal()
+			window2.doModal()
 			try: window2.close()
 			except: pass
 			try: del window2
@@ -96,6 +98,9 @@ class VideoPlayer(xbmc.Player):
 					del window
 					self.wait_for_video_end()
 					return wm.pop_stack()
+			xbmc.sleep(50)
+					
+					
 
 	def play_from_button(self, url, listitem, window=False, type='', dbid=0):
 		#import subprocess, signal, os
