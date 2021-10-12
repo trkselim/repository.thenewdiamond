@@ -28,17 +28,14 @@ class VideoPlayer(xbmc.Player):
 		Utils.hide_busy()
 		xbmc.sleep(50)
 		while xbmc.Player().isPlaying():
-			Utils.hide_busy()
-			xbmc.executebuiltin('ActivateWindow(FullScreenVideo)')
-			xbmc.sleep(50)
-			Utils.hide_busy()
 			while xbmc.getCondVisibility('Window.IsActive(10138)'):
 				xbmc.sleep(50)
 		xbmc.sleep(250)
 		#self.stopped = False
 
+
 	def play(self, url, listitem, window=False):
-		import subprocess, signal, os
+		import collections
 		import xbmcvfs
 		container = xbmc.getInfoLabel('System.CurrentControlId')
 		position = int(xbmc.getInfoLabel('Container('+str(container)+').CurrentItem'))-1
@@ -47,23 +44,26 @@ class VideoPlayer(xbmc.Player):
 			Utils.show_busy()
 			xbmc.executebuiltin('RunPlugin(%s)' % url)
 			xbmcgui.Window(10000).setProperty(str(addon_ID_short())+'_running', 'True')
+			#window2 = window
 			gc.collect()
 			logpath = xbmcvfs.translatePath('special://logpath') + str('kodi.log')
-			f = subprocess.Popen(['tail','-F',logpath],stdout=subprocess.PIPE,stderr=subprocess.PIPE, preexec_fn=os.setsid)
 			while True:
-				line = f.stdout.readline()
+				line = collections.deque(open(logpath), 5)
 				if 'VideoPlayer::OpenFile:' in str(line):
 					Utils.hide_busy()
-					window.close()
+					try: window.close()
+					except: pass
+					try:
+						window = None
+						del window
+					except: 
+						pass
 					xbmcgui.Window(10000).setProperty(str(addon_ID_short())+'_running', 'True')
 					#Utils.hide_busy()
 					#Utils.hide_busy()
 					#xbmc.executebuiltin('ActivateWindow(FullScreenVideo)')
 				if 'CVideoPlayer::CloseFile()' in str(line):
-					xbmc.executebuiltin('Dialog.Close(FullScreenVideo)')
-					xbmc.sleep(50)
 					break
-			os.killpg(os.getpgid(f.pid), signal.SIGTERM) 
 			params = {'sender': addon_ID_short(),
 							  'message': 'SetFocus',
 							  'data': {'command': 'SetFocus',
@@ -77,10 +77,10 @@ class VideoPlayer(xbmc.Player):
 										  'id': 1,
 										  })
 			result = xbmc.executeJSONRPC(command)
-			window.doModal()
-			try: window.close()
+			#return window2.doModal()
+			try: window2.close()
 			except: pass
-			try: del window
+			try: del window2
 			except: pass
 			try: del self
 			except: pass
@@ -98,7 +98,8 @@ class VideoPlayer(xbmc.Player):
 					return wm.pop_stack()
 
 	def play_from_button(self, url, listitem, window=False, type='', dbid=0):
-		import subprocess, signal, os
+		#import subprocess, signal, os
+		import collections
 		import xbmcvfs
 		container = xbmc.getInfoLabel('System.CurrentControlId')
 		position = int(xbmc.getInfoLabel('Container('+str(container)+').CurrentItem'))-1
@@ -114,9 +115,10 @@ class VideoPlayer(xbmc.Player):
 			del window
 			gc.collect()
 			logpath = xbmcvfs.translatePath('special://logpath') + str('kodi.log')
-			f = subprocess.Popen(['tail','-F',logpath],stdout=subprocess.PIPE,stderr=subprocess.PIPE, preexec_fn=os.setsid)
+			#f = subprocess.Popen(['tail','-F',logpath],stdout=subprocess.PIPE,stderr=subprocess.PIPE, preexec_fn=os.setsid)
 			while True:
-				line = f.stdout.readline()
+				#line = f.stdout.readline()
+				line = collections.deque(open(logpath), 5)
 				if 'VideoPlayer::OpenFile:' in str(line):
 					Utils.hide_busy()
 					xbmc.executebuiltin('ActivateWindow(FullScreenVideo)')
@@ -124,7 +126,7 @@ class VideoPlayer(xbmc.Player):
 				if 'CVideoPlayer::CloseFile()' in str(line):
 					break
 			window2.close()
-			os.killpg(os.getpgid(f.pid), signal.SIGTERM) 
+			#os.killpg(os.getpgid(f.pid), signal.SIGTERM) 
 			params = {'sender': addon_ID_short(),
 							  'message': 'SetFocus',
 							  'data': {'command': 'SetFocus',
