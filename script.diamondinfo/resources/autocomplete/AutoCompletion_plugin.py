@@ -5,7 +5,7 @@
 
 import sys
 
-import AutoCompletion
+from resources.autocomplete import AutoCompletion
 import xbmc
 import xbmcaddon
 import xbmcgui
