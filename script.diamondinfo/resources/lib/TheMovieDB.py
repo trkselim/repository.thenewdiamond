@@ -1034,7 +1034,7 @@ def get_trakt_userlists():
     from resources.lib.library import get_trakt_data
     trakt_slug = xbmcaddon.Addon().getSetting('trakt_slug')
     trakt_user_name = xbmcaddon.Addon().getSetting('trakt_user_name')
-    if 1==1:
+    if trakt_slug == '':
         url = 'https://api.trakt.tv/users/settings'
         response = get_trakt_data(url=url, cache_days=14, folder='Trakt')
         trakt_slug = response['user']['ids']['slug']
