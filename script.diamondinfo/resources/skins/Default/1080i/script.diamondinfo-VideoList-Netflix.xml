@@ -491,12 +491,14 @@
 			</control>
 			<control type="button" id="600">
 				<onfocus>SetFocus(500)</onfocus>
+				<onfocus>ActivateWindow(busydialog)</onfocus>
 				<width>1</width>
 				<height>1</height>
 				<posx>-1000</posx>
 			</control>
 			<control type="button" id="700">
 				<onfocus>SetFocus(500)</onfocus>
+				<onfocus>ActivateWindow(busydialog)</onfocus>
 				<width>1</width>
 				<height>1</height>
 				<posx>-1000</posx>
