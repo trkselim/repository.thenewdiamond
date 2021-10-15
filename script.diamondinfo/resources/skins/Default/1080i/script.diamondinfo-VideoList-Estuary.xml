@@ -87,7 +87,8 @@
 
 			<control type="button" id="6666">
 				<onclick>SetFocus(9000)</onclick>
-				<texturenofocus>$INFO[Container(500).ListItem.Property(Fanart_small)]</texturenofocus>
+      <texturefocus colordiffuse="FFFFAAFF">myfocustexture.png</texturefocus>
+      <texturenofocus colordiffuse="FFFFAAFF">mynormaltexture.png</texturenofocus>
 				<posx>40</posx>
 				<posy>125</posy>
 				<width>396</width>
