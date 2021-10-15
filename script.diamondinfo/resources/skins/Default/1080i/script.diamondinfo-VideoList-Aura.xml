@@ -482,7 +482,7 @@
 			</control>
 			<control type="button" id="600">
 				<onfocus>SetFocus(500)</onfocus>
-				<onfocus>ActivateWindow(busydialog)</onfocus>
+				<onclick>ActivateWindow(busydialog)</onclick>
 				<width>1</width>
 				<height>1</height>
 				<posx>-1000</posx>
@@ -548,6 +548,7 @@
 				<width>120</width>
 				<height>55</height>
 				<aspectratio>scale</aspectratio>
+				<visible>!String.IsEmpty(Window.Property(ArrowDown)) | Container(500).HasNext</visible>
 			</control>
 
 			<control type="button" id="6668">
@@ -559,6 +560,7 @@
 				<width>120</width>
 				<height>55</height>
 				<aspectratio>scale</aspectratio>
+				<visible>!String.IsEmpty(Window.Property(ArrowUp)) | Container(500).HasPrevious</visible>
 			</control>
 
 			</control>
