@@ -43,7 +43,7 @@
 			</animation>
 
 			<control type="group">
-				<visible>Integer.IsGreater(Container(500).NumItems,0)</visible>
+				<visible>Integer.IsGreater(Container(500).NumItems,0) + !String.IsEmpty(Container(500).ListItemNoWrap(0).Label)</visible>
 				<animation effect="fade" time="320" delay="300">Visible</animation>
 				<control type="image">
 					<left>75</left>
